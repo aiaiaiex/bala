@@ -1,0 +1,1 @@
+# This is the branch following along with the tutorial ["Coding a 2D Game Engine in Java" by "GamesWithGabe"](https://www.youtube.com/playlist?list=PLtrSb4XxIVbp8AKuEAlwNXDxr99e3woGE)
