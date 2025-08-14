@@ -1,8 +1,9 @@
 import procedural.SimplexNoise;
 
 public class App {
-
     public static void main(String[] args) {
-        System.out.println(new SimplexNoise().getGreeting());
+        SimplexNoise noise = new SimplexNoise();
+        System.out.println(noise.getGreeting());
+        noise.printNoiseGrid(15, 15, 0.1);
     }
 }
