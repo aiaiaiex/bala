@@ -4,6 +4,7 @@ import java.awt.DisplayMode;
 import java.awt.GraphicsEnvironment;
 import event.Event;
 import event.Observer;
+import event.Subject;
 
 public class Window implements Observer {
     private static Window window = null;
@@ -16,7 +17,7 @@ public class Window implements Observer {
                 .getDefaultScreenDevice().getDisplayMode();
         width = displayMode.getWidth();
         height = displayMode.getHeight();
-
+        Subject.addObserver(this);
     }
 
     public static Window getWindow() {
