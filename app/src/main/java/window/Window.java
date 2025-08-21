@@ -2,8 +2,10 @@ package window;
 
 import java.awt.DisplayMode;
 import java.awt.GraphicsEnvironment;
+import event.Event;
+import event.Observer;
 
-public class Window {
+public class Window implements Observer {
     private static Window window = null;
 
     private int width, height;
@@ -23,5 +25,23 @@ public class Window {
         }
 
         return window;
+    }
+
+    @Override
+    public void notify(Event event) {
+        switch (event) {
+            case START_GAME:
+                // TODO Create reaction to START_GAME.
+                break;
+            case STOP_GAME:
+                // TODO Create reaction to STOP_GAME.
+                break;
+            case SAVE_LEVEL:
+                // TODO Create reaction to SAVE_LEVEL.
+                break;
+            case LOAD_LEVEL:
+                // TODO Create reaction to LOAD_LEVEL.
+                break;
+        }
     }
 }
