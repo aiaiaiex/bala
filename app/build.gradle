@@ -10,14 +10,14 @@ plugins {
     id 'application'
 }
 
-project.ext.lwjglVersion = "3.3.6"
-project.ext.jomlVersion = "1.10.8"
-project.ext.lwjglNatives = "natives-windows"
-
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
+
+project.ext.lwjglVersion = "3.3.6"
+project.ext.jomlVersion = "1.10.8"
+project.ext.lwjglNatives = "natives-windows"
 
 dependencies {
     // Use JUnit test framework.
@@ -25,10 +25,8 @@ dependencies {
 
     // This dependency is used by the application.
     implementation libs.guava
-}
 
-// LWJGL
-dependencies {
+	// LWJGL.
 	implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 
 	implementation "org.lwjgl:lwjgl"
