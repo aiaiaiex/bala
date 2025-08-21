@@ -10,7 +10,7 @@ public class Window implements Observer {
     private static Window window = null;
 
     private int width, height;
-    private String title = "Bala";
+    private static String title = "Bala";
 
     private Window() {
         DisplayMode displayMode = GraphicsEnvironment.getLocalGraphicsEnvironment()
