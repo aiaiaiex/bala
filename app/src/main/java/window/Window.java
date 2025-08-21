@@ -28,6 +28,8 @@ public class Window implements Observer {
         return window;
     }
 
+    public void run() {}
+
     @Override
     public void notify(Event event) {
         switch (event) {
