@@ -1,7 +1,7 @@
 package window;
 
-import java.awt.GraphicsEnvironment;
 import java.awt.DisplayMode;
+import java.awt.GraphicsEnvironment;
 
 public class Window {
     private static Window window = null;
