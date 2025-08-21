@@ -10,7 +10,7 @@
 		"java.format.settings.profile": "GoogleStyle",
 		"editor.formatOnSave": true,
 		"editor.codeActionsOnSave": {
-			"source.organizeImports": true
+			"source.organizeImports": "explicit"
 		},
 		"todo-tree.general.tags": [
 			"TODO",
