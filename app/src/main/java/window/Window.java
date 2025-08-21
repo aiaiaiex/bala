@@ -1,4 +1,4 @@
-package bala;
+package window;
 
 import java.awt.GraphicsEnvironment;
 import java.awt.DisplayMode;
