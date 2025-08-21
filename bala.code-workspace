@@ -11,7 +11,23 @@
 		"editor.formatOnSave": true,
 		"editor.codeActionsOnSave": {
 			"source.organizeImports": true
-		}
+		},
+		"todo-tree.general.tags": [
+			"TODO",
+			"DOING",
+			"DONE"
+		],
+		"todo-tree.highlights.useColourScheme": true,
+		"todo-tree.highlights.foregroundColourScheme": [
+			"white",
+			"black",
+			"white"
+		],
+		"todo-tree.highlights.backgroundColourScheme": [
+			"#BB1E10",
+			"#F7B500",
+			"#008351"
+		]
 	},
 	"extensions": {
 		"recommendations": [
