@@ -11,4 +11,8 @@ public final class Subject {
     public static void addObserver(Observer observer) {
         observers.add(observer);
     }
+
+    public static void notifyObservers(Event event) {
+        observers.forEach(observer -> observer.notify(event));
+    }
 }
