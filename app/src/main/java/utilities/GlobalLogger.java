@@ -12,6 +12,10 @@ import settings.EngineSettings;
 public final class GlobalLogger {
     private static final Logger LOGGER = Logger.getGlobal();
 
+    public static final String CLASS_INITIALIZATION = "Class initialized"; // without arguments.
+    public static final String METHOD_CALL = "Method called"; // without arguments.
+    public static final String METHOD_RETURN = "Method returned: void";
+
     private static GlobalLogger globalLogger = null;
 
     private GlobalLogger() {
