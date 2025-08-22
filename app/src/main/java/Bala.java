@@ -4,14 +4,14 @@ import utilities.GlobalLogger;
 import window.Window;
 
 public class Bala {
-    private static final Logger logger = GlobalLogger.getLogger();
+    private static final Logger LOGGER = GlobalLogger.getLogger();
 
     public static void main(String[] args) {
-        logger.fine(() -> String.format("Method called with: (args=%1$s)", Arrays.toString(args)));
+        LOGGER.fine(() -> String.format("Method called with: (args=%1$s)", Arrays.toString(args)));
 
         Window window = Window.getWindow();
         window.run();
 
-        logger.fine("Method returned: void");
+        LOGGER.fine("Method returned: void");
     }
 }

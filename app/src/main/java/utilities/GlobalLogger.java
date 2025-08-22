@@ -10,11 +10,12 @@ import java.util.logging.SimpleFormatter;
 import settings.EngineSettings;
 
 public final class GlobalLogger {
-    private static final Logger logger = Logger.getGlobal();
+    private static final Logger LOGGER = Logger.getGlobal();
+
     private static GlobalLogger globalLogger = null;
 
     private GlobalLogger() {
-        logger.setLevel(EngineSettings.LOG_LEVEL);
+        LOGGER.setLevel(EngineSettings.LOG_LEVEL);
 
         Handler consoleHandler = new ConsoleHandler();
         consoleHandler.setLevel(EngineSettings.LOG_LEVEL);
@@ -31,14 +32,14 @@ public final class GlobalLogger {
         };
         consoleHandler.setFormatter(formatter);
 
-        logger.addHandler(consoleHandler);
-        logger.setUseParentHandlers(false);
+        LOGGER.addHandler(consoleHandler);
+        LOGGER.setUseParentHandlers(false);
     }
 
     public static Logger getLogger() {
         if (globalLogger == null) {
             globalLogger = new GlobalLogger();
         }
-        return logger;
+        return LOGGER;
     }
 }
