@@ -47,6 +47,14 @@ public class Window implements Observer {
     public void run() {
         LOGGER.fine("Method called");
 
+        initialize();
+
+        LOGGER.fine("Method returned: void");
+    }
+
+    private void initialize() {
+        LOGGER.fine("Method called");
+
         LOGGER.fine("Method returned: void");
     }
 
