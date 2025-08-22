@@ -17,7 +17,7 @@ public class Window implements Observer {
     private int width, height;
 
     private Window() {
-        LOGGER.fine("Class instantiated");
+        LOGGER.fine(GlobalLogger.CLASS_INITIALIZATION);
 
         LOGGER.fine(() -> String.format("Old width: %1$s", width));
         LOGGER.fine(() -> String.format("Old height: %1$s", height));
@@ -32,7 +32,7 @@ public class Window implements Observer {
     }
 
     public static Window getWindow() {
-        LOGGER.fine("Method called");
+        LOGGER.fine(GlobalLogger.METHOD_CALL);
 
         if (window == null) {
             LOGGER.fine(() -> String.format("Old window: %1$s", window));
@@ -45,17 +45,17 @@ public class Window implements Observer {
     }
 
     public void run() {
-        LOGGER.fine("Method called");
+        LOGGER.fine(GlobalLogger.METHOD_CALL);
 
         initialize();
 
-        LOGGER.fine("Method returned: void");
+        LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
 
     private void initialize() {
-        LOGGER.fine("Method called");
+        LOGGER.fine(GlobalLogger.METHOD_CALL);
 
-        LOGGER.fine("Method returned: void");
+        LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class Window implements Observer {
                 break;
         }
 
-        LOGGER.fine("Method returned: void");
+        LOGGER.fine(GlobalLogger.METHOD_RETURN);
 
     }
 }

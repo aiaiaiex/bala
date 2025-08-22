@@ -12,6 +12,6 @@ public class Bala {
         Window window = Window.getWindow();
         window.run();
 
-        LOGGER.fine("Method returned: void");
+        LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
 }

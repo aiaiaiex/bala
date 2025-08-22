@@ -19,7 +19,7 @@ public final class Subject {
         observers.add(observer);
         LOGGER.fine(() -> String.format("New observers: %1$s", observers));
 
-        LOGGER.fine("Method returned: void");
+        LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
 
     public static void notifyObservers(Event event) {
@@ -27,6 +27,6 @@ public final class Subject {
 
         observers.forEach(observer -> observer.notify(event));
 
-        LOGGER.fine("Method returned: void");
+        LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
 }
