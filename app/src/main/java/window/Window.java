@@ -14,7 +14,7 @@ public class Window implements Observer {
     private static Window window = null;
 
     private int width, height;
-    private static String title = "Bala";
+    private static final String title = "Bala";
 
     private Window() {
         logger.fine("Class instantiated");
