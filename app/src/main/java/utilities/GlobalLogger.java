@@ -20,7 +20,7 @@ public final class GlobalLogger {
         consoleHandler.setLevel(EngineSettings.LOG_LEVEL);
 
         Formatter formatter = new SimpleFormatter() {
-            private String format = "%1$tT.%1$tL | %2$-7S | %3$s [%4$s.%5$s] %n";
+            private String format = "%1$tF %1$tT.%1$tL | %2$-7S | %3$s [%4$s.%5$s] %n";
 
             @Override
             public synchronized String format(LogRecord logRecord) {
