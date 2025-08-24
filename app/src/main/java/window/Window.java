@@ -1,11 +1,10 @@
 package window;
 
-import java.awt.DisplayMode;
-import java.awt.GraphicsEnvironment;
 import java.util.logging.Logger;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
@@ -40,15 +39,6 @@ public final class Window implements Observer {
             title = GameSettings.GAME_TITLE;
         }
         LOGGER.fine(() -> String.format("New title: %1$s", title));
-
-        LOGGER.fine(() -> String.format("Old width: %1$s", width));
-        LOGGER.fine(() -> String.format("Old height: %1$s", height));
-        DisplayMode displayMode = GraphicsEnvironment.getLocalGraphicsEnvironment()
-                .getDefaultScreenDevice().getDisplayMode();
-        width = displayMode.getWidth();
-        height = displayMode.getHeight();
-        LOGGER.fine(() -> String.format("New width: %1$s", width));
-        LOGGER.fine(() -> String.format("New height: %1$s", height));
 
         Subject.addObserver(this);
     }
@@ -96,6 +86,18 @@ public final class Window implements Observer {
         } else {
             LOGGER.info("GLFW initialized");
         }
+
+        LOGGER.fine("Get the primary monitor");
+        long primaryMonitor = GLFW.glfwGetPrimaryMonitor();
+        LOGGER.fine("Get the current video mode of the primaryMonitor");
+        GLFWVidMode videoMode = GLFW.glfwGetVideoMode(primaryMonitor);
+
+        LOGGER.fine(() -> String.format("Old width: %1$s", width));
+        LOGGER.fine(() -> String.format("Old height: %1$s", height));
+        width = videoMode.width();
+        height = videoMode.height();
+        LOGGER.fine(() -> String.format("New width: %1$s", width));
+        LOGGER.fine(() -> String.format("New height: %1$s", height));
 
         LOGGER.fine("Configuring glfwWindow");
         GLFW.glfwDefaultWindowHints();
