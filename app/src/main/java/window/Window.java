@@ -14,7 +14,7 @@ import event.Subject;
 import sound.SoundDevice;
 import utilities.GlobalLogger;
 
-public class Window implements Observer {
+public final class Window implements Observer {
     private static final Logger LOGGER = GlobalLogger.getLogger();
     private static final String TITLE = "Bala";
 
