@@ -3,6 +3,7 @@ package window;
 import java.awt.DisplayMode;
 import java.awt.GraphicsEnvironment;
 import java.util.logging.Logger;
+import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -22,6 +23,7 @@ public final class Window implements Observer {
 
     private int width, height;
     private boolean initialized = false;
+    private long glfwWindow;
 
     private Window() {
         LOGGER.fine(GlobalLogger.CLASS_INITIALIZATION);
@@ -89,8 +91,7 @@ public final class Window implements Observer {
         GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
 
         LOGGER.fine("Creating glfwWindow");
-        long glfwWindow =
-                GLFW.glfwCreateWindow(width, height, TITLE, MemoryUtil.NULL, MemoryUtil.NULL);
+        glfwWindow = GLFW.glfwCreateWindow(width, height, TITLE, MemoryUtil.NULL, MemoryUtil.NULL);
         if (glfwWindow == MemoryUtil.NULL) {
             LOGGER.severe("Failed to create glfwWindow");
             throw new RuntimeException("Failed to create glfwWindow!");
@@ -134,7 +135,17 @@ public final class Window implements Observer {
             return;
         }
 
+        SoundDevice.getSoundDevice().terminate();
 
+        LOGGER.fine("Unset all callbacks for glfwWindow");
+        Callbacks.glfwFreeCallbacks(glfwWindow);
+        LOGGER.fine("Destroy glfwWindow and its context");
+        GLFW.glfwDestroyWindow(glfwWindow);
+
+        LOGGER.fine("Terminate GLFW");
+        GLFW.glfwTerminate();
+        LOGGER.fine("Unset error callback for GLFW");
+        GLFW.glfwSetErrorCallback(null).free();
 
         LOGGER.fine("Set initialized to false");
         initialized = false;
