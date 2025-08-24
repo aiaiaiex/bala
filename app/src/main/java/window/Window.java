@@ -12,21 +12,34 @@ import org.lwjgl.system.MemoryUtil;
 import event.Event;
 import event.Observer;
 import event.Subject;
+import settings.EngineSettings;
+import settings.GameSettings;
 import sound.SoundDevice;
 import utilities.GlobalLogger;
 
 public final class Window implements Observer {
     private static final Logger LOGGER = GlobalLogger.getLogger();
-    private static final String TITLE = "Bala";
 
     private static Window window = null;
 
+    private String title;
     private int width, height;
     private boolean initialized = false;
     private long glfwWindow;
 
     private Window() {
         LOGGER.fine(GlobalLogger.CLASS_INITIALIZATION);
+
+        LOGGER.fine("Check if engine editor will be displayed");
+        LOGGER.fine(() -> String.format("Old title: %1$s", title));
+        if (EngineSettings.DISPLAY_EDITOR) {
+            LOGGER.fine("Engine editor will be displayed");
+            title = EngineSettings.ENGINE_TITLE;
+        } else {
+            LOGGER.fine("Engine editor will NOT be displayed");
+            title = GameSettings.GAME_TITLE;
+        }
+        LOGGER.fine(() -> String.format("New title: %1$s", title));
 
         LOGGER.fine(() -> String.format("Old width: %1$s", width));
         LOGGER.fine(() -> String.format("Old height: %1$s", height));
@@ -91,7 +104,7 @@ public final class Window implements Observer {
         GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
 
         LOGGER.fine("Creating glfwWindow");
-        glfwWindow = GLFW.glfwCreateWindow(width, height, TITLE, MemoryUtil.NULL, MemoryUtil.NULL);
+        glfwWindow = GLFW.glfwCreateWindow(width, height, title, MemoryUtil.NULL, MemoryUtil.NULL);
         if (glfwWindow == MemoryUtil.NULL) {
             LOGGER.severe("Failed to create glfwWindow");
             throw new RuntimeException("Failed to create glfwWindow!");
