@@ -80,7 +80,7 @@ public final class SoundDevice {
 
         LOGGER.fine("Check if soundDevice is even initialized");
         if (!initialized) {
-            LOGGER.fine("soundDevice is NOT even initialized");
+            LOGGER.warning("soundDevice is NOT even initialized");
             LOGGER.fine(GlobalLogger.METHOD_RETURN);
             return;
         }
