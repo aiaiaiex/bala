@@ -56,6 +56,8 @@ public final class Window implements Observer {
 
         initialize();
 
+        terminate();
+
         LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
 
@@ -118,6 +120,24 @@ public final class Window implements Observer {
 
         LOGGER.fine("Set initialized to true");
         initialized = true;
+
+        LOGGER.fine(GlobalLogger.METHOD_RETURN);
+    }
+
+    private void terminate() {
+        LOGGER.fine(GlobalLogger.METHOD_CALL);
+
+        LOGGER.fine("Check if window is even initialized");
+        if (!initialized) {
+            LOGGER.warning("window is NOT even initialized");
+            LOGGER.fine(GlobalLogger.METHOD_RETURN);
+            return;
+        }
+
+
+
+        LOGGER.fine("Set initialized to false");
+        initialized = false;
 
         LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
