@@ -9,8 +9,7 @@ public class Bala {
     public static void main(String[] args) {
         LOGGER.fine(() -> String.format("Method called with: (args=%1$s)", Arrays.toString(args)));
 
-        Window window = Window.getWindow();
-        window.run();
+        Window.getWindow().run();
 
         LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
