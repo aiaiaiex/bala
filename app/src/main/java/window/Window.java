@@ -60,7 +60,7 @@ public final class Window implements Observer {
         LOGGER.fine(GlobalLogger.METHOD_CALL);
 
         initialize();
-
+        loop();
         terminate();
 
         LOGGER.fine(GlobalLogger.METHOD_RETURN);
@@ -139,6 +139,12 @@ public final class Window implements Observer {
 
         LOGGER.fine("Set initialized to true");
         initialized = true;
+
+        LOGGER.fine(GlobalLogger.METHOD_RETURN);
+    }
+
+    private void loop() {
+        LOGGER.fine(GlobalLogger.METHOD_CALL);
 
         LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
