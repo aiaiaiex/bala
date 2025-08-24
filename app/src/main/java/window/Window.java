@@ -21,6 +21,7 @@ public final class Window implements Observer {
     private static Window window = null;
 
     private int width, height;
+    private boolean initialized = false;
 
     private Window() {
         LOGGER.fine(GlobalLogger.CLASS_INITIALIZATION);
@@ -60,6 +61,13 @@ public final class Window implements Observer {
 
     private void initialize() {
         LOGGER.fine(GlobalLogger.METHOD_CALL);
+
+        LOGGER.fine("Check if window is already initialized");
+        if (initialized) {
+            LOGGER.fine("window is already initialized");
+            LOGGER.fine(GlobalLogger.METHOD_RETURN);
+            return;
+        }
 
         LOGGER.fine("Set error callback for GLFW");
         GLFWErrorCallback.createPrint(System.err).set();
@@ -107,6 +115,9 @@ public final class Window implements Observer {
 
         LOGGER.fine("Make glfwWindow visible");
         GLFW.glfwShowWindow(glfwWindow);
+
+        LOGGER.fine("Set initialized to true");
+        initialized = true;
 
         LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
