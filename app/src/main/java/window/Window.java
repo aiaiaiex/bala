@@ -99,10 +99,13 @@ public final class Window implements Observer {
         LOGGER.fine(() -> String.format("New width: %1$s", width));
         LOGGER.fine(() -> String.format("New height: %1$s", height));
 
-        LOGGER.fine("Configuring glfwWindow");
+        LOGGER.fine("Reset all window hints");
         GLFW.glfwDefaultWindowHints();
+        LOGGER.fine("Make window invisible");
         GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
+        LOGGER.fine("Make window maximized");
         GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW.GLFW_TRUE);
+        LOGGER.fine("Make window resizable by the user");
         GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
 
         LOGGER.fine("Creating glfwWindow");
