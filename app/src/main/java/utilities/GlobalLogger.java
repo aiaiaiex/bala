@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -19,10 +20,12 @@ public final class GlobalLogger {
     private static GlobalLogger globalLogger = null;
 
     private GlobalLogger() {
-        LOGGER.setLevel(EngineSettings.LOG_LEVEL);
+        Level logLevel = EngineSettings.DISPLAY_EDITOR ? EngineSettings.LOG_LEVEL : Level.OFF;
+
+        LOGGER.setLevel(logLevel);
 
         Handler consoleHandler = new ConsoleHandler();
-        consoleHandler.setLevel(EngineSettings.LOG_LEVEL);
+        consoleHandler.setLevel(logLevel);
 
         Formatter formatter = new SimpleFormatter() {
             private String format = "%1$tF %1$tT.%1$tL | %2$-7S | %3$s [%4$s.%5$s] %n";
