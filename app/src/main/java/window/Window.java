@@ -3,9 +3,15 @@ package window;
 import java.awt.DisplayMode;
 import java.awt.GraphicsEnvironment;
 import java.util.logging.Logger;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.system.MemoryUtil;
 import event.Event;
 import event.Observer;
 import event.Subject;
+import sound.SoundDevice;
 import utilities.GlobalLogger;
 
 public class Window implements Observer {
@@ -54,6 +60,53 @@ public class Window implements Observer {
 
     private void initialize() {
         LOGGER.fine(GlobalLogger.METHOD_CALL);
+
+        LOGGER.fine("Set error callback for GLFW");
+        GLFWErrorCallback.createPrint(System.err).set();
+
+        LOGGER.fine("Initializing GLFW");
+        if (!GLFW.glfwInit()) {
+            LOGGER.severe("Failed to initialize GLFW");
+            throw new RuntimeException("Failed to initialize GLFW!");
+        } else {
+            LOGGER.info("GLFW initialized");
+        }
+
+        LOGGER.fine("Configuring glfwWindow");
+        GLFW.glfwDefaultWindowHints();
+        GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
+        GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW.GLFW_TRUE);
+        GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
+
+        LOGGER.fine("Creating glfwWindow");
+        long glfwWindow =
+                GLFW.glfwCreateWindow(width, height, TITLE, MemoryUtil.NULL, MemoryUtil.NULL);
+        if (glfwWindow == MemoryUtil.NULL) {
+            LOGGER.severe("Failed to create glfwWindow");
+            throw new RuntimeException("Failed to create glfwWindow!");
+        }
+
+        // TODO Set callbacks for keyboard and mouse.
+        // TODO Set callbacks for resizing window.
+
+        LOGGER.fine("Make glfwWindow's OpenGL context current");
+        GLFW.glfwMakeContextCurrent(glfwWindow);
+
+        LOGGER.fine("Create a GLCapabilities for glfwWindow's current OpenGL context");
+        GL.createCapabilities();
+
+        LOGGER.fine("Sync your buffer swaps with your monitor's refresh rate");
+        GLFW.glfwSwapInterval(1);
+
+        LOGGER.fine("Enable glBlendFunc");
+        GL11.glEnable(GL11.GL_BLEND);
+        LOGGER.fine("Enable transparency");
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+        SoundDevice.getSoundDevice().initialize();
+
+        LOGGER.fine("Make glfwWindow visible");
+        GLFW.glfwShowWindow(glfwWindow);
 
         LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
