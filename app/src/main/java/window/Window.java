@@ -122,6 +122,12 @@ public final class Window implements Observer {
             throw new RuntimeException("Failed to create glfwWindow!");
         }
 
+        if (!EngineSettings.DISPLAY_EDITOR) {
+            LOGGER.fine(
+                    "Make glfwWindow follow the primary monitor's aspect ratio when resized when the engine editor is NOT displayed");
+            GLFW.glfwSetWindowAspectRatio(glfwWindow, monitorWidth, monitorHeight);
+        }
+
         // TODO Set callbacks for keyboard and mouse.
         // TODO Set callbacks for resizing window.
 
