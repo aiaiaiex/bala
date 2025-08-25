@@ -162,6 +162,14 @@ public final class Window implements Observer {
     private void loop() {
         LOGGER.fine(GlobalLogger.METHOD_CALL);
 
+        LOGGER.fine("Initialize startTime, endTime, and deltaTime to 0");
+        double startTime = 0.0d;
+        double endTime = 0.0d;
+        double deltaTime = endTime - startTime;
+
+        LOGGER.fine("Set GLFW timer to startTime's initial value");
+        GLFW.glfwSetTime(startTime);
+
         while (!GLFW.glfwWindowShouldClose(glfwWindow)) {
             LOGGER.fine("glfwWindow is NOT yet closed");
 
@@ -172,6 +180,13 @@ public final class Window implements Observer {
             GLFW.glfwSwapBuffers(glfwWindow);
             LOGGER.fine("Process events in the queue");
             GLFW.glfwPollEvents();
+
+            LOGGER.fine("Set endTime to current value of GLFW timer");
+            endTime = GLFW.glfwGetTime();
+            LOGGER.fine("Calculate deltaTime");
+            deltaTime = endTime - startTime;
+            LOGGER.fine("Set startTime to current value of endTime");
+            startTime = endTime;
         }
 
         LOGGER.fine(GlobalLogger.METHOD_RETURN);
