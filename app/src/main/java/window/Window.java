@@ -15,6 +15,7 @@ import settings.EngineSettings;
 import settings.GameSettings;
 import sound.SoundDevice;
 import utilities.AverageFrameTimeLogger;
+import utilities.ExactFrameTimeLogger;
 import utilities.GlobalLogger;
 
 public final class Window implements Observer {
@@ -22,6 +23,9 @@ public final class Window implements Observer {
     private static final AverageFrameTimeLogger averageFrameTimeLogger =
             AverageFrameTimeLogger.getAverageFrameTimeLogger();
     private static final Logger AVERAGE_FRAME_TIME_LOGGER = averageFrameTimeLogger.getLogger();
+    private static final ExactFrameTimeLogger exactFrameTimeLogger =
+            ExactFrameTimeLogger.getExactFrameTimeLogger();
+    private static final Logger EXACT_FRAME_TIME_LOGGER = exactFrameTimeLogger.getLogger();
 
     private static Window window = null;
 
@@ -171,7 +175,6 @@ public final class Window implements Observer {
         double endTime = 0.0d;
         double deltaTime = endTime - startTime;
 
-
         LOGGER.fine("Initialize frames and elapsedTime to 0");
         int frames = 0;
         double elapsedTime = 0.0d;
@@ -195,6 +198,7 @@ public final class Window implements Observer {
             LOGGER.fine("Calculate deltaTime");
             deltaTime = endTime - startTime;
 
+            EXACT_FRAME_TIME_LOGGER.info(endTime + "," + deltaTime);
 
             LOGGER.fine("Set startTime to current value of endTime");
             startTime = endTime;
