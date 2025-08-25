@@ -11,12 +11,12 @@ import org.lwjgl.system.MemoryUtil;
 import event.Event;
 import event.Observer;
 import event.Subject;
+import loggers.AverageFrameTimeLogger;
+import loggers.ExactFrameTimeLogger;
+import loggers.GlobalLogger;
 import settings.EngineSettings;
 import settings.GameSettings;
 import sound.SoundDevice;
-import utilities.AverageFrameTimeLogger;
-import utilities.ExactFrameTimeLogger;
-import utilities.GlobalLogger;
 
 public final class Window implements Observer {
     private static final Logger LOGGER = GlobalLogger.getLogger();

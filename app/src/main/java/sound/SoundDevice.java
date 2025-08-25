@@ -8,7 +8,7 @@ import org.lwjgl.openal.ALC10;
 import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.system.MemoryUtil;
-import utilities.GlobalLogger;
+import loggers.GlobalLogger;
 
 public final class SoundDevice {
     private static final Logger LOGGER = GlobalLogger.getLogger();

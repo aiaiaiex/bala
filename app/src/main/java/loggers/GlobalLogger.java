@@ -1,4 +1,4 @@
-package utilities;
+package loggers;
 
 import java.util.Date;
 import java.util.logging.ConsoleHandler;

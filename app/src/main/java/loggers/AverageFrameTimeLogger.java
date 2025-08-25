@@ -1,4 +1,4 @@
-package utilities;
+package loggers;
 
 import java.io.IOException;
 import java.util.Date;
@@ -10,19 +10,19 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-public final class ExactFrameTimeLogger {
-    private static final String FILE_NAME = "exact-frame-time-log";
+public final class AverageFrameTimeLogger {
+    private static final String FILE_NAME = "average-frame-time-per-second-log";
     private static final String FILE_EXTENSION = "csv";
 
-    private static ExactFrameTimeLogger exactFrameTimeLogger = null;
+    private static AverageFrameTimeLogger frameTimeLogger = null;
 
     private Level defaultLogLevel = Level.INFO;
     private Logger logger;
     private Formatter formatter;
     private boolean started;
 
-    private ExactFrameTimeLogger() {
-        logger = Logger.getLogger("ExactFrameTimeLogger");
+    private AverageFrameTimeLogger() {
+        logger = Logger.getLogger("AverageFrameTimeLogger");
 
         logger.setLevel(Level.OFF);
         started = false;
@@ -45,11 +45,11 @@ public final class ExactFrameTimeLogger {
         };
     }
 
-    public static ExactFrameTimeLogger getExactFrameTimeLogger() {
-        if (exactFrameTimeLogger == null) {
-            exactFrameTimeLogger = new ExactFrameTimeLogger();
+    public static AverageFrameTimeLogger getAverageFrameTimeLogger() {
+        if (frameTimeLogger == null) {
+            frameTimeLogger = new AverageFrameTimeLogger();
         }
-        return exactFrameTimeLogger;
+        return frameTimeLogger;
     }
 
     public Logger getLogger() {
