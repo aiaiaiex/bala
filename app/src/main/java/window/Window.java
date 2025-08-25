@@ -25,7 +25,8 @@ public final class Window implements Observer {
     private int glClearMask = GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT;
 
     private String title;
-    private int width, height;
+    private int monitorWidth, monitorHeight;
+    private int windowWidth, windowHeight;
     private long glfwWindow;
 
     private Window() {
@@ -94,12 +95,21 @@ public final class Window implements Observer {
         LOGGER.fine("Get the current video mode of the primaryMonitor");
         GLFWVidMode videoMode = GLFW.glfwGetVideoMode(primaryMonitor);
 
-        LOGGER.fine(() -> String.format("Old width: %1$s", width));
-        LOGGER.fine(() -> String.format("Old height: %1$s", height));
-        width = videoMode.width();
-        height = videoMode.height();
-        LOGGER.fine(() -> String.format("New width: %1$s", width));
-        LOGGER.fine(() -> String.format("New height: %1$s", height));
+        LOGGER.fine(() -> String.format("Old monitorWidth: %1$s", monitorWidth));
+        LOGGER.fine(() -> String.format("Old monitorHeight: %1$s", monitorHeight));
+        monitorWidth = videoMode.width();
+        monitorHeight = videoMode.height();
+        LOGGER.fine(() -> String.format("New monitorWidth: %1$s", monitorWidth));
+        LOGGER.fine(() -> String.format("New monitorHeight: %1$s", monitorHeight));
+
+        LOGGER.fine(
+                "Set initial windowWidth and windowHeight based on the primary monitor's resolution");
+        LOGGER.fine(() -> String.format("Old windowWidth: %1$s", windowWidth));
+        LOGGER.fine(() -> String.format("Old windowHeight: %1$s", windowHeight));
+        windowWidth = monitorWidth;
+        windowHeight = monitorHeight;
+        LOGGER.fine(() -> String.format("New windowWidth: %1$s", windowWidth));
+        LOGGER.fine(() -> String.format("New windowHeight: %1$s", windowHeight));
 
         LOGGER.fine("Reset all window hints");
         GLFW.glfwDefaultWindowHints();
@@ -111,7 +121,8 @@ public final class Window implements Observer {
         GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
 
         LOGGER.fine("Creating glfwWindow");
-        glfwWindow = GLFW.glfwCreateWindow(width, height, title, MemoryUtil.NULL, MemoryUtil.NULL);
+        glfwWindow = GLFW.glfwCreateWindow(windowWidth, windowHeight, title, MemoryUtil.NULL,
+                MemoryUtil.NULL);
         if (glfwWindow == MemoryUtil.NULL) {
             LOGGER.severe("Failed to create glfwWindow");
             throw new RuntimeException("Failed to create glfwWindow!");
