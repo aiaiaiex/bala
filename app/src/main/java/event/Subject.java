@@ -15,7 +15,6 @@ public final class Subject {
     public static void addObserver(Observer observer) {
         LOGGER.fine(() -> String.format("Method called with: (observer=%1$s)", observer));
 
-        LOGGER.fine(() -> String.format("Old observers: %1$s", observers));
         observers.add(observer);
         LOGGER.fine(() -> String.format("New observers: %1$s", observers));
 

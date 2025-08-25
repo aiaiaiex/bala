@@ -33,7 +33,6 @@ public final class Window implements Observer {
         LOGGER.fine(GlobalLogger.CLASS_INITIALIZATION);
 
         LOGGER.fine("Check if engine editor will be displayed");
-        LOGGER.fine(() -> String.format("Old title: %1$s", title));
         if (EngineSettings.DISPLAY_EDITOR) {
             LOGGER.fine("Engine editor will be displayed");
             title = EngineSettings.ENGINE_TITLE;
@@ -50,7 +49,6 @@ public final class Window implements Observer {
         LOGGER.fine(GlobalLogger.METHOD_CALL);
 
         if (window == null) {
-            LOGGER.fine(() -> String.format("Old window: %1$s", window));
             window = new Window();
             LOGGER.fine(() -> String.format("New window: %1$s", window));
         }
@@ -95,8 +93,6 @@ public final class Window implements Observer {
         LOGGER.fine("Get the current video mode of the primaryMonitor");
         GLFWVidMode videoMode = GLFW.glfwGetVideoMode(primaryMonitor);
 
-        LOGGER.fine(() -> String.format("Old monitorWidth: %1$s", monitorWidth));
-        LOGGER.fine(() -> String.format("Old monitorHeight: %1$s", monitorHeight));
         monitorWidth = videoMode.width();
         monitorHeight = videoMode.height();
         LOGGER.fine(() -> String.format("New monitorWidth: %1$s", monitorWidth));
@@ -104,8 +100,6 @@ public final class Window implements Observer {
 
         LOGGER.fine(
                 "Set the initial windowWidth and windowHeight based on HALF of the primary monitor's resolution");
-        LOGGER.fine(() -> String.format("Old windowWidth: %1$s", windowWidth));
-        LOGGER.fine(() -> String.format("Old windowHeight: %1$s", windowHeight));
         windowWidth = monitorWidth / 2;
         windowHeight = monitorHeight / 2;
         LOGGER.fine(() -> String.format("New windowWidth: %1$s", windowWidth));

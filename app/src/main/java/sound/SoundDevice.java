@@ -23,7 +23,6 @@ public final class SoundDevice {
         LOGGER.fine(GlobalLogger.METHOD_CALL);
 
         if (soundDevice == null) {
-            LOGGER.fine(() -> String.format("Old soundDevice: %1$s", soundDevice));
             soundDevice = new SoundDevice();
             LOGGER.fine(() -> String.format("New soundDevice: %1$s", soundDevice));
         }
