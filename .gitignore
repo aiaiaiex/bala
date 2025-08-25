@@ -3,3 +3,8 @@
 
 # Ignore Gradle build output directory
 build
+
+# Ignore non-sample log files
+logs/*
+!logs/average-frame-time-per-second-log.csv
+!logs/exact-frame-time-log.csv
