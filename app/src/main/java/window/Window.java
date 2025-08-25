@@ -21,9 +21,11 @@ public final class Window implements Observer {
 
     private static Window window = null;
 
+    private boolean initialized = false;
+    private int glClearMask = GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT;
+
     private String title;
     private int width, height;
-    private boolean initialized = false;
     private long glfwWindow;
 
     private Window() {
@@ -132,6 +134,9 @@ public final class Window implements Observer {
         LOGGER.fine("Enable transparency");
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
+        LOGGER.fine("Set the clear color to transparent white");
+        GL11.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+
         SoundDevice.getSoundDevice().initialize();
 
         LOGGER.fine("Make glfwWindow visible");
@@ -145,6 +150,18 @@ public final class Window implements Observer {
 
     private void loop() {
         LOGGER.fine(GlobalLogger.METHOD_CALL);
+
+        while (!GLFW.glfwWindowShouldClose(glfwWindow)) {
+            LOGGER.fine("glfwWindow is NOT yet closed");
+
+            LOGGER.fine("Clear the color buffer and depth buffer");
+            GL11.glClear(glClearMask);
+
+            LOGGER.fine("Swap the front and back buffer");
+            GLFW.glfwSwapBuffers(glfwWindow);
+            LOGGER.fine("Process events in the queue");
+            GLFW.glfwPollEvents();
+        }
 
         LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
