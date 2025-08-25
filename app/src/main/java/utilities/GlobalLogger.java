@@ -39,8 +39,15 @@ public final class GlobalLogger {
         };
         consoleHandler.setFormatter(formatter);
 
-        LOGGER.addHandler(consoleHandler);
         LOGGER.setUseParentHandlers(false);
+
+        Handler[] handlers = LOGGER.getHandlers();
+        for (Handler handler : handlers) {
+            handler.close();
+            LOGGER.removeHandler(handler);
+        }
+
+        LOGGER.addHandler(consoleHandler);
     }
 
     public static Logger getLogger() {
