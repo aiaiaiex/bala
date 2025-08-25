@@ -14,10 +14,14 @@ import event.Subject;
 import settings.EngineSettings;
 import settings.GameSettings;
 import sound.SoundDevice;
+import utilities.AverageFrameTimeLogger;
 import utilities.GlobalLogger;
 
 public final class Window implements Observer {
     private static final Logger LOGGER = GlobalLogger.getLogger();
+    private static final AverageFrameTimeLogger averageFrameTimeLogger =
+            AverageFrameTimeLogger.getAverageFrameTimeLogger();
+    private static final Logger AVERAGE_FRAME_TIME_LOGGER = averageFrameTimeLogger.getLogger();
 
     private static Window window = null;
 
@@ -167,6 +171,11 @@ public final class Window implements Observer {
         double endTime = 0.0d;
         double deltaTime = endTime - startTime;
 
+
+        LOGGER.fine("Initialize frames and elapsedTime to 0");
+        int frames = 0;
+        double elapsedTime = 0.0d;
+
         LOGGER.fine("Set GLFW timer to startTime's initial value");
         GLFW.glfwSetTime(startTime);
 
@@ -185,8 +194,24 @@ public final class Window implements Observer {
             endTime = GLFW.glfwGetTime();
             LOGGER.fine("Calculate deltaTime");
             deltaTime = endTime - startTime;
+
+
             LOGGER.fine("Set startTime to current value of endTime");
             startTime = endTime;
+
+            LOGGER.fine("Increment frame by 1");
+            frames += 1;
+            LOGGER.fine("Add deltaTime to elapsedTime");
+            elapsedTime += deltaTime;
+            if (elapsedTime >= 1.0d) {
+                LOGGER.fine("A second has passed");
+                AVERAGE_FRAME_TIME_LOGGER
+                        .info(elapsedTime + "," + frames + "," + (elapsedTime / (double) frames));
+
+                LOGGER.fine("Reset frames and elapsedTime to 0");
+                frames = 0;
+                elapsedTime = 0.0d;
+            }
         }
 
         LOGGER.fine(GlobalLogger.METHOD_RETURN);
