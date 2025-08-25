@@ -43,8 +43,6 @@ public final class AverageFrameTimeLogger {
                 return String.format(format, logRecord.getMessage());
             }
         };
-
-
     }
 
     public static AverageFrameTimeLogger getAverageFrameTimeLogger() {
