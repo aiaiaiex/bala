@@ -103,11 +103,11 @@ public final class Window implements Observer {
         LOGGER.fine(() -> String.format("New monitorHeight: %1$s", monitorHeight));
 
         LOGGER.fine(
-                "Set initial windowWidth and windowHeight based on the primary monitor's resolution");
+                "Set the initial windowWidth and windowHeight based on HALF of the primary monitor's resolution");
         LOGGER.fine(() -> String.format("Old windowWidth: %1$s", windowWidth));
         LOGGER.fine(() -> String.format("Old windowHeight: %1$s", windowHeight));
-        windowWidth = monitorWidth;
-        windowHeight = monitorHeight;
+        windowWidth = monitorWidth / 2;
+        windowHeight = monitorHeight / 2;
         LOGGER.fine(() -> String.format("New windowWidth: %1$s", windowWidth));
         LOGGER.fine(() -> String.format("New windowHeight: %1$s", windowHeight));
 
