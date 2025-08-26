@@ -32,7 +32,7 @@ public final class Window implements Observer {
     private static Window window = null;
 
     private boolean initialized = false;
-    private int glClearMask = GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT;
+    private int glClearColorAndDepthMask = GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT;
 
     private String title;
     private int monitorWidth, monitorHeight;
@@ -197,7 +197,7 @@ public final class Window implements Observer {
             LOGGER.fine("glfwWindow is NOT yet closed");
 
             LOGGER.fine("Clear the color buffer and depth buffer");
-            GL11.glClear(glClearMask);
+            GL11.glClear(glClearColorAndDepthMask);
 
             LOGGER.fine("Swap the front and back buffer");
             GLFW.glfwSwapBuffers(glfwWindow);
