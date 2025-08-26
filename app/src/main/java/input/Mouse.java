@@ -25,7 +25,6 @@ public final class Mouse {
     }
 
     public static void mouseButtonCallback(long glfwWindow, int button, int action, int mods) {
-        LOGGER.fine(GlobalLogger.METHOD_CALL);
         LOGGER.fine(() -> String.format(
                 "Method called with: (glfwWindow=%1$s) (button=%2$s) (action=%3$s) (mods=%4$s)",
                 glfwWindow, button, action, mods));
