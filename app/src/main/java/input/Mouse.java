@@ -97,4 +97,8 @@ public final class Mouse {
     public static boolean isDragging() {
         return isDragging;
     }
+
+    public static boolean isButtonDragging(int button) {
+        return isButtonPressed(button) && isDragging;
+    }
 }
