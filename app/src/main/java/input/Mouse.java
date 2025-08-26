@@ -10,7 +10,8 @@ public final class Mouse {
     private static double xPosition, yPosition;
     private static boolean[] buttonPressedStates = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST + 1];
     private static int buttonsPressed = 0;
-    private static double yScrollOffset;
+    private static double yScrollOffset = 0.0d;
+    private static boolean isDragging = false;
 
     private Mouse() {}
 
@@ -18,6 +19,10 @@ public final class Mouse {
         LOGGER.fine(
                 () -> String.format("Method called with: (glfwWindow=%1$s) (xPos=%2$s) (yPos=%3$s)",
                         glfwWindow, xPos, yPos));
+
+        if (buttonsPressed > 0) {
+            isDragging = true;
+        }
 
         xPosition = xPos;
         yPosition = yPos;
