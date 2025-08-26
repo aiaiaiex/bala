@@ -193,6 +193,7 @@ public final class Window implements Observer {
         GLFW.glfwSetTime(startTime);
 
         while (!GLFW.glfwWindowShouldClose(glfwWindow)) {
+            // Setup
             LOGGER.fine("glfwWindow is NOT yet closed");
 
             LOGGER.fine("Clear the color buffer and depth buffer");
@@ -203,8 +204,10 @@ public final class Window implements Observer {
             LOGGER.fine("Process events in the queue");
             GLFW.glfwPollEvents();
 
+            // Cleanup
             Mouse.resetYScrollOffset();
 
+            // Time calculation
             LOGGER.fine("Set endTime to current value of GLFW timer");
             endTime = GLFW.glfwGetTime();
             LOGGER.fine("Calculate deltaTime");
