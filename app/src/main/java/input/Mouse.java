@@ -20,9 +20,7 @@ public final class Mouse {
                 () -> String.format("Method called with: (glfwWindow=%1$s) (xPos=%2$s) (yPos=%3$s)",
                         glfwWindow, xPos, yPos));
 
-        if (buttonsPressed > 0) {
-            isDragging = true;
-        }
+        isDragging = buttonsPressed > 0;
 
         xPosition = xPos;
         yPosition = yPos;
