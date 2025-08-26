@@ -13,13 +13,15 @@ public final class Mouse {
     private Mouse() {}
 
     public static void cursorPositionCallback(long glfwWindow, double xPos, double yPos) {
-        LOGGER.fine(GlobalLogger.METHOD_CALL);
+        LOGGER.fine(
+                () -> String.format("Method called with: (glfwWindow=%1$s) (xPos=%2$s) (yPos=%3$s)",
+                        glfwWindow, xPos, yPos));
 
         xPosition = xPos;
         yPosition = yPos;
 
-        LOGGER.fine(() -> String.format("New xPos: %1$s", xPos));
-        LOGGER.fine(() -> String.format("New yPos: %1$s", yPos));
+        LOGGER.fine(() -> String.format("New xPosition: %1$s", xPosition));
+        LOGGER.fine(() -> String.format("New yPosition: %1$s", yPosition));
 
         LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }

@@ -12,7 +12,9 @@ public final class Keyboard {
     private Keyboard() {}
 
     public static void keyCallback(long glfwWindow, int key, int scancode, int action, int mods) {
-        LOGGER.fine(GlobalLogger.METHOD_CALL);
+        LOGGER.fine(() -> String.format(
+                "Method called with: (glfwWindow=%1$s) (key=%2$s) (scancode=%3$s) (action=%4$s) (mods=%5$s)",
+                glfwWindow, key, scancode, action, mods));
 
         if (action == GLFW.GLFW_PRESS) {
             LOGGER.fine(() -> String.format("(key=%1$s) is pressed", key));
