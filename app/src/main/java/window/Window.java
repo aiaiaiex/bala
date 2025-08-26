@@ -273,6 +273,22 @@ public final class Window implements Observer {
         LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
 
+    public static void setWindowWidth(int windowWidth) {
+        getWindow().windowWidth = windowWidth;
+    }
+
+    public static void setWindowHeight(int windowHeight) {
+        getWindow().windowHeight = windowHeight;
+    }
+
+    public static int getWindowWidth() {
+        return getWindow().windowWidth;
+    }
+
+    public static int getWindowHeight() {
+        return getWindow().windowHeight;
+    }
+
     @Override
     public void notify(Event event) {
         LOGGER.fine(() -> String.format("Method called with: (event=%1$s)", event));
