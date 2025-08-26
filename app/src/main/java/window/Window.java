@@ -158,13 +158,8 @@ public final class Window implements Observer {
         LOGGER.fine("Sync your buffer swaps with your monitor's refresh rate");
         GLFW.glfwSwapInterval(1);
 
-        LOGGER.fine("Enable glBlendFunc");
-        GL11.glEnable(GL11.GL_BLEND);
         LOGGER.fine("Enable transparency");
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-        LOGGER.fine("Set the clear color to transparent white");
-        GL11.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
         SoundDevice.getSoundDevice().initialize();
 
@@ -196,19 +191,30 @@ public final class Window implements Observer {
             // Setup
             LOGGER.fine("glfwWindow is NOT yet closed");
 
+            LOGGER.fine("Process events in the queue");
+            GLFW.glfwPollEvents();
+
+            LOGGER.fine("Disable glBlendFunc");
+            GL11.glDisable(GL11.GL_BLEND);
+
+            LOGGER.fine("Set the clear color to transparent black");
+            GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
             LOGGER.fine("Clear the color buffer and depth buffer");
             GL11.glClear(glClearColorAndDepthMask);
 
-            LOGGER.fine("Swap the front and back buffer");
-            GLFW.glfwSwapBuffers(glfwWindow);
-            LOGGER.fine("Process events in the queue");
-            GLFW.glfwPollEvents();
+            LOGGER.fine("Enable glBlendFunc");
+            GL11.glEnable(GL11.GL_BLEND);
+
 
             // Update
 
 
             // Cleanup
             Mouse.cleanup();
+
+            // Swap buffers.
+            LOGGER.fine("Swap the front and back buffer");
+            GLFW.glfwSwapBuffers(glfwWindow);
 
             // Time calculation
             LOGGER.fine("Set endTime to current value of GLFW timer");
