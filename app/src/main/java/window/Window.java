@@ -147,7 +147,8 @@ public final class Window implements Observer {
         LOGGER.fine("Set scroll callback");
         GLFW.glfwSetScrollCallback(glfwWindow, Mouse::scrollCallback);
 
-        // TODO Set callbacks for resizing window.
+        LOGGER.fine("Set window size callback");
+        GLFW.glfwSetWindowSizeCallback(glfwWindow, Window::windowSizeCallback);
 
         LOGGER.fine("Make glfwWindow's OpenGL context current");
         GLFW.glfwMakeContextCurrent(glfwWindow);
@@ -287,6 +288,11 @@ public final class Window implements Observer {
 
     public static int getWindowHeight() {
         return getWindow().windowHeight;
+    }
+
+    public static void windowSizeCallback(long glfwWindow, int width, int height) {
+        setWindowWidth(width);
+        setWindowHeight(height);
     }
 
     @Override
