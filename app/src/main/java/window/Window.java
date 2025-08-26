@@ -203,6 +203,8 @@ public final class Window implements Observer {
             LOGGER.fine("Process events in the queue");
             GLFW.glfwPollEvents();
 
+            Mouse.resetYScrollOffset();
+
             LOGGER.fine("Set endTime to current value of GLFW timer");
             endTime = GLFW.glfwGetTime();
             LOGGER.fine("Calculate deltaTime");
