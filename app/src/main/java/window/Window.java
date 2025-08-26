@@ -11,6 +11,7 @@ import org.lwjgl.system.MemoryUtil;
 import event.Event;
 import event.Observer;
 import event.Subject;
+import input.Keyboard;
 import logger.AverageFrameTimeLogger;
 import logger.ExactFrameTimeLogger;
 import logger.GlobalLogger;
@@ -137,6 +138,8 @@ public final class Window implements Observer {
         }
 
         // TODO Set callbacks for keyboard and mouse.
+        GLFW.glfwSetKeyCallback(glfwWindow, Keyboard::keyCallback);
+
         // TODO Set callbacks for resizing window.
 
         LOGGER.fine("Make glfwWindow's OpenGL context current");
