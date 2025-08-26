@@ -66,4 +66,14 @@ public final class Mouse {
         LOGGER.fine("Reset yScrollOffset to 0");
         yScrollOffset = 0.0d;
     }
+
+    public static double getXPosition() {
+        LOGGER.fine("Return xPosition");
+        return xPosition;
+    }
+
+    public static double getYPosition() {
+        LOGGER.fine("Return yPosition");
+        return yPosition;
+    }
 }
