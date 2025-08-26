@@ -1,6 +1,6 @@
 import java.util.Arrays;
 import java.util.logging.Logger;
-import loggers.GlobalLogger;
+import logger.GlobalLogger;
 import window.Window;
 
 public class Bala {

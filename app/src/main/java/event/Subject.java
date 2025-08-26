@@ -3,7 +3,7 @@ package event;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import loggers.GlobalLogger;
+import logger.GlobalLogger;
 
 public final class Subject {
     private static final Logger LOGGER = GlobalLogger.getLogger();
