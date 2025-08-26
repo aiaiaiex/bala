@@ -9,6 +9,7 @@ public final class Mouse {
 
     private static double xPosition, yPosition;
     private static boolean[] buttonPressedStates = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST + 1];
+    private static int buttonsPressed = 0;
 
     private Mouse() {}
 
@@ -34,9 +35,16 @@ public final class Mouse {
         if (action == GLFW.GLFW_PRESS) {
             LOGGER.fine(() -> String.format("(button=%1$s) is pressed", button));
             buttonPressedStates[button] = true;
+
+            buttonsPressed += 1;
+            LOGGER.fine(() -> String.format("New buttonsPressed: %1$s", buttonsPressed));
+
         } else if (action == GLFW.GLFW_RELEASE) {
             LOGGER.fine(() -> String.format("(button=%1$s) is released", button));
             buttonPressedStates[button] = false;
+
+            buttonsPressed -= 1;
+            LOGGER.fine(() -> String.format("New buttonsPressed: %1$s", buttonsPressed));
         }
 
         LOGGER.fine(GlobalLogger.METHOD_RETURN);
