@@ -24,4 +24,11 @@ public final class Keyboard {
 
         LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
+
+    public static boolean isKeyPressed(int key) {
+        LOGGER.fine(() -> String.format("Method called with: (key=%1$s)", key));
+
+        LOGGER.fine(() -> String.format("Method returned: %1$s", keyPressedStates[key]));
+        return keyPressedStates[key];
+    }
 }
