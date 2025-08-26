@@ -204,8 +204,11 @@ public final class Window implements Observer {
             LOGGER.fine("Process events in the queue");
             GLFW.glfwPollEvents();
 
+            // Update
+
+
             // Cleanup
-            Mouse.resetYScrollOffset();
+            Mouse.cleanup();
 
             // Time calculation
             LOGGER.fine("Set endTime to current value of GLFW timer");
