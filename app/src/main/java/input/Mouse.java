@@ -61,4 +61,9 @@ public final class Mouse {
 
         LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
+
+    public static void resetYScrollOffset() {
+        LOGGER.fine("Reset yScrollOffset to 0");
+        yScrollOffset = 0.0d;
+    }
 }
