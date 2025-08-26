@@ -93,4 +93,8 @@ public final class Mouse {
         LOGGER.fine("Return pressed state of button");
         return buttonPressedStates[button];
     }
+
+    public static boolean isDragging() {
+        return isDragging;
+    }
 }
