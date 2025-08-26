@@ -12,6 +12,7 @@ import event.Event;
 import event.Observer;
 import event.Subject;
 import input.Keyboard;
+import input.Mouse;
 import logger.AverageFrameTimeLogger;
 import logger.ExactFrameTimeLogger;
 import logger.GlobalLogger;
@@ -138,7 +139,10 @@ public final class Window implements Observer {
         }
 
         // TODO Set callbacks for keyboard and mouse.
+        LOGGER.fine("Set key callback");
         GLFW.glfwSetKeyCallback(glfwWindow, Keyboard::keyCallback);
+        LOGGER.fine("Set cursor position callback");
+        GLFW.glfwSetCursorPosCallback(glfwWindow, Mouse::cursorPositionCallback);
 
         // TODO Set callbacks for resizing window.
 
