@@ -76,4 +76,9 @@ public final class Mouse {
         LOGGER.fine("Return yPosition");
         return yPosition;
     }
+
+    public static boolean isButtonPressed(int button) {
+        LOGGER.fine("Return pressed state of button");
+        return buttonPressedStates[button];
+    }
 }
