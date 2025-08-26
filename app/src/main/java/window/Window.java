@@ -138,13 +138,14 @@ public final class Window implements Observer {
             GLFW.glfwSetWindowAspectRatio(glfwWindow, monitorWidth, monitorHeight);
         }
 
-        // TODO Set callbacks for keyboard and mouse.
         LOGGER.fine("Set key callback");
         GLFW.glfwSetKeyCallback(glfwWindow, Keyboard::keyCallback);
         LOGGER.fine("Set cursor position callback");
         GLFW.glfwSetCursorPosCallback(glfwWindow, Mouse::cursorPositionCallback);
         LOGGER.fine("Set mouse button callback");
         GLFW.glfwSetMouseButtonCallback(glfwWindow, Mouse::mouseButtonCallback);
+        LOGGER.fine("Set scroll callback");
+        GLFW.glfwSetScrollCallback(glfwWindow, Mouse::scrollCallback);
 
         // TODO Set callbacks for resizing window.
 
