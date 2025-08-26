@@ -10,6 +10,7 @@ public final class Mouse {
     private static double xPosition, yPosition;
     private static boolean[] buttonPressedStates = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST + 1];
     private static int buttonsPressed = 0;
+    private static double yScrollOffset;
 
     private Mouse() {}
 
@@ -46,6 +47,17 @@ public final class Mouse {
             buttonsPressed -= 1;
             LOGGER.fine(() -> String.format("New buttonsPressed: %1$s", buttonsPressed));
         }
+
+        LOGGER.fine(GlobalLogger.METHOD_RETURN);
+    }
+
+    public static void scrollCallback(long glfwWindow, double xOffset, double yOffset) {
+        LOGGER.fine(() -> String.format(
+                "Method called with: (glfwWindow=%1$s) (xOffset=%2$s) (yOffset=%3$s)", glfwWindow,
+                xOffset, yOffset));
+
+        yScrollOffset = yOffset;
+        LOGGER.fine(() -> String.format("New yScrollOffset: %1$s", yScrollOffset));
 
         LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
