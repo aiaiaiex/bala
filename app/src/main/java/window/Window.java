@@ -14,8 +14,8 @@ import event.Subject;
 import loggers.AverageFrameTimeLogger;
 import loggers.ExactFrameTimeLogger;
 import loggers.GlobalLogger;
-import settings.EngineSettings;
-import settings.GameSettings;
+import setting.EngineSettings;
+import setting.GameSettings;
 import sound.SoundDevice;
 
 public final class Window implements Observer {

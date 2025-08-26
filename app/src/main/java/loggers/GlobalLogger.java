@@ -8,7 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
-import settings.EngineSettings;
+import setting.EngineSettings;
 
 public final class GlobalLogger {
     private static final Logger LOGGER = Logger.getGlobal();
