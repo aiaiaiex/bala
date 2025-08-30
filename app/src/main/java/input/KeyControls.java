@@ -51,7 +51,8 @@ public class KeyControls extends Component {
                     copy.getComponent(StateMachine.class).refreshTextures();
                 }
             }
-        } else if (keyboard.isKeyInitiallyPressed(GLFW.GLFW_KEY_DELETE)) {
+        } else if (keyboard.isKeyInitiallyPressed(GLFW.GLFW_KEY_DELETE)
+                || keyboard.isKeyInitiallyPressed(GLFW.GLFW_KEY_BACKSPACE)) {
             for (GameObject go : activeGameObjects) {
                 go.destroy();
             }
