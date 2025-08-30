@@ -30,3 +30,8 @@ Use this command on your terminal to change directory to the repository folder "
 ```
 Use this command on your terminal to run the game engine "gradlew run".
 ```
+
+<h2>©️ Credits</h2>
+
+- **Game Sounds**: [plasterbrain](https://freesound.org/) (licensed under Creative Commons CC0 1.0 Universal)
+- **Sprite Assets**: [Kenney](https://opengameart.org/) (licensed under 	Creative Commons CC0)
