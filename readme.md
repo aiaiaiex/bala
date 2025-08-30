@@ -11,26 +11,30 @@
 
 <p>1. Java Version 11 or higher</p>
 
-```
-Install Java version 11 or higher on your environment path.
-```
+- Install Java version 11 or higher on your environment path.
 
 <p>2. Clone Repository</p>
 
+- Use this command on your terminal to clone the repository.
+
 ```
-Use this command on your terminal to clone the repository "git clone https://github.com/aiaiaiex/bala.git".
+git clone https://github.com/aiaiaiex/bala.git
 ```
 
 <p>4. Change directory to the repository folder</p>
 
+- Use this command on your terminal to change directory to the repository folder.
+
 ```
-Use this command on your terminal to change directory to the repository folder "cd bala".
+cd bala
 ```
 
 <p>5. Run the Game Engine</p>
 
+- Use this command on your terminal to run the game engine.
+
 ```
-Use this command on your terminal to run the game engine "gradlew run".
+gradlew run
 ```
 
 <h2>©️ Credits</h2>
