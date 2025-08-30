@@ -2,30 +2,29 @@ package event;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
-import logger.GlobalLogger;
 
 public final class Subject {
-    private static final Logger LOGGER = GlobalLogger.getLogger();
+    private static Subject subject = null;
 
-    private static List<Observer> observers = new ArrayList<Observer>(1);
+    private List<Observer> observers;
 
-    private Subject() {}
-
-    public static void addObserver(Observer observer) {
-        LOGGER.fine(() -> String.format("Method called with: (observer=%1$s)", observer));
-
-        observers.add(observer);
-        LOGGER.fine(() -> String.format("New observers: %1$s", observers));
-
-        LOGGER.fine(GlobalLogger.METHOD_RETURN);
+    private Subject() {
+        observers = new ArrayList<>(1);
     }
 
-    public static void notifyObservers(Event event) {
-        LOGGER.fine(() -> String.format("Method called with: (event=%1$s)", event));
+    public static Subject getSubject() {
+        if (subject == null) {
+            subject = new Subject();
+        }
 
+        return subject;
+    }
+
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    public void notifyObservers(Event event) {
         observers.forEach(observer -> observer.notify(event));
-
-        LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
 }

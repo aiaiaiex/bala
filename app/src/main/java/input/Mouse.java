@@ -1,104 +1,165 @@
 package input;
 
-import java.util.logging.Logger;
+import org.joml.Matrix4f;
+import org.joml.Vector2f;
+import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
-import logger.GlobalLogger;
+import camera.Camera;
+import setting.EngineSettings;
+import window.Window;
 
-public final class Mouse {
-    private static final Logger LOGGER = GlobalLogger.getLogger();
+public class Mouse {
+    private static Mouse mouse;
 
-    private static double xPosition, yPosition;
-    private static boolean[] buttonPressedStates = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST + 1];
-    private static int buttonsPressed = 0;
-    private static double yScrollOffset = 0.0d;
-    private static boolean isDragging = false;
+    private double xPosition, yPosition;
+    private boolean[] buttonPressedStates;
+    private boolean[] oldButtonPressedStates;
+    private int buttonsPressed;
+    private double yScrollOffset;
+    private boolean draggingState;
 
-    private Mouse() {}
+    private Vector2f gameViewportPos;
+    private Vector2f gameViewportSize;
 
-    public static void cursorPositionCallback(long glfwWindow, double xPos, double yPos) {
-        LOGGER.fine(
-                () -> String.format("Method called with: (glfwWindow=%1$s) (xPos=%2$s) (yPos=%3$s)",
-                        glfwWindow, xPos, yPos));
+    private Window window;
 
-        isDragging = buttonsPressed > 0;
+    private Mouse() {
+        clear();
+
+        gameViewportPos = new Vector2f();
+        gameViewportSize = new Vector2f();
+
+        window = Window.getWindow();
+    }
+
+    public static Mouse getMouse() {
+        if (Mouse.mouse == null) {
+            Mouse.mouse = new Mouse();
+        }
+
+        return Mouse.mouse;
+    }
+
+    public void cursorPositionCallback(long glfwWindow, double xPos, double yPos) {
+        if (EngineSettings.DISPLAY_EDITOR
+                && !Window.getImguiLayer().getGameViewWindow().getWantCaptureMouse()) {
+            clear();
+        }
+
+
+        draggingState = buttonsPressed > 0;
 
         xPosition = xPos;
         yPosition = yPos;
-
-        LOGGER.fine(() -> String.format("New xPosition: %1$s", xPosition));
-        LOGGER.fine(() -> String.format("New yPosition: %1$s", yPosition));
-
-        LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
 
-    public static void mouseButtonCallback(long glfwWindow, int button, int action, int mods) {
-        LOGGER.fine(() -> String.format(
-                "Method called with: (glfwWindow=%1$s) (button=%2$s) (action=%3$s) (mods=%4$s)",
-                glfwWindow, button, action, mods));
+    public boolean isDragging() {
+        return draggingState;
+    }
 
+    public void mouseButtonCallback(long glfwWindow, int button, int action, int mods) {
         if (action == GLFW.GLFW_PRESS) {
-            LOGGER.fine(() -> String.format("(button=%1$s) is pressed", button));
             buttonPressedStates[button] = true;
 
             buttonsPressed += 1;
-            LOGGER.fine(() -> String.format("New buttonsPressed: %1$s", buttonsPressed));
-
         } else if (action == GLFW.GLFW_RELEASE) {
-            LOGGER.fine(() -> String.format("(button=%1$s) is released", button));
             buttonPressedStates[button] = false;
 
             buttonsPressed -= 1;
-            LOGGER.fine(() -> String.format("New buttonsPressed: %1$s", buttonsPressed));
         }
-
-        LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
 
-    public static void scrollCallback(long glfwWindow, double xOffset, double yOffset) {
-        LOGGER.fine(() -> String.format(
-                "Method called with: (glfwWindow=%1$s) (xOffset=%2$s) (yOffset=%3$s)", glfwWindow,
-                xOffset, yOffset));
-
-        yScrollOffset = yOffset;
-        LOGGER.fine(() -> String.format("New yScrollOffset: %1$s", yScrollOffset));
-
-        LOGGER.fine(GlobalLogger.METHOD_RETURN);
-    }
-
-    private static void resetYScrollOffset() {
-        LOGGER.fine("Reset yScrollOffset to 0");
-        yScrollOffset = 0.0d;
-    }
-
-    private static void resetIsDragging() {
-        isDragging = false;
-    }
-
-    public static void cleanup() {
-        resetYScrollOffset();
-        resetIsDragging();
-    }
-
-    public static double getXPosition() {
-        LOGGER.fine("Return xPosition");
-        return xPosition;
-    }
-
-    public static double getYPosition() {
-        LOGGER.fine("Return yPosition");
-        return yPosition;
-    }
-
-    public static boolean isButtonPressed(int button) {
-        LOGGER.fine("Return pressed state of button");
+    public boolean isButtonPressed(int button) {
         return buttonPressedStates[button];
     }
 
-    public static boolean isDragging() {
-        return isDragging;
+    public boolean isButtonInitiallyPressed(int button) {
+        return buttonPressedStates[button] && !oldButtonPressedStates[button];
     }
 
-    public static boolean isButtonDragging(int button) {
-        return isButtonPressed(button) && isDragging;
+    public void scrollCallback(long glfwWindow, double xOffset, double yOffset) {
+        yScrollOffset = yOffset;
+    }
+
+    public float getYScrollOffset() {
+        return (float) yScrollOffset;
+    }
+
+    public void setup() {
+        oldButtonPressedStates = buttonPressedStates.clone();
+    }
+
+    public void cleanup() {
+        yScrollOffset = 0.0d;
+
+        // draggingState = false;
+    }
+
+    public void clear() {
+        xPosition = 0.0d;
+        yPosition = 0.0d;
+
+        buttonPressedStates = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST + 1];
+        buttonsPressed = 0;
+
+        yScrollOffset = 0.0d;
+
+        draggingState = false;
+    }
+
+    public Vector2f getWorld() {
+        float currentX = (float) xPosition - gameViewportPos.x;
+        currentX = (2.0f * (currentX / gameViewportSize.x)) - 1.0f;
+        float currentY = (float) yPosition - gameViewportPos.y;
+        currentY = (2.0f * (1.0f - (currentY / gameViewportSize.y))) - 1.055f;
+
+        Camera camera = Window.getScene().getCamera();
+        Vector4f tmp = new Vector4f(currentX, currentY, 0, 1);
+        Matrix4f inverseView = new Matrix4f(camera.getInverseView());
+        Matrix4f inverseProjection = new Matrix4f(camera.getInverseProjection());
+        tmp.mul(inverseView.mul(inverseProjection));
+
+        return new Vector2f(tmp.x, tmp.y);
+    }
+
+    public Vector2f screenToWorld(Vector2f screenCoords) {
+        Vector2f normalizedScreenCords = new Vector2f(screenCoords.x / window.getWindowWidth(),
+                screenCoords.y / window.getWindowHeight());
+        normalizedScreenCords.mul(2.0f).sub(new Vector2f(1.0f, 1.0f));
+        Camera camera = Window.getScene().getCamera();
+        Vector4f tmp = new Vector4f(normalizedScreenCords.x, normalizedScreenCords.y, 0, 1);
+        Matrix4f inverseView = new Matrix4f(camera.getInverseView());
+        Matrix4f inverseProjection = new Matrix4f(camera.getInverseProjection());
+        tmp.mul(inverseView.mul(inverseProjection));
+        return new Vector2f(tmp.x, tmp.y);
+    }
+
+    public Vector2f worldToScreen(Vector2f worldCoords) {
+        Camera camera = Window.getScene().getCamera();
+        Vector4f ndcSpacePos = new Vector4f(worldCoords.x, worldCoords.y, 0, 1);
+        Matrix4f view = new Matrix4f(camera.getViewMatrix());
+        Matrix4f projection = new Matrix4f(camera.getProjectionMatrix());
+        ndcSpacePos.mul(projection.mul(view));
+        Vector2f windowSpace = new Vector2f(ndcSpacePos.x, ndcSpacePos.y).mul(1.0f / ndcSpacePos.w);
+        windowSpace.add(new Vector2f(1.0f, 1.0f)).mul(0.5f);
+        windowSpace.mul(new Vector2f(window.getWindowWidth(), window.getWindowHeight()));
+
+        return windowSpace;
+    }
+
+    public Vector2f getScreen() {
+        float currentX = (float) xPosition - gameViewportPos.x;
+        currentX = (currentX / gameViewportSize.x) * window.getMonitorWidth();
+        float currentY = (float) yPosition - gameViewportPos.y;
+        currentY = (1.0f - (currentY / gameViewportSize.y)) * window.getMonitorHeight();
+        return new Vector2f(currentX, currentY);
+    }
+
+    public void setGameViewportPos(Vector2f gameViewportPos) {
+        this.gameViewportPos = gameViewportPos;
+    }
+
+    public void setGameViewportSize(Vector2f gameViewportSize) {
+        this.gameViewportSize = gameViewportSize;
     }
 }

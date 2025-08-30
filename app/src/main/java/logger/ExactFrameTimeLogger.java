@@ -9,16 +9,14 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import setting.LoggerSettings;
 
 public final class ExactFrameTimeLogger {
-    private static final String FILE_NAME = "exact-frame-time-log";
-    private static final String FILE_EXTENSION = "csv";
-
     private static ExactFrameTimeLogger exactFrameTimeLogger = null;
 
-    private Level defaultLogLevel = Level.INFO;
     private Logger logger;
     private Formatter formatter;
+
     private boolean started;
 
     private ExactFrameTimeLogger() {
@@ -65,13 +63,14 @@ public final class ExactFrameTimeLogger {
             try {
                 Handler fileHandler = new FileHandler(
                         String.format("../logs/%1$s%2$s-%3$tF-%3$tH-%3$tM-%3$tS.%4$s",
-                                prefix.isBlank() ? "" : prefix + "-", FILE_NAME, new Date(),
-                                FILE_EXTENSION));
-                fileHandler.setLevel(defaultLogLevel);
+                                prefix.isBlank() ? "" : prefix + "-",
+                                LoggerSettings.EXACT_FRAME_TIME_LOGGER_FILE_NAME, new Date(),
+                                LoggerSettings.EXACT_FRAME_TIME_LOGGER_FILE_EXTENSION));
+                fileHandler.setLevel(LoggerSettings.EXACT_FRAME_TIME_LOGGER_LEVEL);
                 fileHandler.setFormatter(formatter);
 
                 logger.addHandler(fileHandler);
-                logger.setLevel(defaultLogLevel);
+                logger.setLevel(LoggerSettings.EXACT_FRAME_TIME_LOGGER_LEVEL);
                 started = true;
             } catch (IOException | SecurityException | IllegalArgumentException exception) {
                 stop();

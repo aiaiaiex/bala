@@ -9,20 +9,20 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import setting.EngineSettings;
+import setting.LoggerSettings;
 
 public final class GlobalLogger {
-    private static final Logger LOGGER = Logger.getGlobal();
-
-    public static final String CLASS_INITIALIZATION = "Class initialized"; // without arguments.
-    public static final String METHOD_CALL = "Method called"; // without arguments.
-    public static final String METHOD_RETURN = "Method returned: void";
-
     private static GlobalLogger globalLogger = null;
 
-    private GlobalLogger() {
-        Level logLevel = EngineSettings.DISPLAY_EDITOR ? EngineSettings.LOG_LEVEL : Level.OFF;
+    private Logger logger;
 
-        LOGGER.setLevel(logLevel);
+    private GlobalLogger() {
+        logger = Logger.getGlobal();
+
+        Level logLevel =
+                EngineSettings.DISPLAY_EDITOR ? LoggerSettings.GLOBAL_LOGGER_LEVEL : Level.OFF;
+
+        logger.setLevel(logLevel);
 
         Handler consoleHandler = new ConsoleHandler();
         consoleHandler.setLevel(logLevel);
@@ -39,21 +39,25 @@ public final class GlobalLogger {
         };
         consoleHandler.setFormatter(formatter);
 
-        LOGGER.setUseParentHandlers(false);
+        logger.setUseParentHandlers(false);
 
-        Handler[] handlers = LOGGER.getHandlers();
+        Handler[] handlers = logger.getHandlers();
         for (Handler handler : handlers) {
             handler.close();
-            LOGGER.removeHandler(handler);
+            logger.removeHandler(handler);
         }
 
-        LOGGER.addHandler(consoleHandler);
+        logger.addHandler(consoleHandler);
     }
 
-    public static Logger getLogger() {
+    public static GlobalLogger getGlobalLogger() {
         if (globalLogger == null) {
             globalLogger = new GlobalLogger();
         }
-        return LOGGER;
+        return globalLogger;
+    }
+
+    public Logger getLogger() {
+        return logger;
     }
 }

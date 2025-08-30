@@ -1,320 +1,371 @@
 package window;
 
 import java.util.logging.Logger;
+import org.joml.Vector4f;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
 import event.Event;
 import event.Observer;
 import event.Subject;
+import graphics.DebugDraw;
+import graphics.Framebuffer;
+import graphics.PickingTexture;
+import graphics.Renderer;
+import graphics.Shader;
+import gui.ImGuiLayer;
 import input.Keyboard;
 import input.Mouse;
 import logger.AverageFrameTimeLogger;
 import logger.ExactFrameTimeLogger;
 import logger.GlobalLogger;
+import object.ObjectPool;
+import physics.Physics;
+import scene.Scene;
+import scene.SceneInitializer;
+import scene.scenes.ComponentPickerScene;
+import scene.scenes.GameScene;
 import setting.EngineSettings;
 import setting.GameSettings;
 import sound.SoundDevice;
 
 public final class Window implements Observer {
-    private static final Logger LOGGER = GlobalLogger.getLogger();
-    private static final AverageFrameTimeLogger averageFrameTimeLogger =
-            AverageFrameTimeLogger.getAverageFrameTimeLogger();
-    private static final Logger AVERAGE_FRAME_TIME_LOGGER = averageFrameTimeLogger.getLogger();
-    private static final ExactFrameTimeLogger exactFrameTimeLogger =
-            ExactFrameTimeLogger.getExactFrameTimeLogger();
-    private static final Logger EXACT_FRAME_TIME_LOGGER = exactFrameTimeLogger.getLogger();
-
     private static Window window = null;
-
-    private boolean initialized = false;
-    private int glClearColorAndDepthMask = GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT;
 
     private String title;
     private int monitorWidth, monitorHeight;
+    private int refreshRate;
     private int windowWidth, windowHeight;
     private long glfwWindow;
 
-    private Window() {
-        LOGGER.fine(GlobalLogger.CLASS_INITIALIZATION);
+    private Keyboard keyboard;
+    private Mouse mouse;
 
-        LOGGER.fine("Check if engine editor will be displayed");
+    private int glClearColorAndDepthMask = GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT;
+
+    private boolean initialized;
+
+    private Logger globalLogger;
+    private Logger averageFrameTimeLogger;
+    private Logger exactFrameTimeLogger;
+
+    private ImGuiLayer imguiLayer;
+    private Framebuffer framebuffer;
+    private PickingTexture pickingTexture;
+    private boolean runtimePlaying;
+    private Scene currentScene;
+
+    private Window() {
         if (EngineSettings.DISPLAY_EDITOR) {
-            LOGGER.fine("Engine editor will be displayed");
             title = EngineSettings.ENGINE_TITLE;
         } else {
-            LOGGER.fine("Engine editor will NOT be displayed");
             title = GameSettings.GAME_TITLE;
         }
-        LOGGER.fine(() -> String.format("New title: %1$s", title));
 
-        Subject.addObserver(this);
+        glClearColorAndDepthMask = GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT;
+
+        initialized = false;
+        runtimePlaying = false;
+
+        globalLogger = GlobalLogger.getGlobalLogger().getLogger();
+        averageFrameTimeLogger = AverageFrameTimeLogger.getAverageFrameTimeLogger().getLogger();
+        exactFrameTimeLogger = ExactFrameTimeLogger.getExactFrameTimeLogger().getLogger();
+
+        Subject.getSubject().addObserver(this);
     }
 
     public static Window getWindow() {
-        LOGGER.fine(GlobalLogger.METHOD_CALL);
-
         if (window == null) {
             window = new Window();
-            LOGGER.fine(() -> String.format("New window: %1$s", window));
         }
 
-        LOGGER.fine(() -> String.format("Method returned: %1$s", window));
         return window;
     }
 
     public void run() {
-        LOGGER.fine(GlobalLogger.METHOD_CALL);
+        // TODO Remove after moving.
+        // AverageFrameTimeLogger.getAverageFrameTimeLogger().start();
+        // ExactFrameTimeLogger.getExactFrameTimeLogger().start();
 
         initialize();
         loop();
         terminate();
 
-        LOGGER.fine(GlobalLogger.METHOD_RETURN);
+        // TODO Remove after moving.
+        // AverageFrameTimeLogger.getAverageFrameTimeLogger().stop();
+        // ExactFrameTimeLogger.getExactFrameTimeLogger().stop();
     }
 
-    private void initialize() {
-        LOGGER.fine(GlobalLogger.METHOD_CALL);
-
-        LOGGER.fine("Check if window is already initialized");
+    public void initialize() {
         if (initialized) {
-            LOGGER.fine("window is already initialized");
-            LOGGER.fine(GlobalLogger.METHOD_RETURN);
             return;
         }
 
-        LOGGER.fine("Set error callback for GLFW");
         GLFWErrorCallback.createPrint(System.err).set();
 
-        LOGGER.fine("Initializing GLFW");
         if (!GLFW.glfwInit()) {
-            LOGGER.severe("Failed to initialize GLFW");
+            globalLogger.severe("Failed to initialize GLFW");
             throw new RuntimeException("Failed to initialize GLFW!");
         } else {
-            LOGGER.info("GLFW initialized");
+            globalLogger.info("GLFW initialized");
         }
 
-        LOGGER.fine("Get the primary monitor");
         long primaryMonitor = GLFW.glfwGetPrimaryMonitor();
-        LOGGER.fine("Get the current video mode of the primaryMonitor");
         GLFWVidMode videoMode = GLFW.glfwGetVideoMode(primaryMonitor);
 
         monitorWidth = videoMode.width();
         monitorHeight = videoMode.height();
-        LOGGER.fine(() -> String.format("New monitorWidth: %1$s", monitorWidth));
-        LOGGER.fine(() -> String.format("New monitorHeight: %1$s", monitorHeight));
 
-        LOGGER.fine(
-                "Set the initial windowWidth and windowHeight based on HALF of the primary monitor's resolution");
-        windowWidth = monitorWidth / 2;
-        windowHeight = monitorHeight / 2;
-        LOGGER.fine(() -> String.format("New windowWidth: %1$s", windowWidth));
-        LOGGER.fine(() -> String.format("New windowHeight: %1$s", windowHeight));
+        refreshRate = videoMode.refreshRate();
 
-        LOGGER.fine("Reset all window hints");
+        windowWidth = monitorWidth / 1;
+        windowHeight = monitorHeight / 1;
+
         GLFW.glfwDefaultWindowHints();
-        LOGGER.fine("Make window invisible");
         GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
-        LOGGER.fine("Make window maximized");
         GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW.GLFW_TRUE);
-        LOGGER.fine("Make window resizable by the user");
         GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_TRUE);
 
-        LOGGER.fine("Creating glfwWindow");
         glfwWindow = GLFW.glfwCreateWindow(windowWidth, windowHeight, title, MemoryUtil.NULL,
                 MemoryUtil.NULL);
         if (glfwWindow == MemoryUtil.NULL) {
-            LOGGER.severe("Failed to create glfwWindow");
+            globalLogger.severe("Failed to create glfwWindow");
             throw new RuntimeException("Failed to create glfwWindow!");
         }
 
         if (!EngineSettings.DISPLAY_EDITOR) {
-            LOGGER.fine(
-                    "Make glfwWindow follow the primary monitor's aspect ratio when resized when the engine editor is NOT displayed");
             GLFW.glfwSetWindowAspectRatio(glfwWindow, monitorWidth, monitorHeight);
         }
 
-        LOGGER.fine("Set key callback");
-        GLFW.glfwSetKeyCallback(glfwWindow, Keyboard::keyCallback);
-        LOGGER.fine("Set cursor position callback");
-        GLFW.glfwSetCursorPosCallback(glfwWindow, Mouse::cursorPositionCallback);
-        LOGGER.fine("Set mouse button callback");
-        GLFW.glfwSetMouseButtonCallback(glfwWindow, Mouse::mouseButtonCallback);
-        LOGGER.fine("Set scroll callback");
-        GLFW.glfwSetScrollCallback(glfwWindow, Mouse::scrollCallback);
+        keyboard = Keyboard.getKeyboard();
+        GLFW.glfwSetKeyCallback(glfwWindow, keyboard::keyCallback);
 
-        LOGGER.fine("Set window size callback");
-        GLFW.glfwSetWindowSizeCallback(glfwWindow, Window::windowSizeCallback);
+        mouse = Mouse.getMouse();
+        GLFW.glfwSetCursorPosCallback(glfwWindow, mouse::cursorPositionCallback);
+        GLFW.glfwSetMouseButtonCallback(glfwWindow, mouse::mouseButtonCallback);
+        GLFW.glfwSetScrollCallback(glfwWindow, mouse::scrollCallback);
 
-        LOGGER.fine("Make glfwWindow's OpenGL context current");
+        GLFW.glfwSetWindowSizeCallback(glfwWindow, window::windowSizeCallback);
+
         GLFW.glfwMakeContextCurrent(glfwWindow);
 
-        LOGGER.fine("Create a GLCapabilities for glfwWindow's current OpenGL context");
         GL.createCapabilities();
 
-        LOGGER.fine("Sync your buffer swaps with your monitor's refresh rate");
         GLFW.glfwSwapInterval(1);
 
-        LOGGER.fine("Enable transparency");
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
         SoundDevice.getSoundDevice().initialize();
 
-        LOGGER.fine("Make glfwWindow visible");
+        framebuffer = new Framebuffer(monitorWidth, monitorHeight);
+        pickingTexture = new PickingTexture(monitorWidth, monitorHeight);
+        GL11.glViewport(0, 0, monitorWidth, monitorHeight);
+
+        if (!EngineSettings.DISPLAY_EDITOR) {
+            runtimePlaying = true;
+            changeScene(new GameScene());
+        } else {
+            imguiLayer = new ImGuiLayer(glfwWindow, pickingTexture);
+            imguiLayer.initImGui();
+            changeScene(new ComponentPickerScene());
+        }
+
         GLFW.glfwShowWindow(glfwWindow);
 
-        LOGGER.fine("Set initialized to true");
         initialized = true;
-
-        LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
 
-    private void loop() {
-        LOGGER.fine(GlobalLogger.METHOD_CALL);
+    public void loop() {
+        if (!initialized) {
+            globalLogger.warning("window is NOT even initialized");
+            return;
+        }
 
-        LOGGER.fine("Initialize startTime, endTime, and deltaTime to 0");
+        Shader defaultShader = ObjectPool.getShader("../assets/shaders/default.glsl");
+        Shader pickingShader = ObjectPool.getShader("../assets/shaders/pickingShader.glsl");
+
         double startTime = 0.0d;
         double endTime = 0.0d;
         double deltaTime = endTime - startTime;
 
-        LOGGER.fine("Initialize frames and elapsedTime to 0");
         int frames = 0;
         double elapsedTime = 0.0d;
 
-        LOGGER.fine("Set GLFW timer to startTime's initial value");
         GLFW.glfwSetTime(startTime);
 
         while (!GLFW.glfwWindowShouldClose(glfwWindow)) {
-            // Setup
-            LOGGER.fine("glfwWindow is NOT yet closed");
+            keyboard.setup();
+            mouse.setup();
 
-            LOGGER.fine("Process events in the queue");
             GLFW.glfwPollEvents();
 
-            LOGGER.fine("Disable glBlendFunc");
             GL11.glDisable(GL11.GL_BLEND);
 
-            LOGGER.fine("Set the clear color to transparent black");
+            pickingTexture.enableWriting();
+
             GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-            LOGGER.fine("Clear the color buffer and depth buffer");
             GL11.glClear(glClearColorAndDepthMask);
 
-            LOGGER.fine("Enable glBlendFunc");
+            Renderer.bindShader(pickingShader);
+            currentScene.render();
+
+            pickingTexture.disableWriting();
+
             GL11.glEnable(GL11.GL_BLEND);
 
+            DebugDraw.beginFrame();
 
-            // Update
+            framebuffer.bind();
+            Vector4f clearColor = currentScene.getCamera().clearColor;
+            GL11.glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
+            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 
+            if (deltaTime > 0) {
+                Renderer.bindShader(defaultShader);
+                if (runtimePlaying) {
+                    currentScene.update((float) deltaTime);
+                } else {
+                    currentScene.editorUpdate((float) deltaTime);
+                }
+                currentScene.render();
+                DebugDraw.draw();
+            }
+            framebuffer.unbind();
 
-            // Cleanup
-            Mouse.cleanup();
+            if (!EngineSettings.DISPLAY_EDITOR) {
+                GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, framebuffer.getFboID());
+                GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, 0);
+                GL30.glBlitFramebuffer(0, 0, framebuffer.width, framebuffer.height, 0, 0,
+                        windowWidth, windowHeight, GL11.GL_COLOR_BUFFER_BIT, GL11.GL_NEAREST);
+            } else {
+                imguiLayer.update((float) deltaTime, currentScene);
+            }
 
-            // Swap buffers.
-            LOGGER.fine("Swap the front and back buffer");
+            mouse.cleanup();
+
             GLFW.glfwSwapBuffers(glfwWindow);
 
-            // Time calculation
-            LOGGER.fine("Set endTime to current value of GLFW timer");
             endTime = GLFW.glfwGetTime();
-            LOGGER.fine("Calculate deltaTime");
             deltaTime = endTime - startTime;
 
-            EXACT_FRAME_TIME_LOGGER.info(endTime + "," + deltaTime);
+            exactFrameTimeLogger.info(endTime + "," + deltaTime);
 
-            LOGGER.fine("Set startTime to current value of endTime");
             startTime = endTime;
 
-            LOGGER.fine("Increment frame by 1");
             frames += 1;
-            LOGGER.fine("Add deltaTime to elapsedTime");
             elapsedTime += deltaTime;
             if (elapsedTime >= 1.0d) {
-                LOGGER.fine("A second has passed");
-                AVERAGE_FRAME_TIME_LOGGER
+                averageFrameTimeLogger
                         .info(elapsedTime + "," + frames + "," + (elapsedTime / (double) frames));
 
-                LOGGER.fine("Reset frames and elapsedTime to 0");
                 frames = 0;
                 elapsedTime = 0.0d;
             }
         }
-
-        LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
 
     private void terminate() {
-        LOGGER.fine(GlobalLogger.METHOD_CALL);
-
-        LOGGER.fine("Check if window is even initialized");
         if (!initialized) {
-            LOGGER.warning("window is NOT even initialized");
-            LOGGER.fine(GlobalLogger.METHOD_RETURN);
+            globalLogger.warning("window is NOT even initialized");
             return;
         }
 
-        SoundDevice.getSoundDevice().terminate();
+        SoundDevice.getSoundDevice().terminate();;
 
-        LOGGER.fine("Unset all callbacks for glfwWindow");
         Callbacks.glfwFreeCallbacks(glfwWindow);
-        LOGGER.fine("Destroy glfwWindow and its context");
         GLFW.glfwDestroyWindow(glfwWindow);
 
-        LOGGER.fine("Terminate GLFW");
         GLFW.glfwTerminate();
-        LOGGER.fine("Unset error callback for GLFW");
         GLFW.glfwSetErrorCallback(null).free();
 
-        LOGGER.fine("Set initialized to false");
         initialized = false;
-
-        LOGGER.fine(GlobalLogger.METHOD_RETURN);
     }
 
-    public static void setWindowWidth(int windowWidth) {
-        getWindow().windowWidth = windowWidth;
+    public int getRefreshRate() {
+        return refreshRate;
     }
 
-    public static void setWindowHeight(int windowHeight) {
-        getWindow().windowHeight = windowHeight;
+    public int getMonitorWidth() {
+        return monitorWidth;
     }
 
-    public static int getWindowWidth() {
-        return getWindow().windowWidth;
+    public int getMonitorHeight() {
+        return monitorHeight;
     }
 
-    public static int getWindowHeight() {
-        return getWindow().windowHeight;
+    public int getWindowWidth() {
+        return windowWidth;
     }
 
-    public static void windowSizeCallback(long glfwWindow, int width, int height) {
-        setWindowWidth(width);
-        setWindowHeight(height);
+    public int getWindowHeight() {
+        return windowHeight;
+    }
+
+    public void windowSizeCallback(long glfwWindow, int width, int height) {
+        windowWidth = width;
+        windowHeight = height;
+
+        framebuffer = new Framebuffer(windowWidth, windowHeight);
     }
 
     @Override
     public void notify(Event event) {
-        LOGGER.fine(() -> String.format("Method called with: (event=%1$s)", event));
-
         switch (event) {
             case START_GAME:
-                // TODO Create reaction to START_GAME.
+                runtimePlaying = true;
+                currentScene.saveFile();
+                changeScene(new GameScene());
                 break;
             case STOP_GAME:
-                // TODO Create reaction to STOP_GAME.
+                runtimePlaying = false;
+                changeScene(new ComponentPickerScene());
                 break;
             case SAVE_LEVEL:
-                // TODO Create reaction to SAVE_LEVEL.
+                currentScene.saveFile();
                 break;
             case LOAD_LEVEL:
-                // TODO Create reaction to LOAD_LEVEL.
+                changeScene(new ComponentPickerScene());
                 break;
         }
+    }
 
-        LOGGER.fine(GlobalLogger.METHOD_RETURN);
+    public static void changeScene(SceneInitializer sceneInitializer) {
+        if (getWindow().currentScene != null) {
+            getWindow().currentScene.terminate();
+        }
 
+        if (EngineSettings.DISPLAY_EDITOR) {
+            getImguiLayer().getPropertiesWindow().setActiveGameObject(null);
+        }
+
+        getWindow().currentScene = new Scene(sceneInitializer);
+        getWindow().currentScene.loadFile();
+        getWindow().currentScene.initialize();
+        getWindow().currentScene.start();
+    }
+
+    public static Physics getPhysics() {
+        return getWindow().currentScene.getPhysics();
+    }
+
+    public static Scene getScene() {
+        return getWindow().currentScene;
+    }
+
+    public static Framebuffer getFramebuffer() {
+        return getWindow().framebuffer;
+    }
+
+    public static float getTargetAspectRatio() {
+        return (float) getWindow().monitorWidth / (float) getWindow().monitorHeight;
+    }
+
+    public static ImGuiLayer getImguiLayer() {
+        return getWindow().imguiLayer;
     }
 }
