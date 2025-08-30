@@ -1,7 +1,9 @@
-<p align="center">
-  <img src="BALA - LOGO (TRANSPARENT).png" alt="BALA LOGO" width="60" style="vertical-align: middle;"/>
-  <span style="font-size: 2em; font-weight: bold; vertical-align: middle;">Bala: A 2D Bullet Heaven Game Engine</span>
-</p>
+<table align="center">
+  <tr>
+    <td><img src="BALA - LOGO (TRANSPARENT).png" alt="BALA LOGO" width="50"/></td>
+    <td><h1>Bala: A 2D Bullet Heaven Game Engine</h1></td>
+  </tr>
+</table>
 
 <p>Bala is a 2D bullet heaven game engine built with Java and LWJGL designed to help novice developers easily create top-down games. It features procedural generation using Simplex and Perlin Noise collision detection with AABB and circle-circle methods and flocking AI for NPC behavior. The engine also includes tools for performance testing through frame time logs.</p>
 
