@@ -31,6 +31,8 @@ public class ObjectGenerator {
         GameObject player = generateSpriteObject(players.getSprite(index),
                 EngineSettings.GRID_WIDTH, EngineSettings.GRID_HEIGHT);
 
+        player.transform.zIndex = 100;
+
         CircleCollider circleCollider = new CircleCollider();
         circleCollider.setRadius(EngineSettings.GRID_WIDTH / 2.0f);
         player.addComponent(circleCollider);
