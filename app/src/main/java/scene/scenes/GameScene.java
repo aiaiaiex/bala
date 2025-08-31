@@ -16,6 +16,7 @@ public class GameScene extends SceneInitializer {
                 GameObject cameraObject = scene.createGameObject("GameCamera");
                 cameraObject.addComponent(new GameCamera(scene.getCamera()));
                 cameraObject.start();
+                cameraObject.setNoSerialize();
                 scene.addGameObjectToScene(cameraObject);
 
                 ObjectPool.getSound((EngineSettings.DEFAULT_BACKGROUND_MUSIC.getFilePath())).play();
