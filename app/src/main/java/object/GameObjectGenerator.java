@@ -8,7 +8,7 @@ import game.Drop;
 import game.Enemy;
 import game.Player;
 import game.Projectile;
-import physics.CircleCollider;
+import physics.ColliderAdder;
 import physics.Rigidbody2D;
 import setting.EngineSettings;
 import window.Window;
@@ -38,9 +38,7 @@ public class GameObjectGenerator {
 
         player.transform.zIndex = 4;
 
-        CircleCollider circleCollider = new CircleCollider();
-        circleCollider.setRadius(EngineSettings.GRID_WIDTH / 2.0f);
-        player.addComponent(circleCollider);
+        ColliderAdder.addCollider(player);
 
         Rigidbody2D rb = new Rigidbody2D();
         rb.setBodyType(BodyType.DYNAMIC);
@@ -68,9 +66,7 @@ public class GameObjectGenerator {
 
         drop.transform.zIndex = 1;
 
-        CircleCollider circleCollider = new CircleCollider();
-        circleCollider.setRadius(EngineSettings.GRID_WIDTH / 2);
-        drop.addComponent(circleCollider);
+        ColliderAdder.addCollider(drop);
 
         Rigidbody2D rb = new Rigidbody2D();
         rb.setBodyType(BodyType.STATIC);
@@ -88,9 +84,7 @@ public class GameObjectGenerator {
 
         enemy.transform.zIndex = 2;
 
-        CircleCollider circleCollider = new CircleCollider();
-        circleCollider.setRadius(EngineSettings.GRID_WIDTH / 2);
-        enemy.addComponent(circleCollider);
+        ColliderAdder.addCollider(enemy);
 
         Rigidbody2D rb = new Rigidbody2D();
         rb.setBodyType(BodyType.DYNAMIC);
@@ -112,9 +106,7 @@ public class GameObjectGenerator {
 
         projectile.transform.zIndex = 3;
 
-        CircleCollider circleCollider = new CircleCollider();
-        circleCollider.setRadius(EngineSettings.GRID_WIDTH / 2.0f);
-        projectile.addComponent(circleCollider);
+        ColliderAdder.addCollider(projectile);
 
         Rigidbody2D rb = new Rigidbody2D();
         rb.setBodyType(BodyType.DYNAMIC);

@@ -15,7 +15,7 @@ import object.GameObject;
 import object.GameObjectGenerator;
 import object.ObjectPool;
 import object.SpriteSheet;
-import physics.CircleCollider;
+import physics.ColliderAdder;
 import physics.Rigidbody2D;
 import scene.Scene;
 import scene.SceneInitializer;
@@ -157,9 +157,7 @@ public class GameObjectPickerScene extends SceneInitializer {
                         rigidBody.setBodyType(BodyType.STATIC);
                         gameObject.addComponent(rigidBody);
 
-                        CircleCollider circleCollider = new CircleCollider();
-                        circleCollider.setRadius(EngineSettings.GRID_WIDTH / 2);
-                        gameObject.addComponent(circleCollider);
+                        ColliderAdder.addCollider(gameObject);
 
                         gameObject.transform.zIndex = 1;
 

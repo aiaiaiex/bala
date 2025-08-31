@@ -53,5 +53,7 @@ public final class EngineSettings {
         public static final ShaderMetadata PICKER_SHADER = new ShaderMetadata(
                         "./assets/shaders/picker.frag", "./assets/shaders/picker.vert");
 
+        public static final boolean USE_CIRCLE_COLLIDER = true;
+
         private EngineSettings() {}
 }
