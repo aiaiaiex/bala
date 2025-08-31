@@ -103,8 +103,8 @@ public class GameObjectPickerScene extends SceneInitializer {
                 for (int i = 0; i < nonCollidableTerrain.size(); i++) {
 
                     Sprite sprite = nonCollidableTerrain.getSprite(i);
-                    float spriteWidth = sprite.getWidth() * 4;
-                    float spriteHeight = sprite.getHeight() * 4;
+                    float spriteWidth = 64;
+                    float spriteHeight = 64;
                     int id = sprite.getTexId();
                     Vector2f[] texCoords = sprite.getTexCoords();
 
