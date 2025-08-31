@@ -23,9 +23,11 @@ public class GameCamera extends Component {
     @Override
     public void update(float dt) {
         if (player != null) {
-            camera.position.x = player.transform.position.x - (camera.getProjectionSize().x / 2);
+            camera.position.x = player.transform.position.x
+                    - (camera.getProjectionSize().x / 2) * camera.getZoom();
 
-            camera.position.y = player.transform.position.y - (camera.getProjectionSize().y / 2);
+            camera.position.y = player.transform.position.y
+                    - (camera.getProjectionSize().y / 2) * camera.getZoom();
 
             camera.clearColor.set(EngineSettings.BACKGROUND_COLOR);
         }

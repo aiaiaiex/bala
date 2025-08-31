@@ -45,8 +45,9 @@ public class Enemy extends Component {
             return;
         }
 
-        playerPosition = new Vector2f(camera.position.x + (camera.getProjectionSize().x / 2),
-                camera.position.y + (camera.getProjectionSize().y / 2));
+        playerPosition = new Vector2f(
+                camera.position.x + ((camera.getProjectionSize().x / 2) * camera.getZoom()),
+                camera.position.y + ((camera.getProjectionSize().y / 2)) * camera.getZoom());
 
         Vector2f followVector = playerPosition.sub(gameObject.transform.position);
 

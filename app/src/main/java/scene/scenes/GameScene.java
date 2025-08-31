@@ -15,6 +15,7 @@ public class GameScene extends SceneInitializer {
         public void initialize(Scene scene) {
                 GameObject cameraObject = scene.createGameObject("GameCamera");
                 cameraObject.addComponent(new GameCamera(scene.getCamera()));
+                scene.getCamera().addZoom(EngineSettings.CAMERA_ZOOM_OUT);
                 cameraObject.start();
                 cameraObject.setNoSerialize();
                 scene.addGameObjectToScene(cameraObject);
