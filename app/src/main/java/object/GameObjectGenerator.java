@@ -13,7 +13,7 @@ import physics.Rigidbody2D;
 import setting.EngineSettings;
 import window.Window;
 
-public class ObjectGenerator {
+public class GameObjectGenerator {
 
     public static GameObject generateSpriteObject(Sprite sprite, float sizeX, float sizeY) {
         GameObject block = Window.getScene().createGameObject("Sprite_Object_Gen");

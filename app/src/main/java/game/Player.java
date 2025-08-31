@@ -6,7 +6,7 @@ import org.lwjgl.glfw.GLFW;
 import component.Component;
 import input.Keyboard;
 import object.GameObject;
-import object.ObjectGenerator;
+import object.GameObjectGenerator;
 import object.ObjectPool;
 import physics.Rigidbody2D;
 import scene.scenes.GameScene;
@@ -50,7 +50,7 @@ public class Player extends Component {
         if (reloadTime <= 0) {
             Vector2f position = new Vector2f(gameObject.transform.position)
                     .add(isRight ? new Vector2f(width, 0) : new Vector2f(-width, 0));
-            GameObject projectile = ObjectGenerator.generateProjectile(position);
+            GameObject projectile = GameObjectGenerator.generateProjectile(position);
             projectile.getComponent(Projectile.class).setIsRight(isRight);
             Window.getScene().addGameObjectToScene(projectile);
 

@@ -5,7 +5,7 @@ import org.joml.Vector2f;
 import camera.Camera;
 import component.Component;
 import object.GameObject;
-import object.ObjectGenerator;
+import object.GameObjectGenerator;
 import object.ObjectPool;
 import physics.Rigidbody2D;
 import setting.EngineSettings;
@@ -84,8 +84,8 @@ public class Enemy extends Component {
         if (deathSound != null) {
             deathSound.play();
         }
-        Window.getScene()
-                .addGameObjectToScene(ObjectGenerator.generateDrop(gameObject.transform.position));
+        Window.getScene().addGameObjectToScene(
+                GameObjectGenerator.generateDrop(gameObject.transform.position));
         gameObject.destroy();
     }
 

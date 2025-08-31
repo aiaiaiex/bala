@@ -12,7 +12,7 @@ import imgui.ImVec2;
 import input.KeyControls;
 import input.MouseControls;
 import object.GameObject;
-import object.ObjectGenerator;
+import object.GameObjectGenerator;
 import object.ObjectPool;
 import object.SpriteSheet;
 import physics.CircleCollider;
@@ -112,7 +112,7 @@ public class ComponentPickerScene extends SceneInitializer {
                     if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x,
                             texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
                         GameObject object =
-                                ObjectGenerator.generateSpriteObject(sprite, 0.25f, 0.25f);
+                                GameObjectGenerator.generateSpriteObject(sprite, 0.25f, 0.25f);
                         levelEditor.getComponent(MouseControls.class).pickupObject(object);
                     }
                     ImGui.popID();
@@ -151,7 +151,7 @@ public class ComponentPickerScene extends SceneInitializer {
                     if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x,
                             texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
                         GameObject gameObject =
-                                ObjectGenerator.generateSpriteObject(sprite, 0.25f, 0.25f);
+                                GameObjectGenerator.generateSpriteObject(sprite, 0.25f, 0.25f);
 
                         Rigidbody2D rigidBody = new Rigidbody2D();
                         rigidBody.setBodyType(BodyType.STATIC);
@@ -200,7 +200,7 @@ public class ComponentPickerScene extends SceneInitializer {
                     ImGui.pushID(i);
                     if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x,
                             texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
-                        GameObject gameObject = ObjectGenerator.generatePlayer(i);
+                        GameObject gameObject = GameObjectGenerator.generatePlayer(i);
                         levelEditor.getComponent(MouseControls.class).pickupObject(gameObject);
                     }
                     ImGui.popID();
@@ -238,7 +238,7 @@ public class ComponentPickerScene extends SceneInitializer {
                     ImGui.pushID(i);
                     if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x,
                             texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
-                        GameObject gameObject = ObjectGenerator.generateEnemy(i);
+                        GameObject gameObject = GameObjectGenerator.generateEnemy(i);
                         levelEditor.getComponent(MouseControls.class).pickupObject(gameObject);
                     }
                     ImGui.popID();
@@ -276,7 +276,7 @@ public class ComponentPickerScene extends SceneInitializer {
                     ImGui.pushID(i);
                     if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x,
                             texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
-                        GameObject gameObject = ObjectGenerator.generateDrop();
+                        GameObject gameObject = GameObjectGenerator.generateDrop();
                         levelEditor.getComponent(MouseControls.class).pickupObject(gameObject);
                     }
                     ImGui.popID();
