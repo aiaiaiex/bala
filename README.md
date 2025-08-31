@@ -39,5 +39,5 @@ gradlew run
 
 <h2>©️ Credits</h2>
 
-- **Game Sounds**: [plasterbrain](https://freesound.org/) (licensed under Creative Commons CC0 1.0 Universal)
-- **Sprite Assets**: [Kenney](https://opengameart.org/) (licensed under 	Creative Commons CC0)
+- **Game Sounds**: [plasterbrain](https://freesound.org/people/plasterbrain/) (licensed under Creative Commons CC0 1.0 Universal)
+- **Sprite Assets**: [Kenney](https://kenney.nl/assets/tiny-battle) (licensed under	Creative Commons CC0 1.0 Universal)
