@@ -321,6 +321,7 @@ public final class Window implements Observer {
         windowHeight = height;
 
         framebuffer = new Framebuffer(windowWidth, windowHeight);
+        pickingTexture = new PickingTexture(windowWidth, windowHeight);
     }
 
     public void windowPosCollback(long glfwWindow, int xpos, int ypos) {
