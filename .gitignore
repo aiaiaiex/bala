@@ -5,6 +5,6 @@
 build
 
 # Ignore non-sample log files
-logs/*
-!logs/average-frame-time-per-second-log.csv
-!logs/exact-frame-time-log.csv
+app/logs/*
+!app/logs/average-frame-time-per-second-log.csv
+!app/logs/exact-frame-time-log.csv

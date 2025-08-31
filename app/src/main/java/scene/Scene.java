@@ -179,7 +179,7 @@ public class Scene {
                 .enableComplexMapKeySerialization().create();
 
         try {
-            FileWriter writer = new FileWriter(String.format("../scenes/%1$s.%2$s",
+            FileWriter writer = new FileWriter(String.format("./scenes/%1$s.%2$s",
                     fileName.isBlank() ? EngineSettings.DEFAULT_GAME_SCENE_FILE_NAME : fileName,
                     EngineSettings.SCENE_FILE_EXTENSION));
             List<GameObject> serializableObjects = new ArrayList<>();
@@ -207,7 +207,7 @@ public class Scene {
 
         String inFile = "";
         try {
-            inFile = new String(Files.readAllBytes(Paths.get(String.format("../scenes/%1$s.%2$s",
+            inFile = new String(Files.readAllBytes(Paths.get(String.format("./scenes/%1$s.%2$s",
                     fileName.isBlank() ? EngineSettings.DEFAULT_GAME_SCENE_FILE_NAME : fileName,
                     EngineSettings.SCENE_FILE_EXTENSION))));
         } catch (IOException e) {

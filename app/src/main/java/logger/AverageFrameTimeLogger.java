@@ -61,7 +61,7 @@ public final class AverageFrameTimeLogger {
         if (!started) {
             try {
                 Handler fileHandler = new FileHandler(
-                        String.format("../logs/%1$s%2$s-%3$tF-%3$tH-%3$tM-%3$tS.%4$s",
+                        String.format("./logs/%1$s%2$s-%3$tF-%3$tH-%3$tM-%3$tS.%4$s",
                                 prefix.isBlank() ? "" : prefix + "-",
                                 LoggerSettings.AVERAGE_FRAME_TIME_LOGGER_FILE_NAME, new Date(),
                                 LoggerSettings.AVERAGE_FRAME_TIME_LOGGER_FILE_EXTENSION));

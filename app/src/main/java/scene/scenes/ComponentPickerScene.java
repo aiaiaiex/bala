@@ -49,7 +49,7 @@ public class ComponentPickerScene extends SceneInitializer {
 
     @Override
     public void loadResources(Scene scene) {
-        ObjectPool.getShader("../assets/shaders/default.glsl");
+        ObjectPool.getShader("./assets/shaders/default.glsl");
 
         ObjectPool.addSpriteSheet(EngineSettings.COLLIDABLE_TERRAIN);
         ObjectPool.addSpriteSheet(EngineSettings.NON_COLLIDABLE_TERRAIN);

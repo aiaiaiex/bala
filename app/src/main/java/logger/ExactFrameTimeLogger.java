@@ -62,7 +62,7 @@ public final class ExactFrameTimeLogger {
         if (!started) {
             try {
                 Handler fileHandler = new FileHandler(
-                        String.format("../logs/%1$s%2$s-%3$tF-%3$tH-%3$tM-%3$tS.%4$s",
+                        String.format("./logs/%1$s%2$s-%3$tF-%3$tH-%3$tM-%3$tS.%4$s",
                                 prefix.isBlank() ? "" : prefix + "-",
                                 LoggerSettings.EXACT_FRAME_TIME_LOGGER_FILE_NAME, new Date(),
                                 LoggerSettings.EXACT_FRAME_TIME_LOGGER_FILE_EXTENSION));
