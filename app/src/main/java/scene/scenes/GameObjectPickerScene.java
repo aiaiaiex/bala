@@ -21,7 +21,7 @@ import scene.Scene;
 import scene.SceneInitializer;
 import setting.EngineSettings;
 
-public class ComponentPickerScene extends SceneInitializer {
+public class GameObjectPickerScene extends SceneInitializer {
 
     private SpriteSheet collidableTerrain;
     private SpriteSheet nonCollidableTerrain;

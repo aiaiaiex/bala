@@ -28,7 +28,7 @@ import object.ObjectPool;
 import physics.Physics;
 import scene.Scene;
 import scene.SceneInitializer;
-import scene.scenes.ComponentPickerScene;
+import scene.scenes.GameObjectPickerScene;
 import scene.scenes.GameScene;
 import setting.EngineSettings;
 import setting.GameSettings;
@@ -172,7 +172,7 @@ public final class Window implements Observer {
         } else {
             imguiLayer = new ImGuiLayer(glfwWindow, pickingTexture);
             imguiLayer.initImGui();
-            changeScene(new ComponentPickerScene());
+            changeScene(new GameObjectPickerScene());
         }
 
         GLFW.glfwShowWindow(glfwWindow);
@@ -323,13 +323,13 @@ public final class Window implements Observer {
                 break;
             case STOP_GAME:
                 runtimePlaying = false;
-                changeScene(new ComponentPickerScene());
+                changeScene(new GameObjectPickerScene());
                 break;
             case SAVE_LEVEL:
                 currentScene.saveFile();
                 break;
             case LOAD_LEVEL:
-                changeScene(new ComponentPickerScene());
+                changeScene(new GameObjectPickerScene());
                 break;
         }
     }
