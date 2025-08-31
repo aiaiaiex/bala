@@ -111,8 +111,8 @@ public class GameObjectPickerScene extends SceneInitializer {
                     ImGui.pushID(i);
                     if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x,
                             texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
-                        GameObject object =
-                                GameObjectGenerator.generateSpriteObject(sprite, 0.25f, 0.25f);
+                        GameObject object = GameObjectGenerator.generateSpriteObject(sprite,
+                                EngineSettings.GRID_WIDTH, EngineSettings.GRID_HEIGHT);
                         levelEditor.getComponent(MouseControls.class).pickupObject(object);
                     }
                     ImGui.popID();
@@ -150,8 +150,8 @@ public class GameObjectPickerScene extends SceneInitializer {
                     ImGui.pushID(i);
                     if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x,
                             texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
-                        GameObject gameObject =
-                                GameObjectGenerator.generateSpriteObject(sprite, 0.25f, 0.25f);
+                        GameObject gameObject = GameObjectGenerator.generateSpriteObject(sprite,
+                                EngineSettings.GRID_WIDTH, EngineSettings.GRID_HEIGHT);
 
                         Rigidbody2D rigidBody = new Rigidbody2D();
                         rigidBody.setBodyType(BodyType.STATIC);
