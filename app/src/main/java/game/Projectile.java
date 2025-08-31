@@ -62,13 +62,14 @@ public class Projectile extends Component {
     public void preSolve(GameObject obj, Contact contact, Vector2f contactNormal) {
         if (obj.getComponent(Enemy.class) == null) {
             contact.setEnabled(false);
+        } else {
+            if (impactSound != null) {
+                impactSound.play();
+            }
         }
     }
 
     public void cleanup() {
-        if (impactSound != null) {
-            impactSound.play();
-        }
         gameObject.destroy();
     }
 
