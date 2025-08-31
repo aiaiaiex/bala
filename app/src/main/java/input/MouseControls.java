@@ -9,6 +9,8 @@ import org.lwjgl.glfw.GLFW;
 import component.Component;
 import component.SpriteRenderer;
 import component.StateMachine;
+import game.Drop;
+import game.Enemy;
 import game.Player;
 import graphics.DebugDraw;
 import graphics.PickingTexture;
@@ -57,10 +59,18 @@ public class MouseControls extends Component {
         newObj.getComponent(SpriteRenderer.class).setColor(new Vector4f(1, 1, 1, 1));
 
         if (newObj.getComponent(Player.class) != null) {
-            for (GameObject gameObject : Window.getScene().getGameObjects()) {
-                if (gameObject.getComponent(Player.class) != null) {
-                    gameObject.destroy();
-                }
+        }
+
+        for (GameObject gameObject : Window.getScene().getGameObjects()) {
+            if ((newObj.getComponent(Player.class) != null
+                    && gameObject.getComponent(Player.class) != null)
+                    || ((newObj.transform.position.equals(gameObject.transform.position))
+                            && ((newObj.transform.zIndex == gameObject.transform.zIndex)
+                                    || ((newObj.getComponent(Player.class) != null
+                                            || newObj.getComponent(Enemy.class) != null)
+                                            && gameObject.transform.zIndex > 0
+                                            && gameObject.getComponent(Drop.class) == null)))) {
+                gameObject.destroy();
             }
         }
 
