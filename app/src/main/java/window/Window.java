@@ -42,6 +42,7 @@ public final class Window implements Observer {
     private int refreshRate;
     private int windowWidth, windowHeight;
     private long glfwWindow;
+    private int xPosition, yPosition;
 
     private Keyboard keyboard;
     private Mouse mouse;
@@ -151,6 +152,7 @@ public final class Window implements Observer {
         GLFW.glfwSetScrollCallback(glfwWindow, mouse::scrollCallback);
 
         GLFW.glfwSetWindowSizeCallback(glfwWindow, window::windowSizeCallback);
+        GLFW.glfwSetWindowPosCallback(glfwWindow, window::windowPosCollback);
 
         GLFW.glfwMakeContextCurrent(glfwWindow);
 
@@ -306,11 +308,24 @@ public final class Window implements Observer {
         return windowHeight;
     }
 
+    public int getXPosition() {
+        return xPosition;
+    }
+
+    public int getYPosition() {
+        return yPosition;
+    }
+
     public void windowSizeCallback(long glfwWindow, int width, int height) {
         windowWidth = width;
         windowHeight = height;
 
         framebuffer = new Framebuffer(windowWidth, windowHeight);
+    }
+
+    public void windowPosCollback(long glfwWindow, int xpos, int ypos) {
+        xPosition = xpos;
+        yPosition = ypos;
     }
 
     @Override
