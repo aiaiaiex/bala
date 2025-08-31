@@ -15,7 +15,7 @@ public final class EngineSettings {
         public static final float GRID_WIDTH = 0.25f;
         public static final float GRID_HEIGHT = GRID_WIDTH;
 
-        public static final float CAMERA_ZOOM_OUT = 0.00f;
+        public static final int CAMERA_ZOOM_OUT = 3;
 
         public static final Vector4f BACKGROUND_COLOR =
                         new Vector4f(255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f, 1.0F);
