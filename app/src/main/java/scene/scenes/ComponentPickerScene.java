@@ -15,7 +15,7 @@ import object.GameObject;
 import object.ObjectGenerator;
 import object.ObjectPool;
 import object.SpriteSheet;
-import physics.Box2DCollider;
+import physics.CircleCollider;
 import physics.Rigidbody2D;
 import scene.Scene;
 import scene.SceneInitializer;
@@ -145,12 +145,14 @@ public class ComponentPickerScene extends SceneInitializer {
                             texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
                         GameObject gameObject =
                                 ObjectGenerator.generateSpriteObject(sprite, 0.25f, 0.25f);
+
                         Rigidbody2D rigidBody = new Rigidbody2D();
                         rigidBody.setBodyType(BodyType.STATIC);
                         gameObject.addComponent(rigidBody);
-                        Box2DCollider boxCollider = new Box2DCollider();
-                        boxCollider.setHalfSize(new Vector2f(0.25f, 0.25f));
-                        gameObject.addComponent(boxCollider);
+
+                        CircleCollider circleCollider = new CircleCollider();
+                        circleCollider.setRadius(EngineSettings.GRID_WIDTH / 2);
+                        gameObject.addComponent(circleCollider);
 
                         gameObject.transform.zIndex = 1;
 
