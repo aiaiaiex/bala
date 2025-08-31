@@ -47,6 +47,52 @@ dependencies {
 	implementation "org.joml:joml:${jomlVersion}"
 }
 
+task setupFatJar(type: Copy) {
+    copy {
+        from "assets"
+        into "${buildDir}/libs/assets"
+    }
+
+    copy {
+        from "scenes"
+        into "${buildDir}/libs/scenes"
+    }
+
+    copy {
+        from "imgui.ini"
+        into "${buildDir}/libs"
+    }
+
+    mkdir "${buildDir}/libs/logs"
+}
+
+jar {
+    manifest {
+        attributes(
+            'Main-Class': 'Bala'
+        )
+    }
+}
+
+task fatJar(type: Jar) {
+    dependsOn setupFatJar
+
+    manifest.from jar.manifest
+
+    archiveBaseName = "bala"
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it).matching{exclude{it.path.contains('META-INF')}} }
+    } 
+
+    with jar
+}
+
+
+tasks.withType(Jar) {
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(11)
