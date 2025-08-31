@@ -9,8 +9,8 @@ public class Camera {
     private Matrix4f projectionMatrix, viewMatrix, inverseProjection, inverseView;
     public Vector2f position;
 
-    private float projectionWidth = 6;
     private float projectionHeight = 3;
+    private float projectionWidth = projectionHeight * 2;
     public Vector4f clearColor = new Vector4f(1, 1, 1, 1);
     private Vector2f projectionSize = new Vector2f(projectionWidth, projectionHeight);
 
