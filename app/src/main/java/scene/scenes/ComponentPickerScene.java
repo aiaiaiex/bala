@@ -151,6 +151,9 @@ public class ComponentPickerScene extends SceneInitializer {
                         Box2DCollider boxCollider = new Box2DCollider();
                         boxCollider.setHalfSize(new Vector2f(0.25f, 0.25f));
                         gameObject.addComponent(boxCollider);
+
+                        gameObject.transform.zIndex = 1;
+
                         levelEditor.getComponent(MouseControls.class).pickupObject(gameObject);
                     }
                     ImGui.popID();

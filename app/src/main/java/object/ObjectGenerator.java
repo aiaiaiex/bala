@@ -17,9 +17,14 @@ public class ObjectGenerator {
 
     public static GameObject generateSpriteObject(Sprite sprite, float sizeX, float sizeY) {
         GameObject block = Window.getScene().createGameObject("Sprite_Object_Gen");
+
+        block.transform.zIndex = 0;
+
         block.transform.scale.x = sizeX;
         block.transform.scale.y = sizeY;
+
         SpriteRenderer renderer = new SpriteRenderer();
+
         renderer.setSprite(sprite);
         block.addComponent(renderer);
 
@@ -31,7 +36,7 @@ public class ObjectGenerator {
         GameObject player = generateSpriteObject(players.getSprite(index),
                 EngineSettings.GRID_WIDTH, EngineSettings.GRID_HEIGHT);
 
-        player.transform.zIndex = 100;
+        player.transform.zIndex = 4;
 
         CircleCollider circleCollider = new CircleCollider();
         circleCollider.setRadius(EngineSettings.GRID_WIDTH / 2.0f);
@@ -61,6 +66,8 @@ public class ObjectGenerator {
             drop.transform.position = position;
         }
 
+        drop.transform.zIndex = 1;
+
         CircleCollider circleCollider = new CircleCollider();
         circleCollider.setRadius(EngineSettings.GRID_WIDTH / 2);
         drop.addComponent(circleCollider);
@@ -78,6 +85,8 @@ public class ObjectGenerator {
         SpriteSheet enemies = ObjectPool.getSpriteSheet(EngineSettings.ENEMIES.getFilePath());
         GameObject enemy = generateSpriteObject(enemies.getSprite(index), EngineSettings.GRID_WIDTH,
                 EngineSettings.GRID_HEIGHT);
+
+        enemy.transform.zIndex = 2;
 
         CircleCollider circleCollider = new CircleCollider();
         circleCollider.setRadius(EngineSettings.GRID_WIDTH / 2);
@@ -100,6 +109,8 @@ public class ObjectGenerator {
         GameObject projectile = generateSpriteObject(projectiles.getSprite(0),
                 EngineSettings.GRID_WIDTH / 1.0f, EngineSettings.GRID_HEIGHT / 1.0f);
         projectile.transform.position = position;
+
+        projectile.transform.zIndex = 3;
 
         CircleCollider circleCollider = new CircleCollider();
         circleCollider.setRadius(EngineSettings.GRID_WIDTH / 2.0f);
