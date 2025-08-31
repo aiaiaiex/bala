@@ -1,6 +1,6 @@
 plugins {
-    id 'application'
-    id 'org.openjfx.javafxplugin' version '0.1.0'
+    id "application"
+    id "org.openjfx.javafxplugin" version "0.1.0"
 }
 
 repositories {
@@ -8,23 +8,23 @@ repositories {
 }
 
 javafx {
-    modules = [ 'javafx.graphics' ]
+    modules = [ "javafx.graphics" ]
 }
 
 project.ext.lwjglVersion = "3.3.6"
 project.ext.jomlVersion = "1.10.8"
 project.ext.lwjglNatives = "natives-windows"
-project.ext.imguiVersion = '1.81.0'
+project.ext.imguiVersion = "1.81.0"
 
 dependencies {
     // This dependency is used by the application.
     implementation libs.guava
 
     // JBox2D.
-    implementation 'org.jbox2d:jbox2d-library:2.2.1.1'
+    implementation "org.jbox2d:jbox2d-library:2.2.1.1"
 
     // Gson.
-    implementation 'com.google.code.gson:gson:2.13.1'
+    implementation "com.google.code.gson:gson:2.13.1"
 
     // ImGUI.
     implementation "io.github.spair:imgui-java-app:$imguiVersion"
@@ -69,7 +69,7 @@ task setupFatJar(type: Copy) {
 jar {
     manifest {
         attributes(
-            'Main-Class': 'Bala'
+            'Main-Class': "Bala"
         )
     }
 }
@@ -82,7 +82,7 @@ task fatJar(type: Jar) {
     archiveBaseName = "bala"
 
     from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it).matching{exclude{it.path.contains('META-INF')}} }
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it).matching{exclude{it.path.contains("META-INF")}} }
     } 
 
     with jar
@@ -100,5 +100,5 @@ java {
 }
 
 application {
-    mainClass = 'Bala'
+    mainClass = "Bala"
 }
