@@ -73,6 +73,9 @@ public class Sound {
         if (!isPlaying) {
             AL10.alSourcePlay(sourceId);
             isPlaying = true;
+        } else {
+            AL10.alSourceStop(sourceId);
+            AL10.alSourcePlay(sourceId);
         }
     }
 
