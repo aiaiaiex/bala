@@ -58,6 +58,13 @@ public class ComponentPickerScene extends SceneInitializer {
         ObjectPool.addSpriteSheet(EngineSettings.PROJECTILES);
         ObjectPool.addSpriteSheet(EngineSettings.DROPS);
 
+        ObjectPool.addSound(EngineSettings.DEFAULT_BACKGROUND_MUSIC);
+        ObjectPool.addSound(EngineSettings.DEFAULT_PLAYER_DEATH_SOUND);
+        ObjectPool.addSound(EngineSettings.DEFAULT_ENEMY_DEATH_SOUND);
+        ObjectPool.addSound(EngineSettings.DEFAULT_RELEASE_SOUND);
+        ObjectPool.addSound(EngineSettings.DEFAULT_IMPACT_SOUND);
+        ObjectPool.addSound(EngineSettings.DEFAULT_PICKUP_SOUND);
+
         for (GameObject gameObject : scene.getGameObjects()) {
             if (gameObject.getComponent(SpriteRenderer.class) != null) {
                 SpriteRenderer spriteRenderer = gameObject.getComponent(SpriteRenderer.class);
