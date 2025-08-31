@@ -9,7 +9,7 @@ import component.SpriteRenderer;
 import component.StateMachine;
 import imgui.ImGui;
 import imgui.ImVec2;
-import input.KeyControls;
+import input.KeyboardControls;
 import input.MouseControls;
 import object.GameObject;
 import object.GameObjectGenerator;
@@ -41,7 +41,7 @@ public class GameObjectPickerScene extends SceneInitializer {
         levelEditor = scene.createGameObject("LevelEditor");
         levelEditor.setNoSerialize();
         levelEditor.addComponent(new MouseControls());
-        levelEditor.addComponent(new KeyControls());
+        levelEditor.addComponent(new KeyboardControls());
         levelEditor.addComponent(new GridLines());
         levelEditor.addComponent(new EditorCamera(scene.getCamera()));
         scene.addGameObjectToScene(levelEditor);

@@ -10,13 +10,13 @@ import object.GameObject;
 import setting.EngineSettings;
 import window.Window;
 
-public class KeyControls extends Component {
+public class KeyboardControls extends Component {
     private float debounceTime = 0.2f;
     private float debounce = 0.0f;
 
     private Keyboard keyboard;
 
-    public KeyControls() {
+    public KeyboardControls() {
         keyboard = Keyboard.getKeyboard();
     }
 
