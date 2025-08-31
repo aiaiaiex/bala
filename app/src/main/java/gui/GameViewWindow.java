@@ -16,12 +16,14 @@ public class GameViewWindow {
     private boolean windowIsHovered;
 
     private Mouse mouse;
+    private Window window;
 
     public GameViewWindow() {
         isPlaying = false;
         subject = Subject.getSubject();
 
         mouse = Mouse.getMouse();
+        window = Window.getWindow();
     }
 
     public void imgui() {
@@ -57,9 +59,9 @@ public class GameViewWindow {
         ImGui.imageButton(textureId, windowSize.x, windowSize.y, 0, 1, 1, 0);
         windowIsHovered = ImGui.isItemHovered();
 
-
-        mouse.setGameViewportPos(new Vector2f(windowPos.x + ImGui.getWindowPosX(),
-                windowPos.y + ImGui.getWindowPosY()));
+        mouse.setGameViewportPos(
+                new Vector2f(windowPos.x + ImGui.getWindowPosX() - window.getXPosition(),
+                        windowPos.y + ImGui.getWindowPosY() - window.getYPosition()));
         mouse.setGameViewportSize(new Vector2f(windowSize.x, windowSize.y));
 
         ImGui.end();
