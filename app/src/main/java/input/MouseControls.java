@@ -33,9 +33,6 @@ public class MouseControls extends Component {
     private Keyboard keyboard;
     private Mouse mouse;
 
-    private float draggingPlaceReload = 1.0f / 30.0f;
-    private float draggingPlaceReloadRemaining = draggingPlaceReload;
-
     public MouseControls() {
         keyboard = Keyboard.getKeyboard();
         mouse = Mouse.getMouse();
@@ -82,7 +79,6 @@ public class MouseControls extends Component {
     @Override
     public void editorUpdate(float dt) {
         debounce -= dt;
-        draggingPlaceReloadRemaining += dt;
         PickingTexture pickingTexture =
                 Window.getImguiLayer().getPropertiesWindow().getPickingTexture();
         Scene currentScene = Window.getScene();
@@ -101,9 +97,8 @@ public class MouseControls extends Component {
 
 
             if (mouse.isButtonPressed(GLFW.GLFW_MOUSE_BUTTON_LEFT)) {
-                if (mouse.isDragging() && draggingPlaceReloadRemaining >= draggingPlaceReload) {
+                if (mouse.isDragging() && debounce < 0) {
                     place();
-                    draggingPlaceReloadRemaining = 0f;
                 } else if (!mouse.isDragging() && debounce < 0
                         && mouse.isButtonInitiallyPressed(GLFW.GLFW_MOUSE_BUTTON_LEFT)) {
                     place();
