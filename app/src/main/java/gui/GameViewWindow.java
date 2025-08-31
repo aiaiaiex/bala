@@ -38,11 +38,11 @@ public class GameViewWindow {
             subject.notifyObservers(Event.STOP_GAME);
         }
 
-        if (ImGui.menuItem("Save Game Scene", "Ctrl+S")) {
+        if (ImGui.menuItem("Save Game Scene", "Ctrl+S", isPlaying, !isPlaying)) {
             subject.notifyObservers(Event.SAVE_LEVEL);
         }
 
-        if (ImGui.menuItem("Load Game Scene")) {
+        if (ImGui.menuItem("Load Game Scene", "", isPlaying, !isPlaying)) {
             subject.notifyObservers(Event.LOAD_LEVEL);
         }
         ImGui.endMenuBar();
