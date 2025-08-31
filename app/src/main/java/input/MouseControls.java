@@ -135,10 +135,9 @@ public class MouseControls extends Component {
             boxSelectEnd = mouse.getWorld();
             Vector2f boxSelectStartWorld = boxSelectStart;
             Vector2f boxSelectEndWorld = boxSelectEnd;
-            Vector2f halfSize =
-                    (new Vector2f(boxSelectEndWorld).sub(boxSelectStartWorld)).mul(0.5f);
-            DebugDraw.addBox2D((new Vector2f(boxSelectStartWorld)).add(halfSize),
-                    new Vector2f(halfSize).mul(2.0f), 0.0f);
+            Vector2f size = (new Vector2f(boxSelectEndWorld).sub(boxSelectStartWorld)).mul(0.5f);
+            DebugDraw.addBox2D((new Vector2f(boxSelectStartWorld)).add(size),
+                    new Vector2f(size).mul(2.0f), 0.0f);
         } else if (boxSelectSet) {
             boxSelectSet = false;
             int screenStartX = (int) screenBoxSelectStart.x;
