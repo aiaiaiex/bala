@@ -17,14 +17,22 @@ public final class ObjectPool {
 
     private ObjectPool() {}
 
-    public static Shader getShader(String resourceName) {
-        File file = new File(resourceName);
-        if (ObjectPool.shaders.containsKey(file.getAbsolutePath())) {
-            return ObjectPool.shaders.get(file.getAbsolutePath());
+    public static Shader getShader(ShaderMetadata metadata) {
+        return getShader(metadata.getVertexShaderFilePath(), metadata.getFragmentShaderFilePath());
+    }
+
+    public static Shader getShader(String vertexShaderFilePath, String fragmentShaderFilePath) {
+        File vertexShaderFile = new File(vertexShaderFilePath);
+        File fragmentShaderFile = new File(fragmentShaderFilePath);
+        String combinedAbsolutePath = String.format("%1$s+%2$s", vertexShaderFile.getAbsolutePath(),
+                fragmentShaderFile.getName());
+
+        if (ObjectPool.shaders.containsKey(combinedAbsolutePath)) {
+            return ObjectPool.shaders.get(combinedAbsolutePath);
         } else {
-            Shader shader = new Shader(resourceName);
+            Shader shader = new Shader(vertexShaderFilePath, fragmentShaderFilePath);
             shader.compile();
-            ObjectPool.shaders.put(file.getAbsolutePath(), shader);
+            ObjectPool.shaders.put(combinedAbsolutePath, shader);
             return shader;
         }
     }

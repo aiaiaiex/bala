@@ -186,8 +186,8 @@ public final class Window implements Observer {
             return;
         }
 
-        Shader defaultShader = ObjectPool.getShader("./assets/shaders/default.glsl");
-        Shader pickingShader = ObjectPool.getShader("./assets/shaders/pickingShader.glsl");
+        Shader defaultShader = ObjectPool.getShader(EngineSettings.DEFAULT_SHADER);
+        Shader pickingShader = ObjectPool.getShader(EngineSettings.PICKER_SHADER);
 
         double startTime = 0.0d;
         double endTime = 0.0d;

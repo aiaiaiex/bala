@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import camera.Camera;
 import object.ObjectPool;
+import setting.EngineSettings;
 import window.Window;
 
 public class DebugDraw {
@@ -17,7 +18,7 @@ public class DebugDraw {
 
     private static List<Line> lines = new ArrayList<>();
     private static float[] vertexArray = new float[MAX_LINES * 6 * 2];
-    private static Shader shader = ObjectPool.getShader("./assets/shaders/debugLine2D.glsl");
+    private static Shader shader = ObjectPool.getShader(EngineSettings.OUTLINE_SHADER);
 
     private static int vaoID;
     private static int vboID;

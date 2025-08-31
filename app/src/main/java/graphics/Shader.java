@@ -18,43 +18,26 @@ public class Shader {
 
     private String vertexSource;
     private String fragmentSource;
-    private String filepath;
 
-    public Shader(String filepath) {
-        this.filepath = filepath;
+    private String vertexShaderFilePath;
+    private String fragmentShaderFilePath;
+
+    public Shader(String vertexShaderFilePath, String fragmentShaderFilePath) {
+        this.vertexShaderFilePath = vertexShaderFilePath;
+        this.fragmentShaderFilePath = fragmentShaderFilePath;
+
         try {
-            String source = new String(Files.readAllBytes(Paths.get(filepath)));
-            String[] splitString = source.split("(#type)( )+([a-zA-Z]+)");
-
-            int index = source.indexOf("#type") + 6;
-            int eol = source.indexOf("\r\n", index);
-            String firstPattern = source.substring(index, eol).trim();
-
-            index = source.indexOf("#type", eol) + 6;
-            eol = source.indexOf("\r\n", index);
-            String secondPattern = source.substring(index, eol).trim();
-
-            if (firstPattern.equals("vertex")) {
-                vertexSource = splitString[1];
-            } else if (firstPattern.equals("fragment")) {
-                fragmentSource = splitString[1];
-            } else {
-                throw new IOException("Unexpected token '" + firstPattern + "'");
-            }
-
-            if (secondPattern.equals("vertex")) {
-                vertexSource = splitString[2];
-            } else if (secondPattern.equals("fragment")) {
-                fragmentSource = splitString[2];
-            } else {
-                throw new IOException("Unexpected token '" + secondPattern + "'");
-            }
+            vertexSource = new String(Files.readAllBytes(Paths.get(vertexShaderFilePath))).trim();
+            fragmentSource =
+                    new String(Files.readAllBytes(Paths.get(fragmentShaderFilePath))).trim();
         } catch (IOException e) {
             e.printStackTrace();
-            GlobalLogger.getGlobalLogger().getLogger().severe(
-                    () -> String.format("Failed to open shader file: filepath=%1$s", filepath));
-            throw new RuntimeException(
-                    String.format("Failed to open shader file: filepath=%1$s", filepath));
+            GlobalLogger.getGlobalLogger().getLogger().severe(() -> String.format(
+                    "Failed to open: (vertexShaderFilePath=%1$s) (fragmentShaderFilePath=%2$s)",
+                    vertexShaderFilePath, fragmentShaderFilePath));
+            throw new RuntimeException(String.format(
+                    "Failed to open: (vertexShaderFilePath=%1$s) (fragmentShaderFilePath=%2$s)",
+                    vertexShaderFilePath, fragmentShaderFilePath));
         }
     }
 
@@ -67,10 +50,13 @@ public class Shader {
 
         int success = GL20C.glGetShaderi(vertexID, GL20.GL_COMPILE_STATUS);
         if (success == GL11.GL_FALSE) {
-            GlobalLogger.getGlobalLogger().getLogger().severe(() -> String
-                    .format("Failed to compile vertex shader: filepath=%1$s", filepath));
+            GlobalLogger.getGlobalLogger().getLogger()
+                    .severe(() -> String.format(
+                            "Failed to compile vertex shader: vertexShaderFilePath=%1$s",
+                            vertexShaderFilePath));
             throw new RuntimeException(
-                    String.format("Failed to compile vertex shader: filepath=%1$s", filepath));
+                    String.format("Failed to compile vertex shader: vertexShaderFilePath=%1$s",
+                            vertexShaderFilePath));
         }
 
         fragmentID = GL20.glCreateShader(GL20.GL_FRAGMENT_SHADER);
@@ -79,10 +65,13 @@ public class Shader {
 
         success = GL20C.glGetShaderi(fragmentID, GL20.GL_COMPILE_STATUS);
         if (success == GL11.GL_FALSE) {
-            GlobalLogger.getGlobalLogger().getLogger().severe(() -> String
-                    .format("Failed to compile fragment shader: filepath=%1$s", filepath));
+            GlobalLogger.getGlobalLogger().getLogger()
+                    .severe(() -> String.format(
+                            "Failed to compile fragment shader: fragmentShaderFilePath=%1$s",
+                            fragmentShaderFilePath));
             throw new RuntimeException(
-                    String.format("Failed to compile fragment shader: filepath=%1$s", filepath));
+                    String.format("Failed to compile fragment shader: fragmentShaderFilePath=%1$s",
+                            fragmentShaderFilePath));
         }
 
         shaderProgramID = GL20.glCreateProgram();
@@ -92,10 +81,12 @@ public class Shader {
 
         success = GL20.glGetProgrami(shaderProgramID, GL20.GL_LINK_STATUS);
         if (success == GL11.GL_FALSE) {
-            GlobalLogger.getGlobalLogger().getLogger().severe(() -> String
-                    .format("Failed to link vertex and fragment shader: filepath=%1$s", filepath));
-            throw new RuntimeException(String
-                    .format("Failed to link vertex and fragment shader: filepath=%1$s", filepath));
+            GlobalLogger.getGlobalLogger().getLogger().severe(() -> String.format(
+                    "Failed to link vertex and fragment shader: (vertexShaderFilePath=%1$s) (fragmentShaderFilePath=%2$s)",
+                    vertexShaderFilePath, fragmentShaderFilePath));
+            throw new RuntimeException(String.format(
+                    "Failed to link vertex and fragment shader: (vertexShaderFilePath=%1$s) (fragmentShaderFilePath=%2$s)",
+                    vertexShaderFilePath, fragmentShaderFilePath));
         }
     }
 

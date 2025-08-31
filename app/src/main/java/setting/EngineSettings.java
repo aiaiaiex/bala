@@ -1,6 +1,7 @@
 package setting;
 
 import org.joml.Vector4f;
+import object.ShaderMetadata;
 import object.SoundMetadata;
 import object.SpriteSheetMetadata;
 
@@ -44,6 +45,13 @@ public final class EngineSettings {
                         new SoundMetadata("./assets/audio/impact-sound.ogg");
         public static final SoundMetadata DEFAULT_PICKUP_SOUND =
                         new SoundMetadata("./assets/audio/pickup-sound.ogg");
+
+        public static final ShaderMetadata DEFAULT_SHADER = new ShaderMetadata(
+                        "./assets/shaders/default.frag", "./assets/shaders/default.vert");
+        public static final ShaderMetadata OUTLINE_SHADER = new ShaderMetadata(
+                        "./assets/shaders/outline.frag", "./assets/shaders/outline.vert");
+        public static final ShaderMetadata PICKER_SHADER = new ShaderMetadata(
+                        "./assets/shaders/picker.frag", "./assets/shaders/picker.vert");
 
         private EngineSettings() {}
 }
