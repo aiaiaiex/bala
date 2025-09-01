@@ -9,9 +9,9 @@
 
 <h2>🛠️ Installation Steps:</h2>
 
-<p>1. Java Version 11 and Gradle 5.0 to 8.14</p>
+<p>1. Java (version 11 to 16) and Gradle (version 5.0 to 8.14)</p>
 
-- Install Java version 11 and Gradle 5.0 to 8.14 on your environment path.
+- Install Java (version 11 to 16) and Gradle (version 5.0 to 8.14) on your environment path.
 
 <p>2. Clone Repository</p>
 
