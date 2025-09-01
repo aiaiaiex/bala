@@ -26,6 +26,18 @@ public class Camera {
         adjustProjection();
     }
 
+    public Vector4f getGridStarter() {
+        float firstXPosition = ((int) Math.floor(position.x / EngineSettings.GRID_WIDTH))
+                * EngineSettings.GRID_WIDTH + (EngineSettings.GRID_WIDTH / 2);
+        float firstYPosition = ((int) Math.floor(position.y / EngineSettings.GRID_HEIGHT))
+                * EngineSettings.GRID_HEIGHT + (EngineSettings.GRID_HEIGHT / 2);
+
+        int columns = (int) (projectionSize.x * zoom / EngineSettings.GRID_WIDTH) + 2;
+        int rows = (int) (projectionSize.y * zoom / EngineSettings.GRID_HEIGHT) + 2;
+
+        return new Vector4f(firstXPosition, firstYPosition, columns, rows);
+    }
+
     public void adjustProjection() {
         projectionMatrix.identity();
         projectionMatrix.ortho(0.0f, projectionSize.x * zoom, 0.0f, projectionSize.y * zoom, 0.0f,
