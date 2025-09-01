@@ -57,7 +57,7 @@ public final class EngineSettings {
                         "./assets/shaders/picker.frag", "./assets/shaders/picker.vert");
 
         public static final boolean USE_CIRCLE_COLLIDER = true;
-        public static final boolean USE_PERLIN_NOISE = false;
+        public static final boolean USE_PERLIN_NOISE = true;
 
         private EngineSettings() {}
 }
