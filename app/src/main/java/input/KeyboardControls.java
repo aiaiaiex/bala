@@ -27,7 +27,7 @@ public class KeyboardControls extends Component {
         PropertiesWindow propertiesWindow = Window.getImguiLayer().getPropertiesWindow();
         GameObject activeGameObject = propertiesWindow.getActiveGameObject();
         List<GameObject> activeGameObjects = propertiesWindow.getActiveGameObjects();
-        float multiplier = keyboard.isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT) ? 0.1f : 1.0f;
+        float multiplier = keyboard.isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT) ? 0.5f : 1.0f;
 
         if (keyboard.isKeyPressed(GLFW.GLFW_KEY_LEFT_CONTROL)
                 && keyboard.isKeyInitiallyPressed(GLFW.GLFW_KEY_D) && activeGameObject != null) {
