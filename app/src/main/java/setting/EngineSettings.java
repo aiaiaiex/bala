@@ -1,5 +1,6 @@
 package setting;
 
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 import object.ShaderMetadata;
 import object.SoundMetadata;
@@ -14,6 +15,8 @@ public final class EngineSettings {
 
         public static final float GRID_WIDTH = 0.25f;
         public static final float GRID_HEIGHT = GRID_WIDTH;
+        public static final Vector3f GRID_COLOR =
+                        new Vector3f(0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f);
 
         public static final int CAMERA_ZOOM_OUT = 3;
 
