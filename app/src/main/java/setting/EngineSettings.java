@@ -18,7 +18,7 @@ public final class EngineSettings {
         public static final Vector3f GRID_COLOR =
                         new Vector3f(0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f);
 
-        public static final int CAMERA_ZOOM_OUT = 3;
+        public static final int CAMERA_ZOOM_OUT = 5 * 1;
 
         public static final Vector4f BACKGROUND_COLOR =
                         new Vector4f(255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f, 1.0F);
