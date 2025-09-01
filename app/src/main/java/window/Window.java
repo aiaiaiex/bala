@@ -335,7 +335,7 @@ public final class Window implements Observer {
             case START_GAME:
                 runtimePlaying = true;
                 currentScene.saveFile();
-                changeScene(new GameScene());
+                changeScene(new GameScene(), true);
                 break;
             case STOP_GAME:
                 runtimePlaying = false;
@@ -357,6 +357,10 @@ public final class Window implements Observer {
     }
 
     public static void changeScene(SceneInitializer sceneInitializer) {
+        changeScene(sceneInitializer, false);
+    }
+
+    public static void changeScene(SceneInitializer sceneInitializer, boolean isGameScene) {
         if (getWindow().currentScene != null) {
             getWindow().currentScene.terminate();
         }
@@ -365,7 +369,7 @@ public final class Window implements Observer {
             getImguiLayer().getPropertiesWindow().setActiveGameObject(null);
         }
 
-        getWindow().currentScene = new Scene(sceneInitializer);
+        getWindow().currentScene = new Scene(sceneInitializer, isGameScene);
         getWindow().currentScene.loadFile();
         getWindow().currentScene.initialize();
         getWindow().currentScene.start();

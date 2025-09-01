@@ -2,6 +2,7 @@ package object;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import org.jbox2d.dynamics.BodyType;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -84,10 +85,15 @@ public class GameObjectGenerator {
     }
 
     public static GameObject generateEnemy(int index) {
+        return generateEnemy(index, new Vector2f());
+    }
+
+    public static GameObject generateEnemy(int index, Vector2f position) {
         SpriteSheet enemies = ObjectPool.getSpriteSheet(EngineSettings.ENEMIES.getFilePath());
         GameObject enemy = generateSpriteObject(enemies.getSprite(index), EngineSettings.GRID_WIDTH,
                 EngineSettings.GRID_HEIGHT);
 
+        enemy.transform.position = position;
         enemy.transform.zIndex = 2;
 
         ColliderAdder.addCollider(enemy);
@@ -144,8 +150,8 @@ public class GameObjectGenerator {
 
                 GameObject gameObject = generateSpriteObject(
                         nonCollidableTerrain
-                                .getSprite((int) Math.floor((ProceduralNoise.getNoise(x * 10,
-                                        y * 10, (float) GLFW.glfwGetTime() * 10) * 0.5f + 0.5f)
+                                .getSprite((int) Math.floor((ProceduralNoise.getNoise(x * 10.0f,
+                                        y * 10.0f, (float) GLFW.glfwGetTime() * 10) * 0.5f + 0.5f)
                                         * spriteAmount)),
                         EngineSettings.GRID_WIDTH, EngineSettings.GRID_HEIGHT);
 
@@ -155,6 +161,41 @@ public class GameObjectGenerator {
                 gameObject.transform.position.y = yPosition;
 
                 gameObjects.add(gameObject);
+            }
+        }
+
+        return gameObjects;
+    }
+
+    public static List<GameObject> procedurallyGenerateEnemies(Camera camera) {
+        List<GameObject> gameObjects = new ArrayList<>();
+        SpriteSheet enemies = ObjectPool.getSpriteSheet(EngineSettings.ENEMIES.getFilePath());
+        int spriteAmount = enemies.getSprites().size();
+
+        Vector4f gridStarter = camera.getGridStarter();
+        float firstXPosition = gridStarter.x;
+        float firstYPosition = gridStarter.y;
+        int columns = (int) gridStarter.z;
+        int rows = (int) gridStarter.w;
+
+        Random rng = new Random();
+
+        for (int x = 0; x < columns; x++) {
+            float xPosition = firstXPosition + EngineSettings.GRID_WIDTH * x;
+            for (int y = 0; y < rows; y++) {
+                float yPosition = firstYPosition + EngineSettings.GRID_HEIGHT * y;
+
+                float noise = ProceduralNoise.getNoise(x * 10.0f, y * 10.0f,
+                        (float) GLFW.glfwGetTime() * 10) * 0.5f + 0.5f;
+
+                if (noise <= 0.85f) {
+                    continue;
+                }
+
+                GameObject enemy = generateEnemy(rng.nextInt(spriteAmount),
+                        new Vector2f(xPosition, yPosition));
+
+                gameObjects.add(enemy);
             }
         }
 

@@ -61,6 +61,7 @@ public final class EngineSettings {
         public static final boolean USE_FLOCKING = true;
 
         public static final boolean FOLLOW_MOUSE = true;
+        public static final boolean GENERATE_ENEMIES = true;
 
         private EngineSettings() {}
 }

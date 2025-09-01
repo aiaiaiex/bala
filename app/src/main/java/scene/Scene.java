@@ -32,13 +32,23 @@ public class Scene {
 
     private SceneInitializer sceneInitializer;
 
+    private boolean isGameScene;
+    private float generateEnemiesCooldown = 0.5f;
+    private float generateEnemiesTimer = generateEnemiesCooldown;
+
     public Scene(SceneInitializer sceneInitializer) {
+        this(sceneInitializer, false);
+    }
+
+    public Scene(SceneInitializer sceneInitializer, boolean isGameScene) {
         this.sceneInitializer = sceneInitializer;
         physics2D = new Physics();
         renderer = new Renderer();
         gameObjects = new ArrayList<>();
         pendingObjects = new ArrayList<>();
         isRunning = false;
+
+        this.isGameScene = isGameScene;
     }
 
     public Physics getPhysics() {
@@ -148,6 +158,13 @@ public class Scene {
             physics2D.add(pendingObject);
         }
         pendingObjects.clear();
+
+        generateEnemiesTimer -= deltaTime;
+        if (EngineSettings.GENERATE_ENEMIES && isGameScene && generateEnemiesTimer <= 0.0f) {
+            GameObjectGenerator.procedurallyGenerateEnemies(camera)
+                    .forEach(this::addGameObjectToScene);;
+            generateEnemiesTimer = generateEnemiesCooldown;
+        }
     }
 
     public void clearScene() {
