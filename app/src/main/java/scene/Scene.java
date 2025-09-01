@@ -60,6 +60,10 @@ public class Scene {
         camera = new Camera(new Vector2f(0, 0));
         sceneInitializer.loadResources(this);
         sceneInitializer.initialize(this);
+
+        if (EngineSettings.GENERATE_ENEMIES_INITIALLY_WHILE_PLAYING && isGameScene) {
+            fillSceneWithEnemies();
+        }
     }
 
     public void start() {
@@ -161,7 +165,8 @@ public class Scene {
         pendingObjects.clear();
 
         generateEnemiesTimer -= deltaTime;
-        if (EngineSettings.GENERATE_ENEMIES && isGameScene && generateEnemiesTimer <= 0.0f) {
+        if (EngineSettings.PROCEDURALLY_GENERATE_ENEMIES_WHILE_PLAYING && isGameScene
+                && generateEnemiesTimer <= 0.0f) {
             GameObjectGenerator.procedurallyGenerateEnemies(camera).forEach(gameObject -> {
                 addGameObjectToScene(gameObject);
                 enemyCount += 1;
@@ -184,9 +189,17 @@ public class Scene {
         }
     }
 
-    public void fillScene() {
+    public void fillSceneWithNonCollidableTerrain() {
         GameObjectGenerator.procedurallyGenerateNonCollidableTerrain(camera)
                 .forEach(this::addGameObjectToScene);
+    }
+
+    public void fillSceneWithEnemies() {
+        GameObjectGenerator.generateEnemies(camera, EngineSettings.ENEMY_COUNT)
+                .forEach(gameObject -> {
+                    addGameObjectToScene(gameObject);
+                    enemyCount += 1;
+                });
     }
 
     public void render() {

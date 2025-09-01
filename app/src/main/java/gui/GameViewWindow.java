@@ -51,9 +51,12 @@ public class GameViewWindow {
         if (ImGui.menuItem("Clear Game Scene", "", isPlaying, !isPlaying)) {
             subject.notifyObservers(Event.CLEAR_LEVEL);
         }
-        if (ImGui.menuItem("Procedurally Generate Non-Collideable Terrain", "", isPlaying,
+        if (ImGui.menuItem("Procedurally Generate Non-Collidable Terrain", "", isPlaying,
                 !isPlaying)) {
-            subject.notifyObservers(Event.FILL_LEVEL);
+            subject.notifyObservers(Event.FILL_NON_COLLIDABLE_TERRAIN);
+        }
+        if (ImGui.menuItem("Generate Enemies", "", isPlaying, !isPlaying)) {
+            subject.notifyObservers(Event.FILL_ENEMIES);
         }
         ImGui.endMenuBar();
 

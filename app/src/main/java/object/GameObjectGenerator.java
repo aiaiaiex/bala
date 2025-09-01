@@ -201,4 +201,41 @@ public class GameObjectGenerator {
 
         return gameObjects;
     }
+
+    public static List<GameObject> generateEnemies(Camera camera, int enemyCount) {
+        List<GameObject> gameObjects = new ArrayList<>();
+        SpriteSheet enemies = ObjectPool.getSpriteSheet(EngineSettings.ENEMIES.getFilePath());
+        int spriteAmount = enemies.getSprites().size();
+
+        Vector4f gridStarter = camera.getGridStarter();
+        float firstXPosition = gridStarter.x;
+        float firstYPosition = gridStarter.y;
+        int columns = (int) gridStarter.z;
+        int rows = (int) gridStarter.w;
+
+        int currentEnemyCount = 0;
+        for (int x = 0; x < columns; x++) {
+            float xPosition = firstXPosition + EngineSettings.GRID_WIDTH * x;
+            for (int y = 0; y < rows; y++) {
+                float yPosition = firstYPosition + EngineSettings.GRID_HEIGHT * y;
+
+                float noise = ProceduralNoise.getNoise(x * 10.0f, y * 10.0f,
+                        (float) GLFW.glfwGetTime() * 10) * 0.5f + 0.5f;
+
+                GameObject enemy = generateEnemy((int) Math.floor(noise * spriteAmount),
+                        new Vector2f(xPosition, yPosition));
+
+                gameObjects.add(enemy);
+                currentEnemyCount += 1;
+                if (currentEnemyCount == enemyCount) {
+                    break;
+                }
+            }
+            if (currentEnemyCount == enemyCount) {
+                break;
+            }
+        }
+
+        return gameObjects;
+    }
 }

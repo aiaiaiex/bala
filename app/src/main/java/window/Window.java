@@ -356,8 +356,11 @@ public final class Window implements Observer {
             case CLEAR_LEVEL:
                 currentScene.clearScene();
                 break;
-            case FILL_LEVEL:
-                currentScene.fillScene();
+            case FILL_NON_COLLIDABLE_TERRAIN:
+                currentScene.fillSceneWithNonCollidableTerrain();
+                break;
+            case FILL_ENEMIES:
+                currentScene.fillSceneWithEnemies();
                 break;
         }
     }
