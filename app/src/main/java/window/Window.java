@@ -350,6 +350,9 @@ public final class Window implements Observer {
             case CLEAR_LEVEL:
                 currentScene.clearScene();
                 break;
+            case FILL_LEVEL:
+                currentScene.fillScene();
+                break;
         }
     }
 

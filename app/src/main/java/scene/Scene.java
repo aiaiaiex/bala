@@ -17,6 +17,7 @@ import component.Transform;
 import graphics.Renderer;
 import object.GameObject;
 import object.GameObjectDeserializer;
+import object.GameObjectGenerator;
 import physics.Physics;
 import setting.EngineSettings;
 
@@ -156,6 +157,11 @@ public class Scene {
             }
             gameObject.destroy();
         }
+    }
+
+    public void fillScene() {
+        GameObjectGenerator.procedurallyGenerateNonCollidableTerrain(camera)
+                .forEach(this::addGameObjectToScene);
     }
 
     public void render() {
