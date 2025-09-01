@@ -1,8 +1,7 @@
 package component;
 
 import org.joml.Vector2f;
-import org.joml.Vector3f;
-import camera.Camera;
+import org.joml.Vector4f;
 import graphics.DebugDraw;
 import setting.EngineSettings;
 import window.Window;
@@ -11,37 +10,31 @@ public class GridLines extends Component {
 
         @Override
         public void editorUpdate(float dt) {
-                Camera camera = Window.getScene().getCamera();
-                Vector2f cameraPos = camera.position;
-                Vector2f projectionSize = camera.getProjectionSize();
+                Vector4f gridStarter = Window.getScene().getCamera().getGridStarter();
 
-                float firstX = ((int) Math.floor(cameraPos.x / EngineSettings.GRID_WIDTH))
-                                * EngineSettings.GRID_WIDTH;
-                float firstY = ((int) Math.floor(cameraPos.y / EngineSettings.GRID_HEIGHT))
-                                * EngineSettings.GRID_HEIGHT;
+                float firstXPosition = gridStarter.x - (EngineSettings.GRID_WIDTH / 2);
+                float firstYPosition = gridStarter.y - (EngineSettings.GRID_HEIGHT / 2);
 
-                int numVtLines = (int) (projectionSize.x * camera.getZoom()
-                                / EngineSettings.GRID_WIDTH) + 1;
-                int numHzLines = (int) (projectionSize.y * camera.getZoom()
-                                / EngineSettings.GRID_HEIGHT) + 1;
+                int columns = (int) gridStarter.z - 1;
+                int rows = (int) gridStarter.z - 1;
 
-                float width = (numVtLines + 1) * EngineSettings.GRID_WIDTH;
-                float height = (numHzLines + 1) * EngineSettings.GRID_HEIGHT;
+                float rowWidth = (columns + 1) * EngineSettings.GRID_WIDTH;
+                float columnHeight = (rows + 1) * EngineSettings.GRID_HEIGHT;
 
-                int maxLines = Math.max(numVtLines, numHzLines);
-                Vector3f color = new Vector3f(0.2f, 0.2f, 0.2f);
-                for (int i = 1; i <= maxLines; i++) {
-                        float x = firstX + (EngineSettings.GRID_WIDTH * i);
-                        float y = firstY + (EngineSettings.GRID_HEIGHT * i);
+                for (int lineNumber = 1; lineNumber <= Math.max(columns, rows); lineNumber++) {
+                        float x = firstXPosition + (EngineSettings.GRID_WIDTH * lineNumber);
+                        float y = firstYPosition + (EngineSettings.GRID_HEIGHT * lineNumber);
 
-                        if (i <= numVtLines) {
-                                DebugDraw.addLine2D(new Vector2f(x, firstY),
-                                                new Vector2f(x, firstY + height), color);
+                        if (lineNumber <= columns) {
+                                DebugDraw.addLine2D(new Vector2f(x, firstYPosition),
+                                                new Vector2f(x, firstYPosition + columnHeight),
+                                                EngineSettings.GRID_COLOR);
                         }
 
-                        if (i <= numHzLines) {
-                                DebugDraw.addLine2D(new Vector2f(firstX, y),
-                                                new Vector2f(firstX + width, y), color);
+                        if (lineNumber <= rows) {
+                                DebugDraw.addLine2D(new Vector2f(firstXPosition, y),
+                                                new Vector2f(firstXPosition + rowWidth, y),
+                                                EngineSettings.GRID_COLOR);
                         }
                 }
         }

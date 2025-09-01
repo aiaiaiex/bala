@@ -5,6 +5,7 @@ import java.util.List;
 import org.jbox2d.dynamics.BodyType;
 import org.joml.Random;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 import camera.Camera;
 import component.Sprite;
 import component.SpriteRenderer;
@@ -132,16 +133,11 @@ public class GameObjectGenerator {
         // TODO Replace rng with Perlin and Simplex noise.
         Random rng = new Random();
 
-        Vector2f projectionSize = camera.getProjectionSize();
-        float cameraZoom = camera.getZoom();
-
-        float firstXPosition = ((int) Math.floor(camera.position.x / EngineSettings.GRID_WIDTH))
-                * EngineSettings.GRID_WIDTH + (EngineSettings.GRID_WIDTH / 2);
-        float firstYPosition = ((int) Math.floor(camera.position.y / EngineSettings.GRID_HEIGHT))
-                * EngineSettings.GRID_HEIGHT + (EngineSettings.GRID_HEIGHT / 2);
-
-        int columns = (int) (projectionSize.x * cameraZoom / EngineSettings.GRID_WIDTH) + 2;
-        int rows = (int) (projectionSize.y * cameraZoom / EngineSettings.GRID_HEIGHT) + 2;
+        Vector4f gridStarter = camera.getGridStarter();
+        float firstXPosition = gridStarter.x;
+        float firstYPosition = gridStarter.y;
+        int columns = (int) gridStarter.z;
+        int rows = (int) gridStarter.w;
 
         for (int x = 0; x < columns; x++) {
             float xPosition = firstXPosition + EngineSettings.GRID_WIDTH * x;
