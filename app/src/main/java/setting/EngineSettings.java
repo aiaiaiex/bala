@@ -58,6 +58,9 @@ public final class EngineSettings {
 
         public static final boolean USE_CIRCLE_COLLIDER = true;
         public static final boolean USE_PERLIN_NOISE = true;
+        public static final boolean USE_FLOCKING = true;
+
+        public static final boolean FOLLOW_MOUSE = true;
 
         private EngineSettings() {}
 }

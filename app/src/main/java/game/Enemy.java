@@ -4,6 +4,7 @@ import org.jbox2d.dynamics.contacts.Contact;
 import org.joml.Vector2f;
 import camera.Camera;
 import component.Component;
+import input.Mouse;
 import object.GameObject;
 import object.GameObjectGenerator;
 import object.ObjectPool;
@@ -26,12 +27,18 @@ public class Enemy extends Component {
     private transient Vector2f playerPosition;
     private transient Sound deathSound;
 
+    private transient Mouse mouse;
+
     @Override
     public void start() {
         rb = gameObject.getComponent(Rigidbody2D.class);
         camera = Window.getScene().getCamera();
         acceleration = Window.getPhysics().getGravity();
         deathSound = ObjectPool.getSound(EngineSettings.DEFAULT_ENEMY_DEATH_SOUND);
+
+        if (EngineSettings.FOLLOW_MOUSE) {
+            mouse = Mouse.getMouse();
+        }
     }
 
     @Override
@@ -45,9 +52,13 @@ public class Enemy extends Component {
             return;
         }
 
-        playerPosition = new Vector2f(
-                camera.position.x + ((camera.getProjectionSize().x / 2) * camera.getZoom()),
-                camera.position.y + ((camera.getProjectionSize().y / 2)) * camera.getZoom());
+        if (!EngineSettings.FOLLOW_MOUSE) {
+            playerPosition = new Vector2f(
+                    camera.position.x + ((camera.getProjectionSize().x / 2) * camera.getZoom()),
+                    camera.position.y + ((camera.getProjectionSize().y / 2)) * camera.getZoom());
+        } else {
+            playerPosition = mouse.getWorld();
+        }
 
         Vector2f followVector = playerPosition.sub(gameObject.transform.position);
 
