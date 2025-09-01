@@ -347,6 +347,9 @@ public final class Window implements Observer {
             case LOAD_LEVEL:
                 changeScene(new GameObjectPickerScene());
                 break;
+            case CLEAR_LEVEL:
+                currentScene.clearScene();
+                break;
         }
     }
 

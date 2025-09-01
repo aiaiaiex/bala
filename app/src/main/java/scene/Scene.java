@@ -149,6 +149,15 @@ public class Scene {
         pendingObjects.clear();
     }
 
+    public void clearScene() {
+        for (GameObject gameObject : gameObjects) {
+            if (gameObject.name.equals("LevelEditor") || gameObject.name.equals("GameCamera")) {
+                continue;
+            }
+            gameObject.destroy();
+        }
+    }
+
     public void render() {
         renderer.render();
     }

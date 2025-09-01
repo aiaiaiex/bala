@@ -47,6 +47,10 @@ public class GameViewWindow {
         if (ImGui.menuItem("Load Game Scene", "", isPlaying, !isPlaying)) {
             subject.notifyObservers(Event.LOAD_LEVEL);
         }
+
+        if (ImGui.menuItem("Clear Game Scene", "", isPlaying, !isPlaying)) {
+            subject.notifyObservers(Event.CLEAR_LEVEL);
+        }
         ImGui.endMenuBar();
 
 
