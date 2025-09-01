@@ -1,7 +1,11 @@
 package object;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.jbox2d.dynamics.BodyType;
+import org.joml.Random;
 import org.joml.Vector2f;
+import camera.Camera;
 import component.Sprite;
 import component.SpriteRenderer;
 import game.Drop;
@@ -117,5 +121,43 @@ public class GameObjectGenerator {
         projectile.addComponent(new Projectile());
 
         return projectile;
+    }
+
+    public static List<GameObject> procedurallyGenerateNonCollidableTerrain(Camera camera) {
+        List<GameObject> gameObjects = new ArrayList<>();
+        SpriteSheet nonCollidableTerrain =
+                ObjectPool.getSpriteSheet(EngineSettings.NON_COLLIDABLE_TERRAIN.getFilePath());
+        int spriteAmount = nonCollidableTerrain.getSprites().size();
+
+        // TODO Replace rng with Perlin and Simplex noise.
+        Random rng = new Random();
+
+        Vector2f projectionSize = camera.getProjectionSize();
+        float cameraZoom = camera.getZoom();
+
+        float firstXPosition = ((int) Math.floor(camera.position.x / EngineSettings.GRID_WIDTH))
+                * EngineSettings.GRID_WIDTH + (EngineSettings.GRID_WIDTH / 2);
+        float firstYPosition = ((int) Math.floor(camera.position.y / EngineSettings.GRID_HEIGHT))
+                * EngineSettings.GRID_HEIGHT + (EngineSettings.GRID_HEIGHT / 2);
+
+        int columns = (int) (projectionSize.x * cameraZoom / EngineSettings.GRID_WIDTH) + 2;
+        int rows = (int) (projectionSize.y * cameraZoom / EngineSettings.GRID_HEIGHT) + 2;
+
+        for (int x = 0; x < columns; x++) {
+            float xPosition = firstXPosition + EngineSettings.GRID_WIDTH * x;
+            for (int y = 0; y < rows; y++) {
+                float yPosition = firstYPosition + EngineSettings.GRID_HEIGHT * y;
+
+                GameObject gameObject = generateSpriteObject(
+                        nonCollidableTerrain.getSprite(rng.nextInt(spriteAmount)),
+                        EngineSettings.GRID_WIDTH, EngineSettings.GRID_HEIGHT);
+                gameObject.transform.position.x = xPosition;
+                gameObject.transform.position.y = yPosition;
+
+                gameObjects.add(gameObject);
+            }
+        }
+
+        return gameObjects;
     }
 }
