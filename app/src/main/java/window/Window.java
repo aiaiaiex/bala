@@ -89,17 +89,11 @@ public final class Window implements Observer {
     }
 
     public void run() {
-        // TODO Remove after moving.
-        // AverageFrameTimeLogger.getAverageFrameTimeLogger().start();
-        // ExactFrameTimeLogger.getExactFrameTimeLogger().start();
 
         initialize();
         loop();
         terminate();
 
-        // TODO Remove after moving.
-        // AverageFrameTimeLogger.getAverageFrameTimeLogger().stop();
-        // ExactFrameTimeLogger.getExactFrameTimeLogger().stop();
     }
 
     public void initialize() {
@@ -255,15 +249,16 @@ public final class Window implements Observer {
             endTime = GLFW.glfwGetTime();
             deltaTime = endTime - startTime;
 
-            exactFrameTimeLogger.info(endTime + "," + deltaTime);
+            exactFrameTimeLogger
+                    .info(endTime + "," + deltaTime + "," + currentScene.getEnemyCount());
 
             startTime = endTime;
 
             frames += 1;
             elapsedTime += deltaTime;
             if (elapsedTime >= 1.0d) {
-                averageFrameTimeLogger
-                        .info(elapsedTime + "," + frames + "," + (elapsedTime / (double) frames));
+                averageFrameTimeLogger.info(elapsedTime + "," + frames + ","
+                        + (elapsedTime / (double) frames) + "," + currentScene.getEnemyCount());
 
                 frames = 0;
                 elapsedTime = 0.0d;
@@ -276,6 +271,9 @@ public final class Window implements Observer {
             globalLogger.warning("window is NOT even initialized");
             return;
         }
+
+        AverageFrameTimeLogger.getAverageFrameTimeLogger().stop();
+        ExactFrameTimeLogger.getExactFrameTimeLogger().stop();
 
         SoundDevice.getSoundDevice().terminate();;
 
@@ -336,9 +334,17 @@ public final class Window implements Observer {
                 runtimePlaying = true;
                 currentScene.saveFile();
                 changeScene(new GameScene(), true);
+                String logName = String.format("%1$s-%2$s%3$s",
+                        EngineSettings.USE_PERLIN_NOISE ? "perlin" : "simplex",
+                        EngineSettings.USE_CIRCLE_COLLIDER ? "circle" : "box",
+                        EngineSettings.USE_FLOCKING ? "-flocking" : "");
+                AverageFrameTimeLogger.getAverageFrameTimeLogger().start(logName);
+                ExactFrameTimeLogger.getExactFrameTimeLogger().start(logName);
                 break;
             case STOP_GAME:
                 runtimePlaying = false;
+                AverageFrameTimeLogger.getAverageFrameTimeLogger().stop();
+                ExactFrameTimeLogger.getExactFrameTimeLogger().stop();
                 changeScene(new GameObjectPickerScene());
                 break;
             case SAVE_LEVEL:

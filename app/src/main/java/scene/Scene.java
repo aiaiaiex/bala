@@ -35,6 +35,7 @@ public class Scene {
     private boolean isGameScene;
     private float generateEnemiesCooldown = 0.5f;
     private float generateEnemiesTimer = generateEnemiesCooldown;
+    private int enemyCount = 0;
 
     public Scene(SceneInitializer sceneInitializer) {
         this(sceneInitializer, false);
@@ -161,10 +162,17 @@ public class Scene {
 
         generateEnemiesTimer -= deltaTime;
         if (EngineSettings.GENERATE_ENEMIES && isGameScene && generateEnemiesTimer <= 0.0f) {
-            GameObjectGenerator.procedurallyGenerateEnemies(camera)
-                    .forEach(this::addGameObjectToScene);;
+            GameObjectGenerator.procedurallyGenerateEnemies(camera).forEach(gameObject -> {
+                addGameObjectToScene(gameObject);
+                enemyCount += 1;
+            });
+
             generateEnemiesTimer = generateEnemiesCooldown;
         }
+    }
+
+    public int getEnemyCount() {
+        return enemyCount;
     }
 
     public void clearScene() {
