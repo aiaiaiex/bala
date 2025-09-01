@@ -3,9 +3,9 @@ package object;
 import java.util.ArrayList;
 import java.util.List;
 import org.jbox2d.dynamics.BodyType;
-import org.joml.Random;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
+import org.lwjgl.glfw.GLFW;
 import camera.Camera;
 import component.Sprite;
 import component.SpriteRenderer;
@@ -15,6 +15,7 @@ import game.Player;
 import game.Projectile;
 import physics.ColliderAdder;
 import physics.Rigidbody2D;
+import procedural.ProceduralNoise;
 import setting.EngineSettings;
 import window.Window;
 
@@ -130,9 +131,6 @@ public class GameObjectGenerator {
                 ObjectPool.getSpriteSheet(EngineSettings.NON_COLLIDABLE_TERRAIN.getFilePath());
         int spriteAmount = nonCollidableTerrain.getSprites().size();
 
-        // TODO Replace rng with Perlin and Simplex noise.
-        Random rng = new Random();
-
         Vector4f gridStarter = camera.getGridStarter();
         float firstXPosition = gridStarter.x;
         float firstYPosition = gridStarter.y;
@@ -145,8 +143,14 @@ public class GameObjectGenerator {
                 float yPosition = firstYPosition + EngineSettings.GRID_HEIGHT * y;
 
                 GameObject gameObject = generateSpriteObject(
-                        nonCollidableTerrain.getSprite(rng.nextInt(spriteAmount)),
+                        nonCollidableTerrain
+                                .getSprite((int) Math.floor((ProceduralNoise.getNoise(x * 10,
+                                        y * 10, (float) GLFW.glfwGetTime() * 10) * 0.5f + 0.5f)
+                                        * spriteAmount)),
                         EngineSettings.GRID_WIDTH, EngineSettings.GRID_HEIGHT);
+
+                gameObject.getComponent(SpriteRenderer.class).setProcedurallyUpdate(true);
+
                 gameObject.transform.position.x = xPosition;
                 gameObject.transform.position.y = yPosition;
 
