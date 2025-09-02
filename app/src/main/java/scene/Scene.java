@@ -34,7 +34,7 @@ public class Scene {
     private SceneInitializer sceneInitializer;
 
     private boolean isGameScene;
-    private float generateEnemiesCooldown = 1.0f;
+    private float generateEnemiesCooldown = 0.25f;
     private float generateEnemiesTimer = generateEnemiesCooldown;
     private List<GameObject> enemies = new ArrayList<>();
 
