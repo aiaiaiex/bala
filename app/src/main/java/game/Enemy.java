@@ -33,6 +33,9 @@ public class Enemy extends Component {
     private transient Scene scene;
 
     private transient List<GameObject> enemies;
+    // For flocking demo with collidable terrain.
+    // private transient float contactCooldownDuration = 1.0f;
+    // private transient float contactCooldown = 0.0f;
 
     public Vector2f getVelocity() {
         return velocity;
@@ -56,15 +59,17 @@ public class Enemy extends Component {
             // For flocking demo without following player.
             // Random rng = new Random();
             // velocity = new Vector2f(
-            // rng.nextFloat() * rng.nextInt((int) camera.getProjectionSize().x)
-            // * (rng.nextBoolean() ? 1 : -1),
-            // rng.nextFloat() * rng.nextInt((int) camera.getProjectionSize().y)
-            // * (rng.nextBoolean() ? 1 : -1));
+            // rng.nextFloat() * (rng.nextBoolean() ? maxVelocity.x : -maxVelocity.x),
+            // rng.nextFloat() * (rng.nextBoolean() ? maxVelocity.y : -maxVelocity.y));
         }
     }
 
     @Override
     public void update(float deltaTime) {
+
+        // For flocking demo with collidable terrain.
+        // contactCooldown -= deltaTime;
+
         if ((gameObject.transform.position.x < camera.position.x * camera.getZoom())
                 || (gameObject.transform.position.x > camera.position.x
                         + camera.getProjectionSize().x * camera.getZoom())
@@ -166,6 +171,8 @@ public class Enemy extends Component {
         vector.normalize();
         vector.mul(Math.min(length, maxForce.x));
 
+        // vector.mul(multiplier);
+
         acceleration.add(vector);
     }
 
@@ -176,10 +183,25 @@ public class Enemy extends Component {
         } else if (obj.getComponent(Projectile.class) != null) {
             obj.getComponent(Projectile.class).cleanup();
             cleanup();
-        } else if (EngineSettings.USE_FLOCKING && obj.transform.zIndex != 1
-                && obj.getComponent(Drop.class) == null) {
-            contact.setEnabled(false);
         }
+        // } else if (EngineSettings.USE_FLOCKING && obj.transform.zIndex == 2) {
+        // contact.setEnabled(false);
+        // }
+
+        // For flocking demo with collidable terrain.
+        // } else if (obj.transform.zIndex == 1 && obj.getComponent(Drop.class) == null) {
+        // if (contactCooldown <= 0.0f) {
+        // if (contactNormal.x > 0 || contactNormal.x < 0) {
+        // velocity.x *= -1;
+        // acceleration.x = 0;
+        // }
+        // if (contactNormal.y > 0 || contactNormal.y < 0) {
+        // velocity.y *= -1;
+        // acceleration.y = 0;
+        // }
+        // contactCooldown = contactCooldownDuration;
+        // }
+        // }
 
     }
 
