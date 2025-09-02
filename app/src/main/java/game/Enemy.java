@@ -176,7 +176,8 @@ public class Enemy extends Component {
         } else if (obj.getComponent(Projectile.class) != null) {
             obj.getComponent(Projectile.class).cleanup();
             cleanup();
-        } else if (EngineSettings.USE_FLOCKING) {
+        } else if (EngineSettings.USE_FLOCKING && obj.transform.zIndex != 1
+                && obj.getComponent(Drop.class) == null) {
             contact.setEnabled(false);
         }
 
