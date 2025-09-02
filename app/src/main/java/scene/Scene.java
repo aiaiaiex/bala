@@ -14,6 +14,7 @@ import camera.Camera;
 import component.Component;
 import component.ComponentDeserializer;
 import component.Transform;
+import game.Enemy;
 import graphics.Renderer;
 import object.GameObject;
 import object.GameObjectDeserializer;
@@ -35,7 +36,7 @@ public class Scene {
     private boolean isGameScene;
     private float generateEnemiesCooldown = 0.5f;
     private float generateEnemiesTimer = generateEnemiesCooldown;
-    private int enemyCount = 0;
+    private List<GameObject> enemies = new ArrayList<>();
 
     public Scene(SceneInitializer sceneInitializer) {
         this(sceneInitializer, false);
@@ -72,6 +73,10 @@ public class Scene {
             gameObject.start();
             renderer.add(gameObject);
             physics2D.add(gameObject);
+
+            if (gameObject.getComponent(Enemy.class) != null) {
+                enemies.add(gameObject);
+            }
         }
         isRunning = true;
     }
@@ -169,7 +174,7 @@ public class Scene {
                 && generateEnemiesTimer <= 0.0f) {
             GameObjectGenerator.procedurallyGenerateEnemies(camera).forEach(gameObject -> {
                 addGameObjectToScene(gameObject);
-                enemyCount += 1;
+                enemies.add(gameObject);
             });
 
             generateEnemiesTimer = generateEnemiesCooldown;
@@ -177,7 +182,11 @@ public class Scene {
     }
 
     public int getEnemyCount() {
-        return enemyCount;
+        return enemies.size();
+    }
+
+    public List<GameObject> getEnemies() {
+        return enemies;
     }
 
     public void clearScene() {
@@ -198,7 +207,7 @@ public class Scene {
         GameObjectGenerator.generateEnemies(camera, EngineSettings.ENEMY_COUNT)
                 .forEach(gameObject -> {
                     addGameObjectToScene(gameObject);
-                    enemyCount += 1;
+                    enemies.add(gameObject);
                 });
     }
 
