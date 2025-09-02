@@ -216,7 +216,13 @@ public class GameObjectGenerator {
         int currentEnemyCount = 0;
         for (int x = 0; x < columns; x++) {
             float xPosition = firstXPosition + EngineSettings.GRID_WIDTH * x;
+            if (x % 2 == 0) {
+                continue;
+            }
             for (int y = 0; y < rows; y++) {
+                if (y % 2 == 0) {
+                    continue;
+                }
                 float yPosition = firstYPosition + EngineSettings.GRID_HEIGHT * y;
 
                 float noise = ProceduralNoise.getNoise(x * 10.0f, y * 10.0f,
