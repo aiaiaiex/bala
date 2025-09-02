@@ -1,5 +1,6 @@
 package game;
 
+import java.util.List;
 import org.jbox2d.dynamics.contacts.Contact;
 import org.joml.Vector2f;
 import camera.Camera;
@@ -9,6 +10,7 @@ import object.GameObject;
 import object.GameObjectGenerator;
 import object.ObjectPool;
 import physics.Rigidbody2D;
+import scene.Scene;
 import setting.EngineSettings;
 import sound.Sound;
 import window.Window;
@@ -17,10 +19,10 @@ public class Enemy extends Component {
 
     private transient Rigidbody2D rb;
 
-    private transient float minimumSpeed = 0.5f;
-    private transient float maximumSpeed = 0.5f;
-    private transient Vector2f velocity = new Vector2f();
-    private transient Vector2f acceleration = new Vector2f();
+    private transient Vector2f maxVelocity = new Vector2f(2.0f, 2.0f);
+    private transient Vector2f velocity = new Vector2f(0.0f, 0.0f);
+    private transient Vector2f acceleration = new Vector2f(0.0f, 0.0f);
+    private transient Vector2f maxForce = new Vector2f(maxVelocity.x / 2, maxVelocity.y / 2);
 
     private transient float width = EngineSettings.GRID_WIDTH;
     private transient Camera camera;
@@ -28,16 +30,36 @@ public class Enemy extends Component {
     private transient Sound deathSound;
 
     private transient Mouse mouse;
+    private transient Scene scene;
+
+    private transient List<GameObject> enemies;
+
+    public Vector2f getVelocity() {
+        return velocity;
+    }
 
     @Override
     public void start() {
         rb = gameObject.getComponent(Rigidbody2D.class);
-        camera = Window.getScene().getCamera();
+        scene = Window.getScene();
+        camera = scene.getCamera();
         acceleration = Window.getPhysics().getGravity();
         deathSound = ObjectPool.getSound(EngineSettings.DEFAULT_ENEMY_DEATH_SOUND);
 
         if (EngineSettings.FOLLOW_MOUSE) {
             mouse = Mouse.getMouse();
+        }
+
+        if (EngineSettings.USE_FLOCKING) {
+            enemies = scene.getEnemies();
+
+            // For flocking demo without following player.
+            // Random rng = new Random();
+            // velocity = new Vector2f(
+            // rng.nextFloat() * rng.nextInt((int) camera.getProjectionSize().x)
+            // * (rng.nextBoolean() ? 1 : -1),
+            // rng.nextFloat() * rng.nextInt((int) camera.getProjectionSize().y)
+            // * (rng.nextBoolean() ? 1 : -1));
         }
     }
 
@@ -60,16 +82,71 @@ public class Enemy extends Component {
             playerPosition = mouse.getWorld();
         }
 
-        Vector2f followVector = playerPosition.sub(gameObject.transform.position);
+        acceleration.zero();
 
-        velocity.x = followVector.x > 0
-                ? Math.min(minimumSpeed + acceleration.x * deltaTime, maximumSpeed)
-                : Math.min(-minimumSpeed - acceleration.x * deltaTime, -maximumSpeed);
-        velocity.y = followVector.y > 0
-                ? Math.min(minimumSpeed + acceleration.y * deltaTime, maximumSpeed)
-                : Math.min(-minimumSpeed - acceleration.y * deltaTime, -maximumSpeed);
+        if (EngineSettings.USE_FLOCKING) {
+
+            Vector2f separateSum = new Vector2f();
+            Vector2f alignSum = new Vector2f();
+            Vector2f coherenceSum = new Vector2f();
+
+            int neighborCount = 0;
+            int separateCount = 0;
+
+            for (GameObject gameObject : enemies) {
+                Enemy enemy = gameObject.getComponent(Enemy.class);
+                Vector2f enemyVelocity = enemy.getVelocity();
+
+                float distance =
+                        gameObject.transform.position.distance(this.gameObject.transform.position);
+
+                if ((distance > 0) && (distance < EngineSettings.FLOCKING_NEIGHBOR_DISTANCE)) {
+                    alignSum.add(enemyVelocity);
+                    coherenceSum.add(gameObject.transform.position);
+                    neighborCount += 1;
+                }
+
+                if ((distance > 0) && (distance < EngineSettings.FLOCKING_SEPARATE_DISTANCE)) {
+                    Vector2f positionDifference = new Vector2f(this.gameObject.transform.position);
+                    positionDifference.sub(gameObject.transform.position);
+                    positionDifference.normalize();
+                    positionDifference.div(distance);
+                    separateSum.add(positionDifference);
+                    separateCount += 1;
+                }
+            }
+
+            if (separateCount > 0) {
+                moveToVector(separateSum, EngineSettings.FLOCKING_SEPARATE_MULTIPLIER);
+            }
+            if (neighborCount > 0) {
+                moveToVector(alignSum, EngineSettings.FLOCKING_ALIGN_MULTIPLIER);
+
+                coherenceSum.div(neighborCount);
+                coherenceSum.sub(gameObject.transform.position);
+                moveToVector(coherenceSum, EngineSettings.FLOCKING_COHERENCE_MULTIPLIER);
+            }
+        }
+
+
+        float avoid = 1.0f;
+        if (gameObject.transform.position.distance(playerPosition) < EngineSettings.GRID_WIDTH
+                * 4) {
+            avoid = -1.0f;
+        }
+
+        playerPosition.sub(gameObject.transform.position);
+        moveToVector(playerPosition, 1.0f * avoid);
+
+        acceleration.mul(deltaTime);
+        velocity.add(acceleration);
+
+        float length = velocity.length();
+        velocity.normalize();
+        velocity.mul(Math.min(length, maxVelocity.x));
 
         rb.setVelocity(velocity);
+
 
         if (velocity.x > 0) {
             gameObject.transform.scale.x = width;
@@ -78,15 +155,29 @@ public class Enemy extends Component {
         }
     }
 
+    private void moveToVector(Vector2f vector, float multiplier) {
+        vector.normalize();
+        vector.mul(maxVelocity);
+        vector.sub(velocity);
+
+        vector.mul(multiplier);
+
+        float length = vector.length();
+        vector.normalize();
+        vector.mul(Math.min(length, maxForce.x));
+
+        acceleration.add(vector);
+    }
+
     @Override
     public void preSolve(GameObject obj, Contact contact, Vector2f contactNormal) {
         if (obj.getComponent(Player.class) != null) {
             cleanup();
-        }
-
-        if (obj.getComponent(Projectile.class) != null) {
+        } else if (obj.getComponent(Projectile.class) != null) {
             obj.getComponent(Projectile.class).cleanup();
             cleanup();
+        } else if (EngineSettings.USE_FLOCKING) {
+            contact.setEnabled(false);
         }
 
     }

@@ -34,7 +34,7 @@ public class Scene {
     private SceneInitializer sceneInitializer;
 
     private boolean isGameScene;
-    private float generateEnemiesCooldown = 0.5f;
+    private float generateEnemiesCooldown = 1.0f;
     private float generateEnemiesTimer = generateEnemiesCooldown;
     private List<GameObject> enemies = new ArrayList<>();
 
@@ -204,7 +204,7 @@ public class Scene {
     }
 
     public void fillSceneWithEnemies() {
-        GameObjectGenerator.generateEnemies(camera, EngineSettings.ENEMY_COUNT)
+        GameObjectGenerator.generateEnemies(camera, EngineSettings.ENEMY_COUNT_TO_GENERATE)
                 .forEach(gameObject -> {
                     addGameObjectToScene(gameObject);
                     enemies.add(gameObject);
