@@ -167,7 +167,7 @@ public class GameObjectGenerator {
         return gameObjects;
     }
 
-    public static List<GameObject> procedurallyGenerateEnemies(Camera camera) {
+    public static List<GameObject> procedurallyGenerateEnemies(Camera camera, int enemyCount) {
         List<GameObject> gameObjects = new ArrayList<>();
         SpriteSheet enemies = ObjectPool.getSpriteSheet(EngineSettings.ENEMIES.getFilePath());
         int spriteAmount = enemies.getSprites().size();
@@ -180,15 +180,23 @@ public class GameObjectGenerator {
 
         Random rng = new Random();
 
+        int currentEnemyCount = 0;
         for (int x = 0; x < columns; x++) {
             float xPosition = firstXPosition + EngineSettings.GRID_WIDTH * x;
+            if (x % 2 == 0) {
+                continue;
+            }
+
             for (int y = 0; y < rows; y++) {
+                if (y % 2 == 0) {
+                    continue;
+                }
                 float yPosition = firstYPosition + EngineSettings.GRID_HEIGHT * y;
 
                 float noise = ProceduralNoise.getNoise(x * 10.0f, y * 10.0f,
                         (float) GLFW.glfwGetTime() * 10) * 0.5f + 0.5f;
 
-                if (noise <= 0.85f) {
+                if (noise <= (EngineSettings.USE_PERLIN_NOISE ? 0.70 : 0.85)) {
                     continue;
                 }
 
@@ -196,6 +204,13 @@ public class GameObjectGenerator {
                         new Vector2f(xPosition, yPosition));
 
                 gameObjects.add(enemy);
+                currentEnemyCount += 1;
+                if (currentEnemyCount >= enemyCount) {
+                    break;
+                }
+            }
+            if (currentEnemyCount >= enemyCount) {
+                break;
             }
         }
 
@@ -233,11 +248,11 @@ public class GameObjectGenerator {
 
                 gameObjects.add(enemy);
                 currentEnemyCount += 1;
-                if (currentEnemyCount == enemyCount) {
+                if (currentEnemyCount >= enemyCount) {
                     break;
                 }
             }
-            if (currentEnemyCount == enemyCount) {
+            if (currentEnemyCount >= enemyCount) {
                 break;
             }
         }
