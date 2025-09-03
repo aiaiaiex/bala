@@ -34,8 +34,7 @@ public class Scene {
     private SceneInitializer sceneInitializer;
 
     private boolean isGameScene;
-    private float generateEnemiesCooldown = 0.25f;
-    private float generateEnemiesTimer = generateEnemiesCooldown;
+    private float generateEnemiesCooldown = EngineSettings.GENERATE_ENEMIES_COOLDOWN;
     private List<GameObject> enemies = new ArrayList<>();
 
     public Scene(SceneInitializer sceneInitializer) {
@@ -169,15 +168,17 @@ public class Scene {
         }
         pendingObjects.clear();
 
-        generateEnemiesTimer -= deltaTime;
+        generateEnemiesCooldown -= deltaTime;
         if (EngineSettings.PROCEDURALLY_GENERATE_ENEMIES_WHILE_PLAYING && isGameScene
-                && generateEnemiesTimer <= 0.0f) {
-            GameObjectGenerator.procedurallyGenerateEnemies(camera).forEach(gameObject -> {
-                addGameObjectToScene(gameObject);
-                enemies.add(gameObject);
-            });
+                && generateEnemiesCooldown <= 0.0f) {
+            GameObjectGenerator
+                    .procedurallyGenerateEnemies(camera, EngineSettings.ENEMY_COUNT_TO_GENERATE)
+                    .forEach(gameObject -> {
+                        addGameObjectToScene(gameObject);
+                        enemies.add(gameObject);
+                    });
 
-            generateEnemiesTimer = generateEnemiesCooldown;
+            generateEnemiesCooldown = EngineSettings.GENERATE_ENEMIES_COOLDOWN;
         }
     }
 
