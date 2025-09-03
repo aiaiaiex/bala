@@ -134,14 +134,15 @@ public class Enemy extends Component {
         }
 
 
-        float avoid = 1.0f;
-        if (gameObject.transform.position.distance(playerPosition) < EngineSettings.GRID_WIDTH
-                * 4) {
-            avoid = -1.0f;
-        }
+        // float avoid = 1.0f;
+        // if (gameObject.transform.position.distance(playerPosition) < EngineSettings.GRID_WIDTH
+        // * 4) {
+        // avoid = -1.0f;
+        // }
 
         playerPosition.sub(gameObject.transform.position);
-        moveToVector(playerPosition, 1.0f * avoid);
+        // moveToVector(playerPosition, 1.0f * avoid);
+        moveToVector(playerPosition, 1.0f);
 
         acceleration.mul(deltaTime);
         velocity.add(acceleration);
