@@ -1,5 +1,6 @@
 package setting;
 
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 import object.ShaderMetadata;
 import object.SoundMetadata;
@@ -14,8 +15,10 @@ public final class EngineSettings {
 
         public static final float GRID_WIDTH = 0.25f;
         public static final float GRID_HEIGHT = GRID_WIDTH;
+        public static final Vector3f GRID_COLOR =
+                        new Vector3f(0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f);
 
-        public static final float CAMERA_ZOOM_OUT = 0.00f;
+        public static final int CAMERA_ZOOM_OUT = 5 * 4;
 
         public static final Vector4f BACKGROUND_COLOR =
                         new Vector4f(255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f, 1.0F);
@@ -52,6 +55,23 @@ public final class EngineSettings {
                         "./assets/shaders/outline.frag", "./assets/shaders/outline.vert");
         public static final ShaderMetadata PICKER_SHADER = new ShaderMetadata(
                         "./assets/shaders/picker.frag", "./assets/shaders/picker.vert");
+
+        public static final boolean USE_CIRCLE_COLLIDER = true;
+        public static final boolean USE_PERLIN_NOISE = true;
+        public static final boolean USE_FLOCKING = true;
+
+        public static final boolean FOLLOW_MOUSE = false;
+
+        public static final float GENERATE_ENEMIES_COOLDOWN = 1.0f;
+        public static final boolean PROCEDURALLY_GENERATE_ENEMIES_WHILE_PLAYING = true;
+        public static final int ENEMY_COUNT_TO_GENERATE = 75;
+        public static final boolean GENERATE_ENEMIES_INITIALLY_WHILE_PLAYING = false;
+
+        public static final float FLOCKING_NEIGHBOR_DISTANCE = GRID_WIDTH * 1;
+        public static final float FLOCKING_SEPARATE_DISTANCE = FLOCKING_NEIGHBOR_DISTANCE / 2;
+        public static final float FLOCKING_SEPARATE_MULTIPLIER = 1.0f;
+        public static final float FLOCKING_ALIGN_MULTIPLIER = 1.0f;
+        public static final float FLOCKING_COHERENCE_MULTIPLIER = 1.0f;
 
         private EngineSettings() {}
 }

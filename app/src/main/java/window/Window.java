@@ -42,6 +42,7 @@ public final class Window implements Observer {
     private int refreshRate;
     private int windowWidth, windowHeight;
     private long glfwWindow;
+    private int xPosition, yPosition;
 
     private Keyboard keyboard;
     private Mouse mouse;
@@ -88,17 +89,11 @@ public final class Window implements Observer {
     }
 
     public void run() {
-        // TODO Remove after moving.
-        // AverageFrameTimeLogger.getAverageFrameTimeLogger().start();
-        // ExactFrameTimeLogger.getExactFrameTimeLogger().start();
 
         initialize();
         loop();
         terminate();
 
-        // TODO Remove after moving.
-        // AverageFrameTimeLogger.getAverageFrameTimeLogger().stop();
-        // ExactFrameTimeLogger.getExactFrameTimeLogger().stop();
     }
 
     public void initialize() {
@@ -151,6 +146,7 @@ public final class Window implements Observer {
         GLFW.glfwSetScrollCallback(glfwWindow, mouse::scrollCallback);
 
         GLFW.glfwSetWindowSizeCallback(glfwWindow, window::windowSizeCallback);
+        GLFW.glfwSetWindowPosCallback(glfwWindow, window::windowPosCollback);
 
         GLFW.glfwMakeContextCurrent(glfwWindow);
 
@@ -253,15 +249,16 @@ public final class Window implements Observer {
             endTime = GLFW.glfwGetTime();
             deltaTime = endTime - startTime;
 
-            exactFrameTimeLogger.info(endTime + "," + deltaTime);
+            exactFrameTimeLogger
+                    .info(endTime + "," + deltaTime + "," + currentScene.getEnemyCount());
 
             startTime = endTime;
 
             frames += 1;
             elapsedTime += deltaTime;
             if (elapsedTime >= 1.0d) {
-                averageFrameTimeLogger
-                        .info(elapsedTime + "," + frames + "," + (elapsedTime / (double) frames));
+                averageFrameTimeLogger.info(elapsedTime + "," + frames + ","
+                        + (elapsedTime / (double) frames) + "," + currentScene.getEnemyCount());
 
                 frames = 0;
                 elapsedTime = 0.0d;
@@ -274,6 +271,9 @@ public final class Window implements Observer {
             globalLogger.warning("window is NOT even initialized");
             return;
         }
+
+        AverageFrameTimeLogger.getAverageFrameTimeLogger().stop();
+        ExactFrameTimeLogger.getExactFrameTimeLogger().stop();
 
         SoundDevice.getSoundDevice().terminate();;
 
@@ -306,11 +306,25 @@ public final class Window implements Observer {
         return windowHeight;
     }
 
+    public int getXPosition() {
+        return xPosition;
+    }
+
+    public int getYPosition() {
+        return yPosition;
+    }
+
     public void windowSizeCallback(long glfwWindow, int width, int height) {
         windowWidth = width;
         windowHeight = height;
 
         framebuffer = new Framebuffer(windowWidth, windowHeight);
+        pickingTexture = new PickingTexture(windowWidth, windowHeight);
+    }
+
+    public void windowPosCollback(long glfwWindow, int xpos, int ypos) {
+        xPosition = xpos;
+        yPosition = ypos;
     }
 
     @Override
@@ -319,10 +333,18 @@ public final class Window implements Observer {
             case START_GAME:
                 runtimePlaying = true;
                 currentScene.saveFile();
-                changeScene(new GameScene());
+                changeScene(new GameScene(), true);
+                String logName = String.format("%1$s-%2$s%3$s",
+                        EngineSettings.USE_PERLIN_NOISE ? "perlin" : "simplex",
+                        EngineSettings.USE_CIRCLE_COLLIDER ? "circle" : "box",
+                        EngineSettings.USE_FLOCKING ? "-flocking" : "");
+                AverageFrameTimeLogger.getAverageFrameTimeLogger().start(logName);
+                ExactFrameTimeLogger.getExactFrameTimeLogger().start(logName);
                 break;
             case STOP_GAME:
                 runtimePlaying = false;
+                AverageFrameTimeLogger.getAverageFrameTimeLogger().stop();
+                ExactFrameTimeLogger.getExactFrameTimeLogger().stop();
                 changeScene(new GameObjectPickerScene());
                 break;
             case SAVE_LEVEL:
@@ -331,10 +353,23 @@ public final class Window implements Observer {
             case LOAD_LEVEL:
                 changeScene(new GameObjectPickerScene());
                 break;
+            case CLEAR_LEVEL:
+                currentScene.clearScene();
+                break;
+            case FILL_NON_COLLIDABLE_TERRAIN:
+                currentScene.fillSceneWithNonCollidableTerrain();
+                break;
+            case FILL_ENEMIES:
+                currentScene.fillSceneWithEnemies();
+                break;
         }
     }
 
     public static void changeScene(SceneInitializer sceneInitializer) {
+        changeScene(sceneInitializer, false);
+    }
+
+    public static void changeScene(SceneInitializer sceneInitializer, boolean isGameScene) {
         if (getWindow().currentScene != null) {
             getWindow().currentScene.terminate();
         }
@@ -343,7 +378,7 @@ public final class Window implements Observer {
             getImguiLayer().getPropertiesWindow().setActiveGameObject(null);
         }
 
-        getWindow().currentScene = new Scene(sceneInitializer);
+        getWindow().currentScene = new Scene(sceneInitializer, isGameScene);
         getWindow().currentScene.loadFile();
         getWindow().currentScene.initialize();
         getWindow().currentScene.start();

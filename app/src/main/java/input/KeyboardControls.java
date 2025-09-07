@@ -10,13 +10,13 @@ import object.GameObject;
 import setting.EngineSettings;
 import window.Window;
 
-public class KeyControls extends Component {
+public class KeyboardControls extends Component {
     private float debounceTime = 0.2f;
     private float debounce = 0.0f;
 
     private Keyboard keyboard;
 
-    public KeyControls() {
+    public KeyboardControls() {
         keyboard = Keyboard.getKeyboard();
     }
 
@@ -27,7 +27,7 @@ public class KeyControls extends Component {
         PropertiesWindow propertiesWindow = Window.getImguiLayer().getPropertiesWindow();
         GameObject activeGameObject = propertiesWindow.getActiveGameObject();
         List<GameObject> activeGameObjects = propertiesWindow.getActiveGameObjects();
-        float multiplier = keyboard.isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT) ? 0.1f : 1.0f;
+        float multiplier = keyboard.isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT) ? 0.5f : 1.0f;
 
         if (keyboard.isKeyPressed(GLFW.GLFW_KEY_LEFT_CONTROL)
                 && keyboard.isKeyInitiallyPressed(GLFW.GLFW_KEY_D) && activeGameObject != null) {

@@ -14,9 +14,11 @@ import camera.Camera;
 import component.Component;
 import component.ComponentDeserializer;
 import component.Transform;
+import game.Enemy;
 import graphics.Renderer;
 import object.GameObject;
 import object.GameObjectDeserializer;
+import object.GameObjectGenerator;
 import physics.Physics;
 import setting.EngineSettings;
 
@@ -31,13 +33,23 @@ public class Scene {
 
     private SceneInitializer sceneInitializer;
 
+    private boolean isGameScene;
+    private float generateEnemiesCooldown = EngineSettings.GENERATE_ENEMIES_COOLDOWN;
+    private List<GameObject> enemies = new ArrayList<>();
+
     public Scene(SceneInitializer sceneInitializer) {
+        this(sceneInitializer, false);
+    }
+
+    public Scene(SceneInitializer sceneInitializer, boolean isGameScene) {
         this.sceneInitializer = sceneInitializer;
         physics2D = new Physics();
         renderer = new Renderer();
         gameObjects = new ArrayList<>();
         pendingObjects = new ArrayList<>();
         isRunning = false;
+
+        this.isGameScene = isGameScene;
     }
 
     public Physics getPhysics() {
@@ -48,6 +60,10 @@ public class Scene {
         camera = new Camera(new Vector2f(0, 0));
         sceneInitializer.loadResources(this);
         sceneInitializer.initialize(this);
+
+        if (EngineSettings.GENERATE_ENEMIES_INITIALLY_WHILE_PLAYING && isGameScene) {
+            fillSceneWithEnemies();
+        }
     }
 
     public void start() {
@@ -56,6 +72,10 @@ public class Scene {
             gameObject.start();
             renderer.add(gameObject);
             physics2D.add(gameObject);
+
+            if (gameObject.getComponent(Enemy.class) != null) {
+                enemies.add(gameObject);
+            }
         }
         isRunning = true;
     }
@@ -147,6 +167,49 @@ public class Scene {
             physics2D.add(pendingObject);
         }
         pendingObjects.clear();
+
+        generateEnemiesCooldown -= deltaTime;
+        if (EngineSettings.PROCEDURALLY_GENERATE_ENEMIES_WHILE_PLAYING && isGameScene
+                && generateEnemiesCooldown <= 0.0f) {
+            GameObjectGenerator
+                    .procedurallyGenerateEnemies(camera, EngineSettings.ENEMY_COUNT_TO_GENERATE)
+                    .forEach(gameObject -> {
+                        addGameObjectToScene(gameObject);
+                        enemies.add(gameObject);
+                    });
+
+            generateEnemiesCooldown = EngineSettings.GENERATE_ENEMIES_COOLDOWN;
+        }
+    }
+
+    public int getEnemyCount() {
+        return enemies.size();
+    }
+
+    public List<GameObject> getEnemies() {
+        return enemies;
+    }
+
+    public void clearScene() {
+        for (GameObject gameObject : gameObjects) {
+            if (gameObject.name.equals("LevelEditor") || gameObject.name.equals("GameCamera")) {
+                continue;
+            }
+            gameObject.destroy();
+        }
+    }
+
+    public void fillSceneWithNonCollidableTerrain() {
+        GameObjectGenerator.procedurallyGenerateNonCollidableTerrain(camera)
+                .forEach(this::addGameObjectToScene);
+    }
+
+    public void fillSceneWithEnemies() {
+        GameObjectGenerator.generateEnemies(camera, EngineSettings.ENEMY_COUNT_TO_GENERATE)
+                .forEach(gameObject -> {
+                    addGameObjectToScene(gameObject);
+                    enemies.add(gameObject);
+                });
     }
 
     public void render() {

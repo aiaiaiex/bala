@@ -1,15 +1,22 @@
 package object;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import org.jbox2d.dynamics.BodyType;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
+import org.lwjgl.glfw.GLFW;
+import camera.Camera;
 import component.Sprite;
 import component.SpriteRenderer;
 import game.Drop;
 import game.Enemy;
 import game.Player;
 import game.Projectile;
-import physics.CircleCollider;
+import physics.ColliderAdder;
 import physics.Rigidbody2D;
+import procedural.ProceduralNoise;
 import setting.EngineSettings;
 import window.Window;
 
@@ -38,9 +45,7 @@ public class GameObjectGenerator {
 
         player.transform.zIndex = 4;
 
-        CircleCollider circleCollider = new CircleCollider();
-        circleCollider.setRadius(EngineSettings.GRID_WIDTH / 2.0f);
-        player.addComponent(circleCollider);
+        ColliderAdder.addCollider(player);
 
         Rigidbody2D rb = new Rigidbody2D();
         rb.setBodyType(BodyType.DYNAMIC);
@@ -68,9 +73,7 @@ public class GameObjectGenerator {
 
         drop.transform.zIndex = 1;
 
-        CircleCollider circleCollider = new CircleCollider();
-        circleCollider.setRadius(EngineSettings.GRID_WIDTH / 2);
-        drop.addComponent(circleCollider);
+        ColliderAdder.addCollider(drop);
 
         Rigidbody2D rb = new Rigidbody2D();
         rb.setBodyType(BodyType.STATIC);
@@ -82,15 +85,18 @@ public class GameObjectGenerator {
     }
 
     public static GameObject generateEnemy(int index) {
+        return generateEnemy(index, new Vector2f());
+    }
+
+    public static GameObject generateEnemy(int index, Vector2f position) {
         SpriteSheet enemies = ObjectPool.getSpriteSheet(EngineSettings.ENEMIES.getFilePath());
         GameObject enemy = generateSpriteObject(enemies.getSprite(index), EngineSettings.GRID_WIDTH,
                 EngineSettings.GRID_HEIGHT);
 
+        enemy.transform.position = position;
         enemy.transform.zIndex = 2;
 
-        CircleCollider circleCollider = new CircleCollider();
-        circleCollider.setRadius(EngineSettings.GRID_WIDTH / 2);
-        enemy.addComponent(circleCollider);
+        ColliderAdder.addCollider(enemy);
 
         Rigidbody2D rb = new Rigidbody2D();
         rb.setBodyType(BodyType.DYNAMIC);
@@ -112,9 +118,7 @@ public class GameObjectGenerator {
 
         projectile.transform.zIndex = 3;
 
-        CircleCollider circleCollider = new CircleCollider();
-        circleCollider.setRadius(EngineSettings.GRID_WIDTH / 2.0f);
-        projectile.addComponent(circleCollider);
+        ColliderAdder.addCollider(projectile);
 
         Rigidbody2D rb = new Rigidbody2D();
         rb.setBodyType(BodyType.DYNAMIC);
@@ -125,5 +129,134 @@ public class GameObjectGenerator {
         projectile.addComponent(new Projectile());
 
         return projectile;
+    }
+
+    public static List<GameObject> procedurallyGenerateNonCollidableTerrain(Camera camera) {
+        List<GameObject> gameObjects = new ArrayList<>();
+        SpriteSheet nonCollidableTerrain =
+                ObjectPool.getSpriteSheet(EngineSettings.NON_COLLIDABLE_TERRAIN.getFilePath());
+        int spriteAmount = nonCollidableTerrain.getSprites().size();
+
+        Vector4f gridStarter = camera.getGridStarter();
+        float firstXPosition = gridStarter.x;
+        float firstYPosition = gridStarter.y;
+        int columns = (int) gridStarter.z;
+        int rows = (int) gridStarter.w;
+
+        for (int x = 0; x < columns; x++) {
+            float xPosition = firstXPosition + EngineSettings.GRID_WIDTH * x;
+            for (int y = 0; y < rows; y++) {
+                float yPosition = firstYPosition + EngineSettings.GRID_HEIGHT * y;
+
+                GameObject gameObject = generateSpriteObject(
+                        nonCollidableTerrain
+                                .getSprite((int) Math.floor((ProceduralNoise.getNoise(x * 10.0f,
+                                        y * 10.0f, (float) GLFW.glfwGetTime() * 10) * 0.5f + 0.5f)
+                                        * spriteAmount)),
+                        EngineSettings.GRID_WIDTH, EngineSettings.GRID_HEIGHT);
+
+                gameObject.getComponent(SpriteRenderer.class).setProcedurallyUpdate(true);
+
+                gameObject.transform.position.x = xPosition;
+                gameObject.transform.position.y = yPosition;
+
+                gameObjects.add(gameObject);
+            }
+        }
+
+        return gameObjects;
+    }
+
+    public static List<GameObject> procedurallyGenerateEnemies(Camera camera, int enemyCount) {
+        List<GameObject> gameObjects = new ArrayList<>();
+        SpriteSheet enemies = ObjectPool.getSpriteSheet(EngineSettings.ENEMIES.getFilePath());
+        int spriteAmount = enemies.getSprites().size();
+
+        Vector4f gridStarter = camera.getGridStarter();
+        float firstXPosition = gridStarter.x;
+        float firstYPosition = gridStarter.y;
+        int columns = (int) gridStarter.z;
+        int rows = (int) gridStarter.w;
+
+        Random rng = new Random();
+
+        int currentEnemyCount = 0;
+        for (int x = 0; x < columns; x++) {
+            float xPosition = firstXPosition + EngineSettings.GRID_WIDTH * x;
+            if (x % 2 == 0) {
+                continue;
+            }
+
+            for (int y = 0; y < rows; y++) {
+                if (y % 2 == 0) {
+                    continue;
+                }
+                float yPosition = firstYPosition + EngineSettings.GRID_HEIGHT * y;
+
+                float noise = ProceduralNoise.getNoise(x * 10.0f, y * 10.0f,
+                        (float) GLFW.glfwGetTime() * 10) * 0.5f + 0.5f;
+
+                if (noise <= (EngineSettings.USE_PERLIN_NOISE ? 0.70 : 0.85)) {
+                    continue;
+                }
+
+                GameObject enemy = generateEnemy(rng.nextInt(spriteAmount),
+                        new Vector2f(xPosition, yPosition));
+
+                gameObjects.add(enemy);
+                currentEnemyCount += 1;
+                if (currentEnemyCount >= enemyCount) {
+                    break;
+                }
+            }
+            if (currentEnemyCount >= enemyCount) {
+                break;
+            }
+        }
+
+        return gameObjects;
+    }
+
+    public static List<GameObject> generateEnemies(Camera camera, int enemyCount) {
+        List<GameObject> gameObjects = new ArrayList<>();
+        SpriteSheet enemies = ObjectPool.getSpriteSheet(EngineSettings.ENEMIES.getFilePath());
+        int spriteAmount = enemies.getSprites().size();
+
+        Vector4f gridStarter = camera.getGridStarter();
+        float firstXPosition = gridStarter.x;
+        float firstYPosition = gridStarter.y;
+        int columns = (int) gridStarter.z;
+        int rows = (int) gridStarter.w;
+
+        int currentEnemyCount = 0;
+        for (int x = 0; x < columns; x++) {
+            float xPosition = firstXPosition + EngineSettings.GRID_WIDTH * x;
+            if (x % 2 == 0) {
+                continue;
+            }
+            for (int y = 0; y < rows; y++) {
+                if (y % 2 == 0) {
+                    continue;
+                }
+                float yPosition = firstYPosition + EngineSettings.GRID_HEIGHT * y;
+
+                float noise = ProceduralNoise.getNoise(x * 10.0f, y * 10.0f,
+                        (float) GLFW.glfwGetTime() * 10) * 0.5f + 0.5f;
+
+                GameObject enemy = generateEnemy((int) Math.floor(noise * spriteAmount),
+                        new Vector2f(xPosition, yPosition));
+
+                gameObjects.add(enemy);
+                currentEnemyCount += 1;
+                if (currentEnemyCount >= enemyCount) {
+                    break;
+                }
+            }
+            if (currentEnemyCount >= enemyCount) {
+                break;
+            }
+        }
+
+        return gameObjects;
     }
 }

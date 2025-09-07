@@ -108,23 +108,12 @@ public class Mouse {
     }
 
     public Vector2f getWorld() {
-        float currentX = (float) xPosition - gameViewportPos.x;
-        currentX = (2.0f * (currentX / gameViewportSize.x)) - 1.0f;
-        float currentY = (float) yPosition - gameViewportPos.y;
-        currentY = (2.0f * (1.0f - (currentY / gameViewportSize.y))) - 1.055f;
-
-        Camera camera = Window.getScene().getCamera();
-        Vector4f tmp = new Vector4f(currentX, currentY, 0, 1);
-        Matrix4f inverseView = new Matrix4f(camera.getInverseView());
-        Matrix4f inverseProjection = new Matrix4f(camera.getInverseProjection());
-        tmp.mul(inverseView.mul(inverseProjection));
-
-        return new Vector2f(tmp.x, tmp.y);
+        return screenToWorld(getScreen());
     }
 
     public Vector2f screenToWorld(Vector2f screenCoords) {
-        Vector2f normalizedScreenCords = new Vector2f(screenCoords.x / window.getWindowWidth(),
-                screenCoords.y / window.getWindowHeight());
+        Vector2f normalizedScreenCords = new Vector2f(screenCoords.x / window.getMonitorWidth(),
+                screenCoords.y / window.getMonitorHeight());
         normalizedScreenCords.mul(2.0f).sub(new Vector2f(1.0f, 1.0f));
         Camera camera = Window.getScene().getCamera();
         Vector4f tmp = new Vector4f(normalizedScreenCords.x, normalizedScreenCords.y, 0, 1);
@@ -142,7 +131,7 @@ public class Mouse {
         ndcSpacePos.mul(projection.mul(view));
         Vector2f windowSpace = new Vector2f(ndcSpacePos.x, ndcSpacePos.y).mul(1.0f / ndcSpacePos.w);
         windowSpace.add(new Vector2f(1.0f, 1.0f)).mul(0.5f);
-        windowSpace.mul(new Vector2f(window.getWindowWidth(), window.getWindowHeight()));
+        windowSpace.mul(new Vector2f(window.getMonitorWidth(), window.getMonitorHeight()));
 
         return windowSpace;
     }

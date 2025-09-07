@@ -9,13 +9,13 @@ import component.SpriteRenderer;
 import component.StateMachine;
 import imgui.ImGui;
 import imgui.ImVec2;
-import input.KeyControls;
+import input.KeyboardControls;
 import input.MouseControls;
 import object.GameObject;
 import object.GameObjectGenerator;
 import object.ObjectPool;
 import object.SpriteSheet;
-import physics.CircleCollider;
+import physics.ColliderAdder;
 import physics.Rigidbody2D;
 import scene.Scene;
 import scene.SceneInitializer;
@@ -41,7 +41,7 @@ public class GameObjectPickerScene extends SceneInitializer {
         levelEditor = scene.createGameObject("LevelEditor");
         levelEditor.setNoSerialize();
         levelEditor.addComponent(new MouseControls());
-        levelEditor.addComponent(new KeyControls());
+        levelEditor.addComponent(new KeyboardControls());
         levelEditor.addComponent(new GridLines());
         levelEditor.addComponent(new EditorCamera(scene.getCamera()));
         scene.addGameObjectToScene(levelEditor);
@@ -103,16 +103,16 @@ public class GameObjectPickerScene extends SceneInitializer {
                 for (int i = 0; i < nonCollidableTerrain.size(); i++) {
 
                     Sprite sprite = nonCollidableTerrain.getSprite(i);
-                    float spriteWidth = sprite.getWidth() * 4;
-                    float spriteHeight = sprite.getHeight() * 4;
+                    float spriteWidth = 64;
+                    float spriteHeight = 64;
                     int id = sprite.getTexId();
                     Vector2f[] texCoords = sprite.getTexCoords();
 
                     ImGui.pushID(i);
                     if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x,
                             texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
-                        GameObject object =
-                                GameObjectGenerator.generateSpriteObject(sprite, 0.25f, 0.25f);
+                        GameObject object = GameObjectGenerator.generateSpriteObject(sprite,
+                                EngineSettings.GRID_WIDTH, EngineSettings.GRID_HEIGHT);
                         levelEditor.getComponent(MouseControls.class).pickupObject(object);
                     }
                     ImGui.popID();
@@ -150,16 +150,14 @@ public class GameObjectPickerScene extends SceneInitializer {
                     ImGui.pushID(i);
                     if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[2].x,
                             texCoords[0].y, texCoords[0].x, texCoords[2].y)) {
-                        GameObject gameObject =
-                                GameObjectGenerator.generateSpriteObject(sprite, 0.25f, 0.25f);
+                        GameObject gameObject = GameObjectGenerator.generateSpriteObject(sprite,
+                                EngineSettings.GRID_WIDTH, EngineSettings.GRID_HEIGHT);
 
                         Rigidbody2D rigidBody = new Rigidbody2D();
                         rigidBody.setBodyType(BodyType.STATIC);
                         gameObject.addComponent(rigidBody);
 
-                        CircleCollider circleCollider = new CircleCollider();
-                        circleCollider.setRadius(EngineSettings.GRID_WIDTH / 2);
-                        gameObject.addComponent(circleCollider);
+                        ColliderAdder.addCollider(gameObject);
 
                         gameObject.transform.zIndex = 1;
 

@@ -59,6 +59,10 @@ public final class ExactFrameTimeLogger {
     }
 
     public void start(String prefix) {
+        if (LoggerSettings.EXACT_FRAME_TIME_LOGGER_LEVEL == Level.OFF) {
+            return;
+        }
+
         if (!started) {
             try {
                 Handler fileHandler = new FileHandler(
@@ -80,6 +84,10 @@ public final class ExactFrameTimeLogger {
     }
 
     public void stop() {
+        if (!started) {
+            return;
+        }
+
         Handler[] handlers = logger.getHandlers();
         for (Handler handler : handlers) {
             handler.close();

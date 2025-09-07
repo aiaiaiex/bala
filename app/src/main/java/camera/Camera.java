@@ -4,13 +4,14 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import setting.EngineSettings;
 
 public class Camera {
     private Matrix4f projectionMatrix, viewMatrix, inverseProjection, inverseView;
     public Vector2f position;
 
-    private float projectionWidth = 6;
-    private float projectionHeight = 3;
+    private float projectionHeight = EngineSettings.CAMERA_ZOOM_OUT;
+    private float projectionWidth = projectionHeight * 2;
     public Vector4f clearColor = new Vector4f(1, 1, 1, 1);
     private Vector2f projectionSize = new Vector2f(projectionWidth, projectionHeight);
 
@@ -23,6 +24,18 @@ public class Camera {
         inverseProjection = new Matrix4f();
         inverseView = new Matrix4f();
         adjustProjection();
+    }
+
+    public Vector4f getGridStarter() {
+        float firstXPosition = ((int) Math.floor(position.x / EngineSettings.GRID_WIDTH))
+                * EngineSettings.GRID_WIDTH + (EngineSettings.GRID_WIDTH / 2);
+        float firstYPosition = ((int) Math.floor(position.y / EngineSettings.GRID_HEIGHT))
+                * EngineSettings.GRID_HEIGHT + (EngineSettings.GRID_HEIGHT / 2);
+
+        int columns = (int) (projectionSize.x * zoom / EngineSettings.GRID_WIDTH) + 2;
+        int rows = (int) (projectionSize.y * zoom / EngineSettings.GRID_HEIGHT) + 2;
+
+        return new Vector4f(firstXPosition, firstYPosition, columns, rows);
     }
 
     public void adjustProjection() {

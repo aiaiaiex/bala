@@ -16,12 +16,14 @@ public class GameViewWindow {
     private boolean windowIsHovered;
 
     private Mouse mouse;
+    private Window window;
 
     public GameViewWindow() {
         isPlaying = false;
         subject = Subject.getSubject();
 
         mouse = Mouse.getMouse();
+        window = Window.getWindow();
     }
 
     public void imgui() {
@@ -45,6 +47,17 @@ public class GameViewWindow {
         if (ImGui.menuItem("Load Game Scene", "", isPlaying, !isPlaying)) {
             subject.notifyObservers(Event.LOAD_LEVEL);
         }
+
+        if (ImGui.menuItem("Clear Game Scene", "", isPlaying, !isPlaying)) {
+            subject.notifyObservers(Event.CLEAR_LEVEL);
+        }
+        if (ImGui.menuItem("Procedurally Generate Non-Collidable Terrain", "", isPlaying,
+                !isPlaying)) {
+            subject.notifyObservers(Event.FILL_NON_COLLIDABLE_TERRAIN);
+        }
+        if (ImGui.menuItem("Generate Enemies", "", isPlaying, !isPlaying)) {
+            subject.notifyObservers(Event.FILL_ENEMIES);
+        }
         ImGui.endMenuBar();
 
 
@@ -57,9 +70,9 @@ public class GameViewWindow {
         ImGui.imageButton(textureId, windowSize.x, windowSize.y, 0, 1, 1, 0);
         windowIsHovered = ImGui.isItemHovered();
 
-
-        mouse.setGameViewportPos(new Vector2f(windowPos.x + ImGui.getWindowPosX(),
-                windowPos.y + ImGui.getWindowPosY()));
+        mouse.setGameViewportPos(
+                new Vector2f(windowPos.x + ImGui.getWindowPosX() - window.getXPosition(),
+                        windowPos.y + ImGui.getWindowPosY() - window.getYPosition()));
         mouse.setGameViewportSize(new Vector2f(windowSize.x, windowSize.y));
 
         ImGui.end();
