@@ -70,6 +70,7 @@ public final class EngineSettings {
         public static final boolean GENERATE_ENEMIES_INITIALLY_WHILE_PLAYING = false;
         public static final int MAX_ENEMY_COUNT = 300;
         public static final boolean GENERATE_ENEMIES_OUTSIDE = true;
+        public static final boolean SHOW_COLLIDER_WHILE_PLAYING = false;
 
         public static final float FLOCKING_NEIGHBOR_DISTANCE = GRID_WIDTH * 1;
         public static final float FLOCKING_SEPARATE_DISTANCE = FLOCKING_NEIGHBOR_DISTANCE / 2;

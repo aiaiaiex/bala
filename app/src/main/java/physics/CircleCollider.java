@@ -3,6 +3,7 @@ package physics;
 import org.joml.Vector2f;
 import component.Component;
 import graphics.OutlineDraw;
+import setting.EngineSettings;
 import window.Window;
 
 public class CircleCollider extends Component {
@@ -39,6 +40,11 @@ public class CircleCollider extends Component {
 
     @Override
     public void update(float dt) {
+        if (EngineSettings.SHOW_COLLIDER_WHILE_PLAYING) {
+            Vector2f center = new Vector2f(gameObject.transform.position).add(offset);
+            OutlineDraw.addCircle(center, radius);
+        }
+
         if (resetFixtureNextFrame) {
             resetFixture();
         }
