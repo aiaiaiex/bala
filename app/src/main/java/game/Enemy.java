@@ -70,15 +70,6 @@ public class Enemy extends Component {
         // For flocking demo with collidable terrain.
         // contactCooldown -= deltaTime;
 
-        if ((gameObject.transform.position.x < camera.position.x * camera.getZoom())
-                || (gameObject.transform.position.x > camera.position.x
-                        + camera.getProjectionSize().x * camera.getZoom())
-                || ((gameObject.transform.position.y < camera.position.y * camera.getZoom())
-                        || (gameObject.transform.position.y > camera.position.y
-                                + camera.getProjectionSize().y * camera.getZoom()))) {
-            return;
-        }
-
         if (!EngineSettings.FOLLOW_MOUSE) {
             playerPosition = new Vector2f(
                     camera.position.x + ((camera.getProjectionSize().x / 2) * camera.getZoom()),

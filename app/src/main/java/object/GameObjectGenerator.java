@@ -169,6 +169,86 @@ public class GameObjectGenerator {
 
     public static List<GameObject> procedurallyGenerateEnemies(Camera camera,
             int numberOfEnemiesToGenerate, int currentNumberOfEnemies) {
+        if (EngineSettings.GENERATE_ENEMIES_OUTSIDE) {
+            return procedurallyGenerateEnemiesOutside(camera, numberOfEnemiesToGenerate,
+                    currentNumberOfEnemies);
+        } else {
+            return procedurallyGenerateEnemiesInside(camera, numberOfEnemiesToGenerate,
+                    currentNumberOfEnemies);
+        }
+    }
+
+    public static List<GameObject> procedurallyGenerateEnemiesOutside(Camera camera,
+            int numberOfEnemiesToGenerate, int currentNumberOfEnemies) {
+        List<GameObject> gameObjects = new ArrayList<>();
+        SpriteSheet enemies = ObjectPool.getSpriteSheet(EngineSettings.ENEMIES.getFilePath());
+        int spriteAmount = enemies.getSprites().size();
+
+        int borderThickness = 8;
+
+        Vector4f gridStarter = camera.getGridStarter();
+        float firstXPosition = gridStarter.x - EngineSettings.GRID_WIDTH * borderThickness;
+        float firstYPosition = gridStarter.y - EngineSettings.GRID_HEIGHT * borderThickness;
+
+        int columns = (int) gridStarter.z + 2 * borderThickness;
+        int rows = (int) gridStarter.w + 2 * borderThickness;
+
+        float firstInsideXPosition = gridStarter.x;
+        float firstInsideYPosition = gridStarter.y;
+        float lastInsideXPosition = firstInsideXPosition
+                + EngineSettings.GRID_WIDTH * (columns - 2 * borderThickness - 1);
+        float lastInsideYPosition = firstInsideYPosition
+                + EngineSettings.GRID_HEIGHT * (rows - 2 * borderThickness - 1);
+
+        Random rng = new Random();
+
+        int currentEnemyCount = 0;
+        for (int x = 0; x < columns; x++) {
+            float xPosition = firstXPosition + EngineSettings.GRID_WIDTH * x;
+            if (x % 2 == 0
+                    || (xPosition >= firstInsideXPosition && xPosition <= lastInsideXPosition)) {
+                continue;
+            }
+
+            for (int y = 0; y < rows; y++) {
+                float yPosition = firstYPosition + EngineSettings.GRID_HEIGHT * y;
+
+                if (y % 2 == 0 || (yPosition >= firstInsideYPosition
+                        && yPosition <= lastInsideYPosition)) {
+                    continue;
+                }
+
+                float noise = ProceduralNoise.getNoise(x * 10.0f, y * 10.0f,
+                        (float) GLFW.glfwGetTime() * 10) * 0.5f + 0.5f;
+
+                if (noise <= (EngineSettings.USE_PERLIN_NOISE ? 0.50 : 0.65)) {
+                    continue;
+                }
+
+                if (currentNumberOfEnemies + currentEnemyCount > EngineSettings.MAX_ENEMY_COUNT) {
+                    break;
+                }
+
+                GameObject enemy = generateEnemy(rng.nextInt(spriteAmount),
+                        new Vector2f(xPosition, yPosition));
+
+                gameObjects.add(enemy);
+                currentEnemyCount += 1;
+                if (currentEnemyCount >= numberOfEnemiesToGenerate) {
+                    break;
+                }
+            }
+            if ((currentNumberOfEnemies + currentEnemyCount > EngineSettings.MAX_ENEMY_COUNT)
+                    || (currentEnemyCount >= numberOfEnemiesToGenerate)) {
+                break;
+            }
+        }
+
+        return gameObjects;
+    }
+
+    public static List<GameObject> procedurallyGenerateEnemiesInside(Camera camera,
+            int numberOfEnemiesToGenerate, int currentNumberOfEnemies) {
         List<GameObject> gameObjects = new ArrayList<>();
         SpriteSheet enemies = ObjectPool.getSpriteSheet(EngineSettings.ENEMIES.getFilePath());
         int spriteAmount = enemies.getSprites().size();
