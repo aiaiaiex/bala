@@ -2,7 +2,7 @@ package component;
 
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-import graphics.DebugDraw;
+import graphics.OutlineDraw;
 import setting.EngineSettings;
 import window.Window;
 
@@ -26,13 +26,13 @@ public class GridLines extends Component {
                         float y = firstYPosition + (EngineSettings.GRID_HEIGHT * lineNumber);
 
                         if (lineNumber <= columns) {
-                                DebugDraw.addLine2D(new Vector2f(x, firstYPosition),
+                                OutlineDraw.addLine2D(new Vector2f(x, firstYPosition),
                                                 new Vector2f(x, firstYPosition + columnHeight),
                                                 EngineSettings.GRID_COLOR);
                         }
 
                         if (lineNumber <= rows) {
-                                DebugDraw.addLine2D(new Vector2f(firstXPosition, y),
+                                OutlineDraw.addLine2D(new Vector2f(firstXPosition, y),
                                                 new Vector2f(firstXPosition + rowWidth, y),
                                                 EngineSettings.GRID_COLOR);
                         }

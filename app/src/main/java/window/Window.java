@@ -13,8 +13,8 @@ import org.lwjgl.system.MemoryUtil;
 import event.Event;
 import event.Observer;
 import event.Subject;
-import graphics.DebugDraw;
 import graphics.Framebuffer;
+import graphics.OutlineDraw;
 import graphics.PickingTexture;
 import graphics.Renderer;
 import graphics.Shader;
@@ -215,7 +215,7 @@ public final class Window implements Observer {
 
             GL11.glEnable(GL11.GL_BLEND);
 
-            DebugDraw.beginFrame();
+            OutlineDraw.beginFrame();
 
             framebuffer.bind();
             Vector4f clearColor = currentScene.getCamera().clearColor;
@@ -230,7 +230,7 @@ public final class Window implements Observer {
                     currentScene.editorUpdate((float) deltaTime);
                 }
                 currentScene.render();
-                DebugDraw.draw();
+                OutlineDraw.draw();
             }
             framebuffer.unbind();
 

@@ -2,7 +2,7 @@ package physics;
 
 import org.joml.Vector2f;
 import component.Component;
-import graphics.DebugDraw;
+import graphics.OutlineDraw;
 import window.Window;
 
 public class CircleCollider extends Component {
@@ -30,7 +30,7 @@ public class CircleCollider extends Component {
     @Override
     public void editorUpdate(float dt) {
         Vector2f center = new Vector2f(gameObject.transform.position).add(offset);
-        DebugDraw.addCircle(center, radius);
+        OutlineDraw.addCircle(center, radius);
 
         if (resetFixtureNextFrame) {
             resetFixture();

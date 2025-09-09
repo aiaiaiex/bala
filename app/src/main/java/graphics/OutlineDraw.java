@@ -13,8 +13,8 @@ import object.ObjectPool;
 import setting.EngineSettings;
 import window.Window;
 
-public class DebugDraw {
-    private static int MAX_LINES = 5000;
+public class OutlineDraw {
+    private static int MAX_LINES = 10000;
 
     private static List<Line> lines = new ArrayList<>();
     private static float[] vertexArray = new float[MAX_LINES * 6 * 2];
@@ -24,6 +24,8 @@ public class DebugDraw {
     private static int vboID;
 
     private static boolean started = false;
+
+    private OutlineDraw() {}
 
     public static void start() {
         vaoID = GL30.glGenVertexArrays();
@@ -40,7 +42,7 @@ public class DebugDraw {
         GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 6 * Float.BYTES, 3 * Float.BYTES);
         GL20.glEnableVertexAttribArray(1);
 
-        GL11.glLineWidth(2.0f);
+        GL11.glLineWidth(4.0f);
     }
 
     public static void beginFrame() {
@@ -99,10 +101,6 @@ public class DebugDraw {
         shader.detach();
     }
 
-    public static void addLine2D(Vector2f from, Vector2f to) {
-        addLine2D(from, to, new Vector3f(0, 1, 0), 1);
-    }
-
     public static void addLine2D(Vector2f from, Vector2f to, Vector3f color) {
         addLine2D(from, to, color, 1);
     }
@@ -120,16 +118,11 @@ public class DebugDraw {
         if (lines.size() >= MAX_LINES || !lineInView) {
             return;
         }
-        DebugDraw.lines.add(new Line(from, to, color, lifetime));
+        OutlineDraw.lines.add(new Line(from, to, color, lifetime));
     }
 
     public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation) {
-        addBox2D(center, dimensions, rotation, new Vector3f(0, 1, 0), 1);
-    }
-
-    public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation,
-            Vector3f color) {
-        addBox2D(center, dimensions, rotation, color, 1);
+        addBox2D(center, dimensions, rotation, new Vector3f(0, 0, 1), 1);
     }
 
     public static void addBox2D(Vector2f center, Vector2f dimensions, float rotation,
@@ -153,11 +146,7 @@ public class DebugDraw {
     }
 
     public static void addCircle(Vector2f center, float radius) {
-        addCircle(center, radius, new Vector3f(0, 1, 0), 1);
-    }
-
-    public static void addCircle(Vector2f center, float radius, Vector3f color) {
-        addCircle(center, radius, color, 1);
+        addCircle(center, radius, new Vector3f(0, 0, 1), 1);
     }
 
     public static void addCircle(Vector2f center, float radius, Vector3f color, int lifetime) {

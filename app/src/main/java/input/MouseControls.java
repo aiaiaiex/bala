@@ -12,7 +12,7 @@ import component.StateMachine;
 import game.Drop;
 import game.Enemy;
 import game.Player;
-import graphics.DebugDraw;
+import graphics.OutlineDraw;
 import graphics.PickingTexture;
 import object.GameObject;
 import scene.Scene;
@@ -136,7 +136,7 @@ public class MouseControls extends Component {
             Vector2f boxSelectStartWorld = boxSelectStart;
             Vector2f boxSelectEndWorld = boxSelectEnd;
             Vector2f size = (new Vector2f(boxSelectEndWorld).sub(boxSelectStartWorld)).mul(0.5f);
-            DebugDraw.addBox2D((new Vector2f(boxSelectStartWorld)).add(size),
+            OutlineDraw.addBox2D((new Vector2f(boxSelectStartWorld)).add(size),
                     new Vector2f(size).mul(2.0f), 0.0f);
         } else if (boxSelectSet) {
             boxSelectSet = false;

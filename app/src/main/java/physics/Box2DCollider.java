@@ -2,7 +2,7 @@ package physics;
 
 import org.joml.Vector2f;
 import component.Component;
-import graphics.DebugDraw;
+import graphics.OutlineDraw;
 
 public class Box2DCollider extends Component {
     private Vector2f size = new Vector2f(1);
@@ -32,6 +32,6 @@ public class Box2DCollider extends Component {
     @Override
     public void editorUpdate(float dt) {
         Vector2f center = new Vector2f(gameObject.transform.position).add(offset);
-        DebugDraw.addBox2D(center, size, gameObject.transform.rotation);
+        OutlineDraw.addBox2D(center, size, gameObject.transform.rotation);
     }
 }
