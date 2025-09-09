@@ -58,7 +58,7 @@ public final class Window implements Observer {
     private ImGuiWindow imGuiWindow;
     private Framebuffer framebuffer;
     private PickingTexture pickingTexture;
-    private boolean runtimePlaying;
+    private boolean gamePlaying;
     private Scene currentScene;
 
     private Window() {
@@ -71,7 +71,7 @@ public final class Window implements Observer {
         glClearColorAndDepthMask = GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT;
 
         initialized = false;
-        runtimePlaying = false;
+        gamePlaying = false;
 
         globalLogger = GlobalLogger.getGlobalLogger().getLogger();
         averageFrameTimeLogger = AverageFrameTimeLogger.getAverageFrameTimeLogger().getLogger();
@@ -163,7 +163,7 @@ public final class Window implements Observer {
         GL11.glViewport(0, 0, monitorWidth, monitorHeight);
 
         if (!EngineSettings.DISPLAY_EDITOR) {
-            runtimePlaying = true;
+            gamePlaying = true;
             changeScene(new GameScene());
         } else {
             imGuiWindow = new ImGuiWindow(glfwWindow, pickingTexture);
@@ -223,7 +223,7 @@ public final class Window implements Observer {
 
             if (deltaTime > 0) {
                 Renderer.bindShader(defaultShader);
-                if (runtimePlaying) {
+                if (gamePlaying) {
                     currentScene.update((float) deltaTime);
                 } else {
                     currentScene.editorUpdate((float) deltaTime);
@@ -331,7 +331,7 @@ public final class Window implements Observer {
     public void notify(Event event) {
         switch (event) {
             case START_GAME:
-                runtimePlaying = true;
+                gamePlaying = true;
                 currentScene.saveFile();
                 changeScene(new GameScene(), true);
                 String logName = String.format("%1$s-%2$s%3$s",
@@ -342,7 +342,7 @@ public final class Window implements Observer {
                 ExactFrameTimeLogger.getExactFrameTimeLogger().start(logName);
                 break;
             case STOP_GAME:
-                runtimePlaying = false;
+                gamePlaying = false;
                 AverageFrameTimeLogger.getAverageFrameTimeLogger().stop();
                 ExactFrameTimeLogger.getExactFrameTimeLogger().stop();
                 changeScene(new GameObjectPickerScene());
