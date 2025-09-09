@@ -27,6 +27,8 @@ public final class EngineSettings {
                         "./assets/images/collidable-terrain.png", 16, 16, 19);
         public static final SpriteSheetMetadata NON_COLLIDABLE_TERRAIN = new SpriteSheetMetadata(
                         "./assets/images/non-collidable-terrain.png", 16, 16, 3);
+        // public static final SpriteSheetMetadata NON_COLLIDABLE_TERRAIN = new SpriteSheetMetadata(
+        // "./assets/images/non-collidable-terrain-two.png", 16, 16, 84);
         public static final SpriteSheetMetadata PLAYERS =
                         new SpriteSheetMetadata("./assets/images/players.png", 16, 16, 13);
         public static final SpriteSheetMetadata ENEMIES =
