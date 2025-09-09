@@ -176,6 +176,12 @@ public class Enemy extends Component {
             obj.getComponent(Projectile.class).cleanup();
             cleanup();
         }
+
+        // When generating enemies outside.
+        // else if (obj.getComponent(Enemy.class) == null) {
+        // contact.setEnabled(false);
+        // }
+
         // } else if (EngineSettings.USE_FLOCKING && obj.transform.zIndex == 2) {
         // contact.setEnabled(false);
         // }
