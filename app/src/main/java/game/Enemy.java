@@ -19,7 +19,7 @@ public class Enemy extends Component {
 
     private transient Rigidbody2D rb;
 
-    private transient Vector2f maxVelocity = new Vector2f(2.0f, 2.0f);
+    private transient Vector2f maxVelocity = new Vector2f(1.0f, 1.0f);
     private transient Vector2f velocity = new Vector2f(0.0f, 0.0f);
     private transient Vector2f acceleration = new Vector2f(0.0f, 0.0f);
     private transient Vector2f maxForce = new Vector2f(maxVelocity.x / 2, maxVelocity.y / 2);
