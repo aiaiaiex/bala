@@ -35,6 +35,8 @@ public class Player extends Component {
     private transient Keyboard keyboard;
     private transient Sound deathSound;
 
+    private transient int drops = 0;
+
     public Player() {
         keyboard = Keyboard.getKeyboard();
     }
@@ -48,11 +50,25 @@ public class Player extends Component {
     @Override
     public void update(float dt) {
         if (reloadTime <= 0) {
-            Vector2f position = new Vector2f(gameObject.transform.position)
-                    .add(isRight ? new Vector2f(width, 0) : new Vector2f(-width, 0));
-            GameObject projectile = GameObjectGenerator.generateProjectile(position);
-            projectile.getComponent(Projectile.class).setIsRight(isRight);
-            Window.getScene().addGameObjectToScene(projectile);
+            if (drops >= 10) {
+                Vector2f position =
+                        new Vector2f(gameObject.transform.position).add(new Vector2f(-width, 0));
+                GameObject projectile = GameObjectGenerator.generateProjectile(position);
+                projectile.getComponent(Projectile.class).setIsRight(false);
+                Window.getScene().addGameObjectToScene(projectile);
+
+                Vector2f positionTwo =
+                        new Vector2f(gameObject.transform.position).add(new Vector2f(width, 0));
+                GameObject projectileTwo = GameObjectGenerator.generateProjectile(positionTwo);
+                projectileTwo.getComponent(Projectile.class).setIsRight(true);
+                Window.getScene().addGameObjectToScene(projectileTwo);
+            } else {
+                Vector2f position = new Vector2f(gameObject.transform.position)
+                        .add(isRight ? new Vector2f(width, 0) : new Vector2f(-width, 0));
+                GameObject projectile = GameObjectGenerator.generateProjectile(position);
+                projectile.getComponent(Projectile.class).setIsRight(isRight);
+                Window.getScene().addGameObjectToScene(projectile);
+            }
 
             reloadTime = timeToReload;
         } else {
@@ -93,6 +109,14 @@ public class Player extends Component {
         } else {
             gameObject.transform.scale.x = -width;
         }
+    }
+
+    public void incrementDrops() {
+        drops += 1;
+    }
+
+    public void adjustTimeToReload() {
+        timeToReload = Math.max(1.0f - drops * 0.01f, 0.25f);
     }
 
     @Override

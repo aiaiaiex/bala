@@ -38,6 +38,8 @@ public class Drop extends Component {
         if (obj.getComponent(Player.class) != null) {
             cleanup();
             contact.setEnabled(false);
+            obj.getComponent(Player.class).incrementDrops();
+            obj.getComponent(Player.class).adjustTimeToReload();
         } else if (obj.getComponent(Enemy.class) != null) {
             contact.setEnabled(false);
         }

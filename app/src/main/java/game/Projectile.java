@@ -17,7 +17,7 @@ public class Projectile extends Component {
     private transient float maximumSpeed = 4.0f;
     private transient Vector2f velocity = new Vector2f();
     private transient Vector2f acceleration = new Vector2f();
-    private transient float activeTime = 4.0f;
+    private transient float activeTime = 10.0f;
     private transient float remainingTime = activeTime;
     private transient float width = EngineSettings.GRID_WIDTH / 1.0f;
 
