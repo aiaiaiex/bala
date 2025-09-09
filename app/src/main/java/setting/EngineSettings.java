@@ -56,14 +56,14 @@ public final class EngineSettings {
         public static final ShaderMetadata PICKER_SHADER = new ShaderMetadata(
                         "./assets/shaders/picker.frag", "./assets/shaders/picker.vert");
 
-        public static final boolean USE_CIRCLE_COLLIDER = true;
-        public static final boolean USE_PERLIN_NOISE = true;
-        public static final boolean USE_FLOCKING = true;
+        public static final boolean USE_CIRCLE_COLLIDER = false;
+        public static final boolean USE_PERLIN_NOISE = false;
+        public static final boolean USE_FLOCKING = false;
 
         public static final boolean FOLLOW_MOUSE = false;
 
         public static final float GENERATE_ENEMIES_COOLDOWN = 1.0f;
-        public static final boolean PROCEDURALLY_GENERATE_ENEMIES_WHILE_PLAYING = true;
+        public static final boolean PROCEDURALLY_GENERATE_ENEMIES_WHILE_PLAYING = false;
         public static final int ENEMY_COUNT_TO_GENERATE = 75;
         public static final boolean GENERATE_ENEMIES_INITIALLY_WHILE_PLAYING = false;
 
