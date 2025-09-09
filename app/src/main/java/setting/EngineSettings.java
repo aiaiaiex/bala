@@ -50,11 +50,11 @@ public final class EngineSettings {
                         new SoundMetadata("./assets/audio/pickup-sound.ogg");
 
         public static final ShaderMetadata DEFAULT_SHADER = new ShaderMetadata(
-                        "./assets/shaders/default.frag", "./assets/shaders/default.vert");
+                        "./assets/shaders/default.vert", "./assets/shaders/default.frag");
         public static final ShaderMetadata OUTLINE_SHADER = new ShaderMetadata(
-                        "./assets/shaders/outline.frag", "./assets/shaders/outline.vert");
+                        "./assets/shaders/outline.vert", "./assets/shaders/outline.frag");
         public static final ShaderMetadata PICKER_SHADER = new ShaderMetadata(
-                        "./assets/shaders/picker.frag", "./assets/shaders/picker.vert");
+                        "./assets/shaders/picker.vert", "./assets/shaders/picker.frag");
 
         public static final boolean USE_CIRCLE_COLLIDER = false;
         public static final boolean USE_PERLIN_NOISE = false;
