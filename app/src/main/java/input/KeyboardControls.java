@@ -39,7 +39,7 @@ public class KeyboardControls extends Component {
                 newObj.getComponent(StateMachine.class).refreshTextures();
             }
         } else if (keyboard.isKeyPressed(GLFW.GLFW_KEY_LEFT_CONTROL)
-                && keyboard.isKeyInitiallyPressed(GLFW.GLFW_KEY_D)
+                && keyboard.isKeyInitiallyPressed(GLFW.GLFW_KEY_C)
                 && activeGameObjects.size() > 1) {
             List<GameObject> gameObjects = new ArrayList<>(activeGameObjects);
             propertiesWindow.clearSelected();
@@ -57,16 +57,6 @@ public class KeyboardControls extends Component {
                 go.destroy();
             }
             propertiesWindow.clearSelected();
-        } else if (keyboard.isKeyPressed(GLFW.GLFW_KEY_PAGE_DOWN) && debounce < 0) {
-            debounce = debounceTime;
-            for (GameObject go : activeGameObjects) {
-                go.transform.zIndex--;
-            }
-        } else if (keyboard.isKeyPressed(GLFW.GLFW_KEY_PAGE_UP) && debounce < 0) {
-            debounce = debounceTime;
-            for (GameObject go : activeGameObjects) {
-                go.transform.zIndex++;
-            }
         } else if (keyboard.isKeyPressed(GLFW.GLFW_KEY_UP) && debounce < 0) {
             debounce = debounceTime;
             for (GameObject go : activeGameObjects) {
