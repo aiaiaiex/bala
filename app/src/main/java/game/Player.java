@@ -110,7 +110,7 @@ public class Player extends Component {
         if (deathSound != null) {
             deathSound.play();
         }
-        Window.changeScene(new GameScene());
+        Window.changeScene(new GameScene(), true);
         gameObject.destroy();
     }
 }
