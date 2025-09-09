@@ -1,6 +1,7 @@
 package game;
 
 import java.util.List;
+import java.util.Random;
 import org.jbox2d.dynamics.contacts.Contact;
 import org.joml.Vector2f;
 import camera.Camera;
@@ -34,8 +35,8 @@ public class Enemy extends Component {
 
     private transient List<GameObject> enemies;
     // For flocking demo with collidable terrain.
-    // private transient float contactCooldownDuration = 1.0f;
-    // private transient float contactCooldown = 0.0f;
+    private transient float contactCooldownDuration = 1.0f;
+    private transient float contactCooldown = 0.0f;
 
     public Vector2f getVelocity() {
         return velocity;
@@ -55,12 +56,16 @@ public class Enemy extends Component {
 
         if (EngineSettings.USE_FLOCKING) {
             enemies = scene.getEnemies();
+        }
 
-            // For flocking demo without following player.
-            // Random rng = new Random();
-            // velocity = new Vector2f(
-            // rng.nextFloat() * (rng.nextBoolean() ? maxVelocity.x : -maxVelocity.x),
-            // rng.nextFloat() * (rng.nextBoolean() ? maxVelocity.y : -maxVelocity.y));
+        // For flocking demo without following player.
+        if (EngineSettings.IS_FLOCKING_DEMO) {
+            Random rng = new Random();
+            velocity = new Vector2f(
+                    rng.nextFloat() * (rng.nextBoolean() ? maxVelocity.x : -maxVelocity.x),
+                    rng.nextFloat() * (rng.nextBoolean() ? maxVelocity.y : -maxVelocity.y));
+
+            maxVelocity = new Vector2f(2.0f, 2.0f);
         }
     }
 
@@ -68,14 +73,19 @@ public class Enemy extends Component {
     public void update(float deltaTime) {
 
         // For flocking demo with collidable terrain.
-        // contactCooldown -= deltaTime;
+        if (EngineSettings.IS_FLOCKING_DEMO) {
+            contactCooldown -= deltaTime;
+        }
 
-        if (!EngineSettings.FOLLOW_MOUSE) {
-            playerPosition = new Vector2f(
-                    camera.position.x + ((camera.getProjectionSize().x / 2) * camera.getZoom()),
-                    camera.position.y + ((camera.getProjectionSize().y / 2)) * camera.getZoom());
-        } else {
-            playerPosition = mouse.getWorld();
+        if (!EngineSettings.IS_FLOCKING_DEMO) {
+            if (!EngineSettings.FOLLOW_MOUSE) {
+                playerPosition = new Vector2f(
+                        camera.position.x + ((camera.getProjectionSize().x / 2) * camera.getZoom()),
+                        camera.position.y
+                                + ((camera.getProjectionSize().y / 2)) * camera.getZoom());
+            } else {
+                playerPosition = mouse.getWorld();
+            }
         }
 
         acceleration.zero();
@@ -122,6 +132,12 @@ public class Enemy extends Component {
                 coherenceSum.sub(gameObject.transform.position);
                 moveToVector(coherenceSum, EngineSettings.FLOCKING_COHERENCE_MULTIPLIER);
             }
+        } else {
+            if (EngineSettings.IS_FLOCKING_DEMO) {
+                Vector2f targetPosition = new Vector2f(velocity).mul(10);
+                targetPosition.sub(gameObject.transform.position);
+                moveToVector(targetPosition, 1.0f);
+            }
         }
 
 
@@ -131,9 +147,11 @@ public class Enemy extends Component {
         // avoid = -1.0f;
         // }
 
-        playerPosition.sub(gameObject.transform.position);
-        // moveToVector(playerPosition, 1.0f * avoid);
-        moveToVector(playerPosition, 1.0f);
+        if (!EngineSettings.IS_FLOCKING_DEMO) {
+            playerPosition.sub(gameObject.transform.position);
+            // moveToVector(playerPosition, 1.0f * avoid);
+            moveToVector(playerPosition, 1.0f);
+        }
 
         acceleration.mul(deltaTime);
         velocity.add(acceleration);
@@ -182,24 +200,27 @@ public class Enemy extends Component {
         // contact.setEnabled(false);
         // }
 
-        // } else if (EngineSettings.USE_FLOCKING && obj.transform.zIndex == 2) {
-        // contact.setEnabled(false);
-        // }
 
         // For flocking demo with collidable terrain.
-        // } else if (obj.transform.zIndex == 1 && obj.getComponent(Drop.class) == null) {
-        // if (contactCooldown <= 0.0f) {
-        // if (contactNormal.x > 0 || contactNormal.x < 0) {
-        // velocity.x *= -1;
-        // acceleration.x = 0;
-        // }
-        // if (contactNormal.y > 0 || contactNormal.y < 0) {
-        // velocity.y *= -1;
-        // acceleration.y = 0;
-        // }
-        // contactCooldown = contactCooldownDuration;
-        // }
-        // }
+        if (EngineSettings.IS_FLOCKING_DEMO) {
+            if (obj.transform.zIndex == 1 && obj.getComponent(Drop.class) == null) {
+                if (contactCooldown <= 0.0f) {
+                    if (contactNormal.x > 0 || contactNormal.x < 0) {
+                        velocity.x *= -1;
+                        acceleration.x = 0;
+                    }
+                    if (contactNormal.y > 0 || contactNormal.y < 0) {
+                        velocity.y *= -1;
+                        acceleration.y = 0;
+                    }
+                    contactCooldown = contactCooldownDuration;
+                }
+            }
+
+            if (obj.getComponent(Enemy.class) != null) {
+                contact.setEnabled(false);
+            }
+        }
 
     }
 

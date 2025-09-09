@@ -7,10 +7,14 @@ import object.SoundMetadata;
 import object.SpriteSheetMetadata;
 
 public final class EngineSettings {
+        public static final boolean IS_FLOCKING_DEMO = false;
+
         public static final String ENGINE_TITLE = "Bala";
         public static final boolean DISPLAY_EDITOR = true;
 
-        public static final String DEFAULT_GAME_SCENE_FILE_NAME = "default-game-scene";
+        public static final String DEFAULT_GAME_SCENE_FILE_NAME =
+                        IS_FLOCKING_DEMO ? "default-game-scene-flocking-demo"
+                                        : "default-game-scene";
         public static final String SCENE_FILE_EXTENSION = "txt";
 
         public static final float GRID_WIDTH = 0.25f;
@@ -18,7 +22,7 @@ public final class EngineSettings {
         public static final Vector3f GRID_COLOR =
                         new Vector3f(0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f);
 
-        public static final int CAMERA_ZOOM_OUT = 5 * 1;
+        public static final int CAMERA_ZOOM_OUT = IS_FLOCKING_DEMO ? 5 * 1 : 5 * 4;
 
         public static final Vector4f BACKGROUND_COLOR =
                         new Vector4f(0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0F);
@@ -67,7 +71,7 @@ public final class EngineSettings {
         public static final boolean FOLLOW_MOUSE = false;
 
         public static final float GENERATE_ENEMIES_COOLDOWN = 1.0f;
-        public static final boolean PROCEDURALLY_GENERATE_ENEMIES_WHILE_PLAYING = true;
+        public static final boolean PROCEDURALLY_GENERATE_ENEMIES_WHILE_PLAYING = false;
         public static final int ENEMY_COUNT_TO_GENERATE = 75;
         public static final boolean GENERATE_ENEMIES_INITIALLY_WHILE_PLAYING = false;
         public static final int MAX_ENEMY_COUNT = 300;
@@ -76,7 +80,7 @@ public final class EngineSettings {
 
         public static final float FLOCKING_NEIGHBOR_DISTANCE = GRID_WIDTH * 1;
         public static final float FLOCKING_SEPARATE_DISTANCE = FLOCKING_NEIGHBOR_DISTANCE / 2;
-        public static final float FLOCKING_SEPARATE_MULTIPLIER = 1.0f;
+        public static final float FLOCKING_SEPARATE_MULTIPLIER = IS_FLOCKING_DEMO ? 1.0f : 1.0f;
         public static final float FLOCKING_ALIGN_MULTIPLIER = 1.0f;
         public static final float FLOCKING_COHERENCE_MULTIPLIER = 1.0f;
 
