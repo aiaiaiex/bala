@@ -21,7 +21,7 @@ public final class EngineSettings {
         public static final int CAMERA_ZOOM_OUT = 5 * 4;
 
         public static final Vector4f BACKGROUND_COLOR =
-                        new Vector4f(255.0f / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f, 1.0F);
+                        new Vector4f(0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0F);
 
         public static final SpriteSheetMetadata COLLIDABLE_TERRAIN = new SpriteSheetMetadata(
                         "./assets/images/collidable-terrain.png", 16, 16, 19);
