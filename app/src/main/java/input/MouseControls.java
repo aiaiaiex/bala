@@ -71,7 +71,7 @@ public class MouseControls extends Component {
             }
         }
 
-        if (Window.getImguiLayer().getGameViewWindow().getWantCaptureMouse()) {
+        if (Window.getImGuiWindow().getGameViewWindow().getWantCaptureMouse()) {
             Window.getScene().addGameObjectToScene(newObj);
         }
     }
@@ -80,7 +80,7 @@ public class MouseControls extends Component {
     public void editorUpdate(float dt) {
         debounce -= dt;
         PickingTexture pickingTexture =
-                Window.getImguiLayer().getPropertiesWindow().getPickingTexture();
+                Window.getImGuiWindow().getPropertiesWindow().getPickingTexture();
         Scene currentScene = Window.getScene();
 
         if (holdingObject != null) {
@@ -119,14 +119,14 @@ public class MouseControls extends Component {
             int gameObjectId = pickingTexture.readPixel(x, y);
             GameObject pickedObj = currentScene.getGameObject(gameObjectId);
             if (pickedObj != null) {
-                Window.getImguiLayer().getPropertiesWindow().setActiveGameObject(pickedObj);
+                Window.getImGuiWindow().getPropertiesWindow().setActiveGameObject(pickedObj);
             } else if (!mouse.isDragging()) {
-                Window.getImguiLayer().getPropertiesWindow().clearSelected();
+                Window.getImGuiWindow().getPropertiesWindow().clearSelected();
             }
             debounce = 0.2f;
         } else if (mouse.isDragging() && mouse.isButtonPressed(GLFW.GLFW_MOUSE_BUTTON_LEFT)) {
             if (!boxSelectSet) {
-                Window.getImguiLayer().getPropertiesWindow().clearSelected();
+                Window.getImGuiWindow().getPropertiesWindow().clearSelected();
                 screenBoxSelectStart = mouse.getScreen();
                 boxSelectStart = mouse.getWorld();
                 boxSelectSet = true;
@@ -170,7 +170,7 @@ public class MouseControls extends Component {
             for (Integer gameObjectId : uniqueGameObjectIds) {
                 GameObject pickedObj = Window.getScene().getGameObject(gameObjectId);
                 if (pickedObj != null) {
-                    Window.getImguiLayer().getPropertiesWindow().addActiveGameObject(pickedObj);
+                    Window.getImGuiWindow().getPropertiesWindow().addActiveGameObject(pickedObj);
                 }
             }
         }

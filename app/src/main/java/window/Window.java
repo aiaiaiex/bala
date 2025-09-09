@@ -18,7 +18,7 @@ import graphics.Framebuffer;
 import graphics.PickingTexture;
 import graphics.Renderer;
 import graphics.Shader;
-import gui.ImGuiLayer;
+import gui.ImGuiWindow;
 import input.Keyboard;
 import input.Mouse;
 import logger.AverageFrameTimeLogger;
@@ -55,7 +55,7 @@ public final class Window implements Observer {
     private Logger averageFrameTimeLogger;
     private Logger exactFrameTimeLogger;
 
-    private ImGuiLayer imguiLayer;
+    private ImGuiWindow imGuiWindow;
     private Framebuffer framebuffer;
     private PickingTexture pickingTexture;
     private boolean runtimePlaying;
@@ -166,8 +166,8 @@ public final class Window implements Observer {
             runtimePlaying = true;
             changeScene(new GameScene());
         } else {
-            imguiLayer = new ImGuiLayer(glfwWindow, pickingTexture);
-            imguiLayer.initImGui();
+            imGuiWindow = new ImGuiWindow(glfwWindow, pickingTexture);
+            imGuiWindow.initImGui();
             changeScene(new GameObjectPickerScene());
         }
 
@@ -239,7 +239,7 @@ public final class Window implements Observer {
                 GL30.glBlitFramebuffer(0, 0, framebuffer.width, framebuffer.height, 0, 0,
                         windowWidth, windowHeight, GL11.GL_COLOR_BUFFER_BIT, GL11.GL_NEAREST);
             } else {
-                imguiLayer.update((float) deltaTime, currentScene);
+                imGuiWindow.update((float) deltaTime, currentScene);
             }
 
             mouse.cleanup();
@@ -375,7 +375,7 @@ public final class Window implements Observer {
         }
 
         if (EngineSettings.DISPLAY_EDITOR) {
-            getImguiLayer().getPropertiesWindow().setActiveGameObject(null);
+            getImGuiWindow().getPropertiesWindow().setActiveGameObject(null);
         }
 
         getWindow().currentScene = new Scene(sceneInitializer, isGameScene);
@@ -400,7 +400,7 @@ public final class Window implements Observer {
         return (float) getWindow().monitorWidth / (float) getWindow().monitorHeight;
     }
 
-    public static ImGuiLayer getImguiLayer() {
-        return getWindow().imguiLayer;
+    public static ImGuiWindow getImGuiWindow() {
+        return getWindow().imGuiWindow;
     }
 }

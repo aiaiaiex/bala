@@ -20,7 +20,7 @@ import input.Mouse;
 import scene.Scene;
 import window.Window;
 
-public class ImGuiLayer {
+public class ImGuiWindow {
 
     private long glfwWindow;
 
@@ -34,7 +34,7 @@ public class ImGuiLayer {
     private Keyboard keyboard;
     private Mouse mouse;
 
-    public ImGuiLayer(long glfwWindow, PickingTexture pickingTexture) {
+    public ImGuiWindow(long glfwWindow, PickingTexture pickingTexture) {
         this.glfwWindow = glfwWindow;
         this.gameViewWindow = new GameViewWindow();
         this.propertiesWindow = new PropertiesWindow(pickingTexture);

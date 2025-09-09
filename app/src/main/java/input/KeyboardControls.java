@@ -24,7 +24,7 @@ public class KeyboardControls extends Component {
     public void editorUpdate(float dt) {
         debounce -= dt;
 
-        PropertiesWindow propertiesWindow = Window.getImguiLayer().getPropertiesWindow();
+        PropertiesWindow propertiesWindow = Window.getImGuiWindow().getPropertiesWindow();
         GameObject activeGameObject = propertiesWindow.getActiveGameObject();
         List<GameObject> activeGameObjects = propertiesWindow.getActiveGameObjects();
         float multiplier = keyboard.isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT) ? 0.5f : 1.0f;

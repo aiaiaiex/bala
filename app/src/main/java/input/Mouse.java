@@ -42,7 +42,7 @@ public class Mouse {
 
     public void cursorPositionCallback(long glfwWindow, double xPos, double yPos) {
         if (EngineSettings.DISPLAY_EDITOR
-                && !Window.getImguiLayer().getGameViewWindow().getWantCaptureMouse()) {
+                && !Window.getImGuiWindow().getGameViewWindow().getWantCaptureMouse()) {
             clear();
         }
 
