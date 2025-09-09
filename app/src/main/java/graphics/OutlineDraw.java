@@ -42,7 +42,7 @@ public class OutlineDraw {
         GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 6 * Float.BYTES, 3 * Float.BYTES);
         GL20.glEnableVertexAttribArray(1);
 
-        GL11.glLineWidth(4.0f);
+        GL11.glLineWidth(2.0f);
     }
 
     public static void beginFrame() {
