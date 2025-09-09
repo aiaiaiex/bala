@@ -28,8 +28,6 @@ public class GameCamera extends Component {
 
             camera.position.y = player.transform.position.y
                     - (camera.getProjectionSize().y / 2) * camera.getZoom();
-
-            camera.clearColor.set(EngineSettings.BACKGROUND_COLOR);
         }
     }
 }
