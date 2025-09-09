@@ -7,7 +7,7 @@ import component.SpriteRenderer;
 import object.GameObject;
 
 public class Renderer {
-    private final int MAX_BATCH_SIZE = 1000;
+    private final int MAX_BATCH_SIZE = 10000;
     private List<RenderBatch> batches;
     private static Shader currentShader;
 
