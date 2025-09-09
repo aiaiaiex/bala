@@ -63,9 +63,10 @@ public final class EngineSettings {
         public static final boolean FOLLOW_MOUSE = false;
 
         public static final float GENERATE_ENEMIES_COOLDOWN = 1.0f;
-        public static final boolean PROCEDURALLY_GENERATE_ENEMIES_WHILE_PLAYING = false;
+        public static final boolean PROCEDURALLY_GENERATE_ENEMIES_WHILE_PLAYING = true;
         public static final int ENEMY_COUNT_TO_GENERATE = 75;
         public static final boolean GENERATE_ENEMIES_INITIALLY_WHILE_PLAYING = false;
+        public static final int MAX_ENEMY_COUNT = 300;
 
         public static final float FLOCKING_NEIGHBOR_DISTANCE = GRID_WIDTH * 1;
         public static final float FLOCKING_SEPARATE_DISTANCE = FLOCKING_NEIGHBOR_DISTANCE / 2;

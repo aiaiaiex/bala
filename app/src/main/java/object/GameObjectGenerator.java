@@ -167,7 +167,8 @@ public class GameObjectGenerator {
         return gameObjects;
     }
 
-    public static List<GameObject> procedurallyGenerateEnemies(Camera camera, int enemyCount) {
+    public static List<GameObject> procedurallyGenerateEnemies(Camera camera,
+            int numberOfEnemiesToGenerate, int currentNumberOfEnemies) {
         List<GameObject> gameObjects = new ArrayList<>();
         SpriteSheet enemies = ObjectPool.getSpriteSheet(EngineSettings.ENEMIES.getFilePath());
         int spriteAmount = enemies.getSprites().size();
@@ -200,16 +201,21 @@ public class GameObjectGenerator {
                     continue;
                 }
 
+                if (currentNumberOfEnemies + currentEnemyCount > EngineSettings.MAX_ENEMY_COUNT) {
+                    break;
+                }
+
                 GameObject enemy = generateEnemy(rng.nextInt(spriteAmount),
                         new Vector2f(xPosition, yPosition));
 
                 gameObjects.add(enemy);
                 currentEnemyCount += 1;
-                if (currentEnemyCount >= enemyCount) {
+                if (currentEnemyCount >= numberOfEnemiesToGenerate) {
                     break;
                 }
             }
-            if (currentEnemyCount >= enemyCount) {
+            if ((currentNumberOfEnemies + currentEnemyCount > EngineSettings.MAX_ENEMY_COUNT)
+                    || (currentEnemyCount >= numberOfEnemiesToGenerate)) {
                 break;
             }
         }

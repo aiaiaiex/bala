@@ -130,6 +130,13 @@ public class Scene {
             }
         }
 
+        for (int i = enemies.size() - 1; i > -1; i--) {
+            GameObject enemy = enemies.get(i);
+            if (enemy.isDead()) {
+                enemies.remove(i);
+            }
+        }
+
         for (GameObject pendingObject : pendingObjects) {
             gameObjects.add(pendingObject);
             pendingObject.start();
@@ -160,6 +167,13 @@ public class Scene {
             }
         }
 
+        for (int i = enemies.size() - 1; i > -1; i--) {
+            GameObject enemy = enemies.get(i);
+            if (enemy.isDead()) {
+                enemies.remove(i);
+            }
+        }
+
         for (GameObject pendingObject : pendingObjects) {
             gameObjects.add(pendingObject);
             pendingObject.start();
@@ -171,9 +185,8 @@ public class Scene {
         generateEnemiesCooldown -= deltaTime;
         if (EngineSettings.PROCEDURALLY_GENERATE_ENEMIES_WHILE_PLAYING && isGameScene
                 && generateEnemiesCooldown <= 0.0f) {
-            GameObjectGenerator
-                    .procedurallyGenerateEnemies(camera, EngineSettings.ENEMY_COUNT_TO_GENERATE)
-                    .forEach(gameObject -> {
+            GameObjectGenerator.procedurallyGenerateEnemies(camera,
+                    EngineSettings.ENEMY_COUNT_TO_GENERATE, enemies.size()).forEach(gameObject -> {
                         addGameObjectToScene(gameObject);
                         enemies.add(gameObject);
                     });
