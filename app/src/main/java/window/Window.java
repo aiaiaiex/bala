@@ -55,9 +55,10 @@ public final class Window implements Observer {
     private Logger averageFrameTimeLogger;
     private Logger exactFrameTimeLogger;
 
-    private ImGuiWindow imGuiWindow;
     private Framebuffer framebuffer;
     private PickingTexture pickingTexture;
+    private ImGuiWindow imGuiWindow;
+
     private boolean gamePlaying;
     private Scene currentScene;
 

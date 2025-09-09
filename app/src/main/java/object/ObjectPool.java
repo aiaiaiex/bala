@@ -42,8 +42,7 @@ public final class ObjectPool {
         if (ObjectPool.textures.containsKey(file.getAbsolutePath())) {
             return ObjectPool.textures.get(file.getAbsolutePath());
         } else {
-            Texture texture = new Texture();
-            texture.init(resourceName);
+            Texture texture = new Texture(resourceName);
             ObjectPool.textures.put(file.getAbsolutePath(), texture);
             return texture;
         }

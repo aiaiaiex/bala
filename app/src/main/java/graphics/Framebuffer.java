@@ -20,7 +20,7 @@ public class Framebuffer {
 
         texture = new Texture(width, height);
         GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0,
-                GL11.GL_TEXTURE_2D, texture.getId(), 0);
+                GL11.GL_TEXTURE_2D, texture.getTextureName(), 0);
 
         int rboID = GL30.glGenRenderbuffers();
         GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, rboID);
@@ -47,6 +47,6 @@ public class Framebuffer {
     }
 
     public int getTextureId() {
-        return texture.getId();
+        return texture.getTextureName();
     }
 }

@@ -16,7 +16,7 @@ public class AnimationState {
 
     public void refreshTextures() {
         for (Frame frame : animationFrames) {
-            frame.sprite.setTexture(ObjectPool.getTexture(frame.sprite.getTexture().getFilepath()));
+            frame.sprite.setTexture(ObjectPool.getTexture(frame.sprite.getTexture().getFilePath()));
         }
     }
 

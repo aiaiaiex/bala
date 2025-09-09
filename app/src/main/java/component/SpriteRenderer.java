@@ -28,7 +28,7 @@ public class SpriteRenderer extends Component {
     @Override
     public void start() {
         if (sprite.getTexture() != null) {
-            sprite.setTexture(ObjectPool.getTexture(sprite.getTexture().getFilepath()));
+            sprite.setTexture(ObjectPool.getTexture(sprite.getTexture().getFilePath()));
         }
         lastTransform = gameObject.transform.copy();
 

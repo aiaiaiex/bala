@@ -107,7 +107,7 @@ public class GameObject {
 
         SpriteRenderer sprite = obj.getComponent(SpriteRenderer.class);
         if (sprite != null && sprite.getTexture() != null) {
-            sprite.setTexture(ObjectPool.getTexture(sprite.getTexture().getFilepath()));
+            sprite.setTexture(ObjectPool.getTexture(sprite.getTexture().getFilePath()));
         }
 
         return obj;

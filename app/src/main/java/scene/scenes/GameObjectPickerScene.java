@@ -70,7 +70,7 @@ public class GameObjectPickerScene extends SceneInitializer {
                 SpriteRenderer spriteRenderer = gameObject.getComponent(SpriteRenderer.class);
                 if (spriteRenderer.getTexture() != null) {
                     spriteRenderer.setTexture(
-                            ObjectPool.getTexture(spriteRenderer.getTexture().getFilepath()));
+                            ObjectPool.getTexture(spriteRenderer.getTexture().getFilePath()));
                 }
             }
 

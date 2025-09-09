@@ -45,7 +45,7 @@ public class GameScene extends SceneInitializer {
                                 SpriteRenderer spr = g.getComponent(SpriteRenderer.class);
                                 if (spr.getTexture() != null) {
                                         spr.setTexture(ObjectPool.getTexture(
-                                                        spr.getTexture().getFilepath()));
+                                                        spr.getTexture().getFilePath()));
                                 }
                         }
 
