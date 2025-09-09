@@ -7,8 +7,8 @@ import logger.GlobalLogger;
 
 public class PickingTexture {
     private int pickingTextureId;
-    private int fbo;
-    private int depthTexture;
+    private int frameBufferObject;
+    private int textureName;
 
     public PickingTexture(int width, int height) {
         if (!init(width, height)) {
@@ -18,8 +18,8 @@ public class PickingTexture {
     }
 
     public boolean init(int width, int height) {
-        fbo = GL30.glGenFramebuffers();
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, fbo);
+        frameBufferObject = GL30.glGenFramebuffers();
+        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBufferObject);
 
         pickingTextureId = GL11.glGenTextures();
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, pickingTextureId);
@@ -33,12 +33,12 @@ public class PickingTexture {
                 GL11.GL_TEXTURE_2D, this.pickingTextureId, 0);
 
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-        depthTexture = GL11.glGenTextures();
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, depthTexture);
+        textureName = GL11.glGenTextures();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureName);
         GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_DEPTH_COMPONENT, width, height, 0,
                 GL11.GL_DEPTH_COMPONENT, GL11.GL_FLOAT, 0);
         GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT,
-                GL11.GL_TEXTURE_2D, depthTexture, 0);
+                GL11.GL_TEXTURE_2D, textureName, 0);
 
         GL11.glReadBuffer(GL11.GL_NONE);
         GL11.glDrawBuffer(GL30.GL_COLOR_ATTACHMENT0);
@@ -54,7 +54,7 @@ public class PickingTexture {
     }
 
     public void enableWriting() {
-        GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, fbo);
+        GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, frameBufferObject);
     }
 
     public void disableWriting() {
@@ -62,7 +62,7 @@ public class PickingTexture {
     }
 
     public int readPixel(int x, int y) {
-        GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, fbo);
+        GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, frameBufferObject);
         GL11.glReadBuffer(GL30.GL_COLOR_ATTACHMENT0);
 
         float pixels[] = new float[3];
@@ -72,7 +72,7 @@ public class PickingTexture {
     }
 
     public float[] readPixels(Vector2i start, Vector2i end) {
-        GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, fbo);
+        GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, frameBufferObject);
         GL11.glReadBuffer(GL30.GL_COLOR_ATTACHMENT0);
 
         Vector2i size = new Vector2i(end).sub(start).absolute();
