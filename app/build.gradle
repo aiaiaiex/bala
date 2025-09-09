@@ -1,14 +1,9 @@
 plugins {
     id "application"
-    id "org.openjfx.javafxplugin" version "0.1.0"
 }
 
 repositories {
     mavenCentral()
-}
-
-javafx {
-    modules = [ "javafx.graphics" ]
 }
 
 project.ext.lwjglVersion = "3.3.6"
