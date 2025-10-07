@@ -35,7 +35,8 @@
 			"vscjava.vscode-gradle",
 			"vscjava.vscode-java-dependency",
 			"sonarsource.sonarlint-vscode",
-			"gruntfuggly.todo-tree"
+			"gruntfuggly.todo-tree",
+			"ms-azuretools.vscode-docker"
 		]
 	}
 }
