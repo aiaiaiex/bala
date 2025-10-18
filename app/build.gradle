@@ -1,8 +1,19 @@
 import org.gradle.internal.os.OperatingSystem
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'io.github.fvarrui:javapackager:1.7.6'
+    }
+}
+
 plugins {
     id "application"
 }
+
+apply plugin: 'io.github.fvarrui.javapackager.plugin'
 
 repositories {
     mavenCentral()
@@ -107,9 +118,37 @@ task fatJar(type: Jar) {
     with jar
 }
 
-
 tasks.withType(Jar) {
     duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+}
+
+javapackager {
+    name = 'bala'
+    version = '1.0'
+	mainClass = 'Bala'
+    bundleJre = true
+    customizedJre = false
+    runnableJar = file('./build/libs/bala.jar')
+    copyDependencies = false
+    additionalResources = [file('./build/libs/assets'), file('./build/libs/scenes'), file('./build/libs/logs'), file('./build/libs/imgui.ini')]
+}
+
+task packageAppForWindows(type: io.github.fvarrui.javapackager.gradle.PackageTask, dependsOn: fatJar) {
+	platform = 'windows'
+	createZipball = true
+}
+
+task packageAppForLinux(type: io.github.fvarrui.javapackager.gradle.PackageTask, dependsOn: fatJar) {
+	platform = 'linux'
+	createTarball = true
+}
+
+task packageAppForMac(type: io.github.fvarrui.javapackager.gradle.PackageTask, dependsOn: fatJar) {
+    platform = 'mac'
+    createTarball = true
+}
+
+task packageApp(dependsOn: ['packageAppForWindows', 'packageAppForLinux', 'packageAppForMac']) {
 }
 
 java {
@@ -121,3 +160,4 @@ java {
 application {
     mainClass = "Bala"
 }
+
